@@ -190,12 +190,12 @@ npm run preview
 
 Site deploys automatically via Cloudflare Pages when changes are pushed to GitHub.
 
-**Repository:** `github-personal:jasonleinart/personal-site` (main branch)
+**Repository:** `github-personal:jasonleinart/personal-site` (master branch)
 **Live URL:** https://jasonleinart.com
 
 **Deploy process:**
 1. Commit changes locally
-2. Push to `origin main`
+2. Push to `origin master`
 3. Cloudflare Pages automatically builds and deploys
 
 Cloudflare runs `npm run build` and serves the `dist/` directory.
