@@ -35,10 +35,10 @@
 .tag {
   font-size: 0.75rem;
   padding: 0.25rem 0.625rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: rgba(74, 153, 97, 0.1);
+  border: 1px solid var(--color-accent-secondary);
   border-radius: 4px;
-  color: var(--color-text-secondary);
+  color: var(--color-accent-secondary);
 }
 
 .tags-list {

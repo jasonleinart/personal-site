@@ -1,25 +1,42 @@
 /* Global Styles and CSS Custom Properties */
 
+/*
+ * PALETTE SWITCHER - Uncomment the palette you want to use
+ * Current: Warm Earth Tones (terracotta + sage)
+ * Alternative: Tech Indigo (commented out below)
+ */
+
 :root {
-  /* Color System - Dark Mode Default */
-  --color-bg: #0a0a0a;
-  --color-bg-secondary: #111111;
-  --color-bg-elevated: #1a1a1a;
-  --color-text: #e5e5e5;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
-  --color-border: #262626;
-  --color-border-subtle: #1f1f1f;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-accent-muted: rgba(59, 130, 246, 0.15);
-  --color-accent-glow: rgba(59, 130, 246, 0.25);
-  
-  /* Gradient Colors */
-  --gradient-text: linear-gradient(135deg, #e5e5e5 0%, #a3a3a3 100%);
-  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --gradient-card: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-  --gradient-border: linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(139, 92, 246, 0.5) 100%);
+  /* Color System - Dark Mode Default - WARM EARTH TONES */
+  --color-bg: #0f0f0e;
+  --color-bg-secondary: #161614;
+  --color-bg-elevated: #1c1c1a;
+  --color-text: #e8e4df;
+  --color-text-secondary: #a8a49d;
+  --color-text-muted: #6b6860;
+  --color-border: #2a2926;
+  --color-border-subtle: #222120;
+  --color-accent: #c4654a;
+  --color-accent-hover: #d4785d;
+  --color-accent-muted: rgba(196, 101, 74, 0.15);
+  --color-accent-glow: rgba(196, 101, 74, 0.25);
+  --color-accent-secondary: #4a9961;
+
+  /* Gradient Colors - Warm */
+  --gradient-text: linear-gradient(135deg, #e8e4df 0%, #a8a49d 100%);
+  --gradient-accent: linear-gradient(135deg, #c4654a 0%, #d4785d 100%);
+  --gradient-accent-reverse: linear-gradient(135deg, #7d9a78 0%, #c4654a 100%);
+  --gradient-card: linear-gradient(135deg, rgba(196, 101, 74, 0.06) 0%, rgba(125, 154, 120, 0.04) 100%);
+  --gradient-border: linear-gradient(135deg, rgba(196, 101, 74, 0.4) 0%, rgba(125, 154, 120, 0.3) 100%);
+  --gradient-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(196, 101, 74, 0.12), transparent);
+
+  /*
+   * ALTERNATIVE: Tech Indigo Palette (AI-style - use sparingly)
+   * --color-accent: #6366f1;
+   * --color-accent-hover: #818cf8;
+   * --color-accent-secondary: #22d3ee;
+   * --gradient-accent: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+   */
   
   /* Spacing System */
   --space-xs: 0.25rem;    /* 4px */
@@ -72,29 +89,39 @@
   --transition-slow: 300ms ease;
 }
 
-/* Light Mode Colors */
+/* Light Mode Colors - WARM EARTH TONES */
 [data-theme="light"] {
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f5;
-  --color-bg-elevated: #fafafa;
-  --color-text: #171717;
-  --color-text-secondary: #525252;
-  --color-text-muted: #a3a3a3;
-  --color-border: #e5e5e5;
-  --color-border-subtle: #f0f0f0;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-muted: rgba(37, 99, 235, 0.1);
-  --color-accent-glow: rgba(37, 99, 235, 0.15);
-  
-  /* Light mode gradients */
-  --gradient-text: linear-gradient(135deg, #171717 0%, #525252 100%);
-  --gradient-card: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
-  
+  --color-bg: #faf8f5;
+  --color-bg-secondary: #f2efe9;
+  --color-bg-elevated: #ffffff;
+  --color-text: #1a1917;
+  --color-text-secondary: #4a4843;
+  --color-text-muted: #8a867d;
+  --color-border: #e2ddd4;
+  --color-border-subtle: #ebe7e0;
+  --color-accent: #b35537;
+  --color-accent-hover: #9a4830;
+  --color-accent-muted: rgba(179, 85, 55, 0.1);
+  --color-accent-glow: rgba(179, 85, 55, 0.12);
+  --color-accent-secondary: #3d8a52;
+
+  /* Light mode gradients - Warm */
+  --gradient-text: linear-gradient(135deg, #1a1917 0%, #4a4843 100%);
+  --gradient-accent: linear-gradient(135deg, #b35537 0%, #c4654a 100%);
+  --gradient-card: linear-gradient(135deg, rgba(179, 85, 55, 0.04) 0%, rgba(92, 122, 86, 0.03) 100%);
+  --gradient-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(179, 85, 55, 0.06), transparent);
+
   /* Light mode shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.05);
+  --shadow-md: 0 4px 6px rgba(26, 25, 23, 0.07);
+  --shadow-lg: 0 10px 25px rgba(26, 25, 23, 0.1);
+}
+
+/* Reduce grid visibility in light mode */
+[data-theme="light"] body::before {
+  background-image:
+    linear-gradient(rgba(179, 85, 55, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(179, 85, 55, 0.015) 1px, transparent 1px);
 }
 
 /* CSS Reset and Base Styles */
@@ -116,10 +143,46 @@ html {
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   min-height: 100vh;
+  position: relative;
+}
+
+/* Headlines use Instrument Serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+}
+
+/* Subtle geometric grid pattern overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(196, 101, 74, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 101, 74, 0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Gradient glow at top of page */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 500px;
+  background: var(--gradient-glow);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Links */
@@ -195,4 +258,91 @@ pre code {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease forwards;
+}
+
+/* Staggered animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Accent underline effect for links */
+.accent-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.accent-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  transition: width 0.3s ease;
+}
+
+.accent-link:hover::after {
+  width: 100%;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effect utility */
+.glow-accent {
+  box-shadow: 0 0 20px var(--color-accent-glow);
 }

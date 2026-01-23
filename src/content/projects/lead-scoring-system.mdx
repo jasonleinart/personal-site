@@ -1,0 +1,63 @@
+---
+title: "Production Lead Scoring System"
+role: "Builder & Strategist"
+year: 2025
+duration: "2 months"
+teamSize: 1
+outcomeSummary: "Built ML-powered lead scoring processing 20,000+ subscribers with real revenue impact"
+overview: "Designed and built a production machine learning system for lead scoring, collaboratively developed with AI assistance"
+problem: "Client needed to prioritize sales outreach across a large subscriber base but had no systematic way to identify high-intent leads. Manual review was impossible at scale, and basic rules-based scoring missed nuanced signals."
+constraints:
+  - "No data science team available"
+  - "Must integrate with existing CRM (Go High Level)"
+  - "Needed production-ready, not just a prototype"
+  - "Limited ML experience at project start"
+approach: "Used collaborative AI development to bridge the ML knowledge gap. Built the system iteratively: started with data exploration in Jupyter notebooks with Claude, developed feature engineering logic together, and deployed to production using Google Cloud Functions. The 'sparring' process—working through problems step by step rather than just getting answers—built the judgment needed to make good decisions."
+keyDecisions:
+  - decision: "Collaborative development with Claude rather than outsourcing or learning ML from scratch"
+    reasoning: "Traditional path would take months. Pure outsourcing would leave me unable to maintain or improve the system. Collaborative AI development let me build real capability while shipping."
+    alternatives:
+      - "Hire a data science contractor"
+      - "Complete ML bootcamp first"
+      - "Use off-the-shelf scoring tool"
+  - decision: "Deploy on Google Cloud Functions with BigQuery"
+    reasoning: "Serverless reduces operational overhead. BigQuery handles the data scale without infrastructure management. Already familiar with GCP from previous work."
+    alternatives:
+      - "AWS Lambda + Redshift"
+      - "Self-hosted on VPS"
+      - "SaaS ML platform"
+techStack:
+  - "Python"
+  - "scikit-learn"
+  - "Google Cloud Functions"
+  - "BigQuery"
+  - "Go High Level API"
+  - "Jupyter Notebooks"
+impact:
+  metrics:
+    - label: "Subscribers Scored"
+      value: "20,000+"
+    - label: "Sales Team Efficiency"
+      value: "Focused outreach on top 15% of leads"
+    - label: "Revenue Attribution"
+      value: "Direct impact on closed deals"
+  qualitative: "Transformed an overwhelming subscriber list into actionable priorities. Sales team now has confidence in who to call first. System continues to run in production with minimal maintenance."
+learnings:
+  - "Capability loading (AI assistance) is real, but the judgment comes from sparring—working through problems, not just getting answers"
+  - "Production ML is 80% data pipeline, 20% model"
+  - "Starting with exploratory notebooks before committing to architecture saves significant rework"
+  - "You don't need to become a data scientist to build ML systems—you need to know enough to make good decisions"
+featured: true
+status: completed
+order: 1
+relatedDecisions:
+  - "ai-collaborative-development"
+---
+
+## The Capability Loading Story
+
+A year before this project, I signed up for a Python ML course. Quit after a few modules—environment setup, package dependencies, technical friction I couldn't resolve. The gap between what I wanted and what I could execute felt permanent.
+
+Same course, one year later. Claude handled the infrastructure friction. But the real difference wasn't the capability loading—it was the sparring. Working through problems together, debugging together, building understanding rather than just getting answers.
+
+I finished the course and built this production system. Not because AI did it for me, but because AI collaboration let me develop the judgment to do it myself.

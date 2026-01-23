@@ -1,0 +1,296 @@
+---
+/**
+ * Three Horizons Overview Page
+ *
+ * Main landing page for the Three Horizons of AI Integration framework.
+ * Provides the philosophical foundation and links to individual horizon deep-dives.
+ *
+ * Route: /three-horizons
+ *
+ * @page
+ */
+
+import PageLayout from '../../layouts/PageLayout.astro';
+import SEO from '../../components/SEO.astro';
+import StructuredData from '../../components/StructuredData.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+
+// Define headings for table of contents
+const headings = [
+  { depth: 2, text: 'Core Philosophy', slug: 'core-philosophy' },
+  { depth: 2, text: 'Philosophy as Predictive Architecture', slug: 'philosophy-as-predictive-architecture' },
+  { depth: 2, text: 'The Big Idea: AI as Operating System', slug: 'the-big-idea-ai-as-operating-system' },
+  { depth: 2, text: 'Framework Architecture: Why Three Horizons?', slug: 'framework-architecture-why-three-horizons' },
+  { depth: 2, text: 'Maturity Evolution Framework', slug: 'maturity-evolution-framework' },
+  { depth: 2, text: 'Strategic Implications Framework', slug: 'strategic-implications-framework' },
+  { depth: 2, text: 'Horizon 1: Personal AI', slug: 'horizon-1-personal-ai' },
+  { depth: 2, text: 'Horizon 2: Team-AI Collaboration', slug: 'horizon-2-team-ai-collaboration' },
+  { depth: 2, text: 'Horizon 3: Organizational AI Integration', slug: 'horizon-3-organizational-ai-integration' },
+  { depth: 2, text: 'Integration Across Horizons', slug: 'integration-across-horizons' },
+  { depth: 3, text: 'Systematic Progression', slug: 'systematic-progression' },
+  { depth: 3, text: 'Economic Compound Effects', slug: 'economic-compound-effects' },
+  { depth: 2, text: 'Strategic Positioning and Competitive Advantage', slug: 'strategic-positioning-and-competitive-advantage' },
+  { depth: 3, text: 'First-Mover Advantages', slug: 'first-mover-advantages' },
+  { depth: 3, text: 'Implementation Strategy', slug: 'implementation-strategy' },
+  { depth: 2, text: 'The AI-Native Future', slug: 'the-ai-native-future' },
+];
+---
+
+<PageLayout
+  pageTitle="The Three Horizons of AI Integration"
+  pageIntro="A foundational framework for understanding how artificial intelligence transforms human work across personal, collaborative, and organizational dimensions."
+>
+  <SEO
+    slot="head"
+    title="Three Horizons of AI Integration | Framework for Enterprise AI Transformation"
+    description="Strategic framework for AI integration across personal, team, and organizational scales. Predictive architecture for navigating enterprise AI transformation and competitive positioning."
+    type="article"
+  />
+
+  <StructuredData
+    type="Article"
+    data={{
+      title: "Three Horizons of AI Integration | Framework for Enterprise AI Transformation",
+      description: "Strategic framework for AI integration across personal, team, and organizational scales. Predictive architecture for navigating enterprise AI transformation and competitive positioning.",
+      url: Astro.url.href,
+    }}
+  />
+
+  <TableOfContents headings={headings} />
+
+  <article class="prose">
+    <h2 id="core-philosophy">Core Philosophy</h2>
+
+    <p>The integration of artificial intelligence into human work represents the next major economic transformation, following the pattern of previous technological revolutions but with a unique focus on amplifying cognitive rather than physical capability. This evolution occurs across three distinct yet interconnected horizons, each representing a different scale of human-AI collaboration and economic value creation.</p>
+
+    <p>This evolution fundamentally reimagines how humans and AI work together to create new forms of economic value, optimize resource allocation, and achieve productivity gains that neither could accomplish alone. Like previous technological revolutions, this transformation follows predictable economic patterns while creating entirely new categories of work and value.</p>
+
+    <h2 id="philosophy-as-predictive-architecture">Philosophy as Predictive Architecture</h2>
+
+    <p><strong>Intellectual Infrastructure for Emerging Realities</strong></p>
+
+    <p>The Three Horizons Philosophy maps emerging patterns of AI integration across personal, team, and organizational levels. While few organizations operate at the highest maturity levels today, systematic pattern recognition suggests predictable development trajectories that strategic thinkers can prepare for.</p>
+
+    <p>This philosophy emerges from pattern recognition of AI integration trajectories, then builds systematic intellectual support around that core insight. Rather than describing current widespread practices, it maps intellectual infrastructure for an AI integration reality that is emerging but doesn't fully exist yet. The philosophy's value lies in providing conceptual tools for understanding this transformation as it unfolds, positioning early adopters with strategic advantage when these patterns become widespread.</p>
+
+    <p><strong>Why Predictive Rather Than Descriptive</strong></p>
+
+    <p>Strategic thinking requires mapping future territory to be useful. This approach prioritizes logical coherence and predictive utility over exhaustive current-state proof. As AI maturity evolves over the next 3-5 years, this systematic thinking will prove prescient rather than speculative, providing the intellectual infrastructure needed for successful navigation of technological transformation.</p>
+
+    <h2 id="the-big-idea-ai-as-operating-system">The Big Idea: AI as Operating System</h2>
+
+    <p>AI evolves from discrete tools to becoming the intelligent operating system that orchestrates human-digital interaction across personal, team, and organizational scales. This represents a fundamental shift from reactive tool usage to proactive AI partnership that amplifies human capability and strategic thinking.</p>
+
+    <p>This is not about AI replacing humans, but about fundamentally reimagining how humans and AI work together to create new forms of economic value, optimize resource allocation, and achieve productivity gains that neither could accomplish alone.</p>
+
+    <p>The operating system metaphor captures the essential transformation: just as computer operating systems evolved from basic interfaces to intelligent environments that manage complex resource coordination, AI evolves from application-level tools to becoming the intelligent layer that orchestrates all human-digital collaboration.</p>
+
+    <hr />
+
+    <h2 id="framework-architecture-why-three-horizons">Framework Architecture: Why Three Horizons?</h2>
+
+    <p>The three-horizon structure follows natural patterns of technological adoption and capability scaling:</p>
+
+    <p><strong>Personal Scale (Horizon 1)</strong>: Individual mastery creates the foundation for realizing outsize productivity gains at higher levels. While effective collaboration can occur without AI fluency, personal AI mastery unlocks exponential productivity opportunities when scaling to team and organizational levels.</p>
+
+    <p><strong>Team Scale (Horizon 2)</strong>: Collaborative intelligence emerges when AI-fluent individuals coordinate through AI systems. Teams become the laboratory for developing human-AI collaboration patterns that scale to organizations.</p>
+
+    <p><strong>Organizational Scale (Horizon 3)</strong>: Enterprise transformation builds on proven team collaboration patterns, creating systematic intelligence that drives competitive advantage and market positioning.</p>
+
+    <p>This progression mirrors how previous technologies scaled: personal computing → networked teams → enterprise systems. Each horizon enables the next while creating compound effects that benefit all levels.</p>
+
+    <h2 id="maturity-evolution-framework">Maturity Evolution Framework</h2>
+
+    <p>Each horizon follows a predictable four-level evolution pattern toward AI-native capabilities:</p>
+
+    <p><strong>Level 1: AI as Applications</strong> → Individual tools with manual coordination</p>
+    <p><strong>Level 2: AI as Integrated Systems</strong> → Connected workflows with shared context</p>
+    <p><strong>Level 3: AI as Coordination Layer</strong> → Proactive AI management and optimization</p>
+    <p><strong>Level 4: AI as Operating System</strong> → Seamless human-AI collaborative environment as natural operating mode</p>
+
+    <p>This maturity progression creates the roadmap for becoming AI-native rather than just AI-enabled. Like digital natives who think fundamentally differently than digital immigrants, AI-native individuals, teams, and organizations develop qualitatively different capabilities through foundational AI integration rather than additive tool adoption.</p>
+
+    <h2 id="strategic-implications-framework">Strategic Implications Framework</h2>
+
+    <p>Each horizon's AI-as-OS transformation creates systematic changes across six key dimensions:</p>
+
+    <p><strong>Cognitive + Creative Load Distribution</strong> → How mental and creative work reorganizes around human vs AI strengths</p>
+    <p><strong>Decision Architecture Evolution</strong> → How decision-making processes and authority structures adapt</p>
+    <p><strong>Learning and Adaptation Dynamics</strong> → How knowledge acquisition and skill development accelerate</p>
+    <p><strong>Coordination Complexity Dissolution</strong> → How AI eliminates friction in collaborative workflows</p>
+    <p><strong>Capability Boundary Transformation</strong> → How limitations and possibilities shift for individuals, teams, and organizations</p>
+    <p><strong>Risk and Vulnerability Evolution</strong> → How new risks emerge while traditional constraints disappear</p>
+
+    <p>These implications provide the analytical framework for understanding what changes when AI becomes operating system rather than application tool.</p>
+
+    <hr />
+
+    <h2 id="horizon-1-personal-ai">Horizon 1: Personal AI</h2>
+
+    <p><em>"When AI Transforms How You Interact With the Digital World"</em></p>
+
+    <p>AI becomes your intelligent interface to the entire digital world—orchestrating research, creation, communication, and productivity through collaborative partnership rather than replacing human thinking and decision-making.</p>
+
+    <p>This horizon focuses on human-AI collaboration at the individual scale, where AI amplifies personal cognitive and creative capabilities. Rather than using separate AI tools, you develop a symbiotic relationship where AI becomes an extension of your own thinking and capability. The transformation shifts your role from information processor to insight generator, from technical executor to strategic visionary.</p>
+
+    <p><a href="/three-horizons/personal-ai/">Deep Dive: Personal AI Strategy Framework →</a></p>
+
+    <hr />
+
+    <h2 id="horizon-2-team-ai-collaboration">Horizon 2: Team-AI Collaboration</h2>
+
+    <p><em>"When AI Transforms How Teams Work, Lead, and Create Value"</em></p>
+
+    <p>AI evolves from individual productivity tool to becoming the collaborative intelligence layer that orchestrates team coordination, amplifies collective creativity, and enables fluid human-AI collaboration across all team functions.</p>
+
+    <p>This horizon focuses on collective intelligence where AI agents become specialized team members with distinct capabilities and roles. Teams develop the ability to coordinate human expertise with AI capabilities, creating collaborative intelligence that exceeds what either humans or AI could achieve independently. The transformation enables small teams to achieve enterprise-level outputs through sophisticated AI amplification.</p>
+
+    <p><a href="/three-horizons/team-ai/">Deep Dive: Team AI Collaboration Framework →</a></p>
+
+    <hr />
+
+    <h2 id="horizon-3-organizational-ai-integration">Horizon 3: Organizational AI Integration</h2>
+
+    <p><em>"When AI Transforms How Organizations Compete, Govern, and Evolve"</em></p>
+
+    <p>AI evolves from departmental efficiency tool to becoming the enterprise intelligence architecture that manages organizational evolution, strategic adaptation, and competitive positioning. Human leadership focuses on vision while AI handles intelligent execution.</p>
+
+    <p>This horizon focuses on AI as organizational nervous system that senses, processes, and responds to information across all business functions. Organizations develop adaptive, learning capabilities that continuously optimize performance and competitive positioning. The transformation creates AI-native enterprises that achieve sustainable competitive moats through superior efficiency and adaptive capability.</p>
+
+    <p><a href="/three-horizons/organizational-ai/">Deep Dive: Organizational AI Framework →</a></p>
+
+    <hr />
+
+    <h2 id="integration-across-horizons">Integration Across Horizons</h2>
+
+    <h3 id="systematic-progression">Systematic Progression</h3>
+
+    <p>The three horizons create a systematic progression where each enables the next:</p>
+
+    <ul>
+      <li><strong>Personal AI mastery</strong> provides the foundation for individual capability that scales to team effectiveness</li>
+      <li><strong>Team-AI collaboration</strong> creates collaborative intelligence patterns that inform organizational processes</li>
+      <li><strong>Organizational AI</strong> generates insights and efficiencies that enhance both team and individual performance</li>
+    </ul>
+
+    <h3 id="economic-compound-effects">Economic Compound Effects</h3>
+
+    <p>Cross-horizon productivity gains create multiplicative benefits. Organizations excelling across all horizons develop sustainable competitive advantages through network effects and learning curves that favor comprehensive integrators.</p>
+
+    <p>Performance gaps between AI-integrated and traditional approaches widen exponentially, creating winner-take-all dynamics that reward systematic integration.</p>
+
+    <hr />
+
+    <h2 id="strategic-positioning-and-competitive-advantage">Strategic Positioning and Competitive Advantage</h2>
+
+    <h3 id="first-mover-advantages">First-Mover Advantages</h3>
+
+    <p>Organizations and individuals developing systematic approaches to AI integration achieve significant competitive advantages as these patterns become widespread over the next 3-5 years.</p>
+
+    <p><strong>Individual Level</strong>: Personal AI mastery creates exponential productivity advantages and positions individuals for advanced collaboration roles requiring AI fluency.</p>
+
+    <p><strong>Team Level</strong>: Human-AI collaboration capabilities become foundational for competitive team performance, creating 2-5x output multiplication while improving quality and innovation speed.</p>
+
+    <p><strong>Organizational Level</strong>: Comprehensive AI integration develops sustainable competitive moats through superior efficiency and adaptive capability, enabling capture of compound learning effects across the entire enterprise.</p>
+
+    <h3 id="implementation-strategy">Implementation Strategy</h3>
+
+    <p>For detailed investment requirements, ROI analysis, and strategic decision criteria, explore the individual horizon frameworks:</p>
+
+    <ul>
+      <li><a href="/three-horizons/personal-ai/">Personal AI Strategy →</a> Individual competitive advantage through AI mastery</li>
+      <li><a href="/three-horizons/team-ai/">Team AI Collaboration →</a> Collective intelligence and collaborative capabilities</li>
+      <li><a href="/three-horizons/organizational-ai/">Organizational AI →</a> Enterprise transformation and competitive positioning</li>
+    </ul>
+
+    <hr />
+
+    <h2 id="the-ai-native-future">The AI-Native Future</h2>
+
+    <p>The transformation from AI-enabled to AI-native represents the next major economic shift in how humans create value. Like the transition from pre-digital to digital-native organizations, this evolution will create fundamental competitive advantages for early adopters while leaving traditional approaches increasingly obsolete.</p>
+
+    <p>The Three Horizons framework provides the intellectual infrastructure for navigating this transformation systematically. Rather than hoping for gradual improvement through ad-hoc AI adoption, it offers a predictive roadmap for developing AI-native capabilities across personal, team, and organizational scales.</p>
+
+    <p><strong>The window for strategic positioning is now.</strong> Organizations and individuals developing systematic approaches to AI integration over the next 3-5 years will capture first-mover advantages as these patterns become widespread. The compound effects of cross-horizon mastery create exponential rather than linear competitive gains.</p>
+
+    <p>The future belongs to those who build AI-native capabilities rather than simply adopting AI-enabled tools. Start with personal mastery, scale to team collaboration, and evolve toward organizational intelligence. The framework is predictive—the implementation is strategic choice.</p>
+
+    <hr />
+
+    <p><em>This philosophy serves as the intellectual foundation for systematic AI integration strategy. It provides both the conceptual framework and practical pathway for achieving competitive advantage through strategic human-AI collaboration across personal, team, and organizational scales.</em></p>
+  </article>
+</PageLayout>
+
+<style>
+  .prose {
+    max-width: var(--max-width-prose);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .prose h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-3xl);
+    margin-bottom: var(--space-lg);
+    letter-spacing: -0.01em;
+  }
+
+  .prose h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .prose p {
+    margin-bottom: var(--space-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .prose strong {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+  }
+
+  .prose a:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-3xl) 0;
+  }
+
+  .prose ul {
+    margin-bottom: var(--space-lg);
+    padding-left: var(--space-xl);
+  }
+
+  .prose li {
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .prose h2 {
+      font-size: var(--font-size-xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .prose h3 {
+      font-size: var(--font-size-lg);
+    }
+  }
+</style>

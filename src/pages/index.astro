@@ -62,14 +62,14 @@ const featuredProjects = allProjects
 const caseSnapshots = featuredProjects.slice(0, 3);
 
 /**
- * Queries recent decisions for preview section
- * 
- * Retrieves all decisions, sorts by date (newest first), and limits to
+ * Queries recent articles for preview section
+ *
+ * Retrieves published articles, sorts by date (newest first), and limits to
  * top 2 for the homepage preview.
  */
-const allDecisions = await getCollection('decisions');
-const recentDecisions = allDecisions
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+const allArticles = await getCollection('writing', ({ data }) => data.draft === false);
+const recentArticles = allArticles
+  .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime())
   .slice(0, 2);
 ---
 
@@ -92,27 +92,27 @@ const recentDecisions = allDecisions
       <div class="hero-grid">
         <!-- Left: Value Statement -->
         <div class="hero-left">
-          <h1 class="hero-title">
-            I don't just ship projects.<br/>
+          <h1 class="hero-title animate-fade-in-up">
+            I build AI systems that move business metrics.<br/>
             <span class="hero-title-emphasis">I document decisions, trade-offs, and outcomes.</span>
           </h1>
-          <p class="hero-sub">
-            A portfolio built around case studies — not screenshots.
+          <p class="hero-sub animate-fade-in-up delay-100">
+            A portfolio built around how I think — not just what I ship.
           </p>
-          <p class="hero-meta">
+          <p class="hero-meta animate-fade-in-up delay-200">
             {siteConfig.author.name} · {siteConfig.author.title}
           </p>
-          <div class="hero-cta">
-            <a href="/projects" class="btn-primary">Explore Case Studies</a>
-            <a href="/decisions" class="btn-secondary">How I Make Decisions</a>
+          <div class="hero-cta animate-fade-in-up delay-300">
+            <a href="/projects" class="btn-primary">Explore Projects</a>
+            <a href="/writing" class="btn-secondary">Read My Writing</a>
           </div>
         </div>
 
         <!-- Right: Case Snapshots -->
         <div class="hero-right">
           <div class="case-snapshots">
-            {caseSnapshots.map((project) => (
-              <a href={`/projects/${project.id}`} class="case-snapshot">
+            {caseSnapshots.map((project, index) => (
+              <a href={`/projects/${project.id}`} class={`case-snapshot animate-slide-in-right delay-${(index + 2) * 100}`}>
                 <span class="case-label">Case · {project.data.role}</span>
                 <span class="case-title">{project.data.title}</span>
                 <span class="case-outcome">{project.data.outcomeSummary}</span>
@@ -126,37 +126,51 @@ const recentDecisions = allDecisions
     <!-- Introduction -->
     <section class="introduction">
       <p>
-        I'm {siteConfig.author.name}, {siteConfig.author.title.toLowerCase()} focused on building systems that move real business metrics.
+        I'm {siteConfig.author.name} — builder, strategist, and AI practitioner focused on turning complex business problems into working systems.
       </p>
       <p>
-        Every major decision is documented—because great engineers don't just build things, they explain why.
+        Every major decision is documented. Because people who build things worth building can explain why they built them that way.
       </p>
       <ForwardLink href="/journey" text="Read my journey" variant="muted" />
     </section>
 
-    <!-- Recent Decisions -->
-    <section class="recent-decisions">
+    <!-- In Motion -->
+    <section class="in-motion">
+      <h2>In Motion</h2>
+      <ul class="motion-list">
+        <li>Building AI agent systems and automation frameworks</li>
+        <li>Writing about AI implementation and strategic decision-making</li>
+        <li>Bridging the gap between AI capability and organizational readiness</li>
+        <li>Working with select clients on AI strategy and builds</li>
+      </ul>
+      <p class="motion-context">
+        Previously: 10+ years in marketing operations and data systems. $100M+ revenue portfolios. The path from ops to AI was paved with pipelines, integrations, and a lot of "there has to be a better way."
+      </p>
+    </section>
+
+    <!-- Recent Writing -->
+    <section class="recent-articles">
       <div class="section-header">
-        <h2>Recent Decisions</h2>
-        <ForwardLink href="/decisions" text="View all" variant="muted" />
+        <h2>Recent Writing</h2>
+        <ForwardLink href="/writing" text="View all" variant="muted" />
       </div>
-      
-      {recentDecisions.length > 0 ? (
-        <div class="decisions-list">
-          {recentDecisions.map((decision) => {
-            const date = new Date(decision.data.date);
-            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+      {recentArticles.length > 0 ? (
+        <div class="articles-list">
+          {recentArticles.map((article) => {
+            const date = new Date(article.data.publishDate);
+            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             return (
-              <article class="decision-item">
-                <span class="decision-date">{formattedDate}</span>
-                <h3 class="decision-title">{decision.data.title}</h3>
-                <p class="decision-context">{decision.data.context}</p>
-              </article>
+              <a href={`/writing/${article.id}`} class="article-item">
+                <span class="article-date">{formattedDate}</span>
+                <h3 class="article-title">{article.data.title}</h3>
+                <p class="article-description">{article.data.description}</p>
+              </a>
             );
           })}
         </div>
       ) : (
-        <p class="no-decisions">No decisions documented yet.</p>
+        <p class="no-articles">No articles published yet.</p>
       )}
     </section>
 
@@ -165,17 +179,17 @@ const recentDecisions = allDecisions
 
     <!-- What I Think About -->
     <section class="thinking">
-      <h2>Problems I Enjoy Solving</h2>
+      <h2>Problems I Think About</h2>
       <p class="thinking-list">
-        How to scale systems without scaling complexity · When to choose consistency over availability · Making legacy codebases maintainable · Designing APIs that last · Building teams that ship · Turning technical debt into technical investment · Documenting decisions so future-you understands past-you
+        When to use AI agents vs. traditional automation · How to build systems that make teams smarter, not dependent · Context engineering and what AI actually needs to know · The gap between AI capability and business implementation · Building judgment through collaboration, not just prompts · Making strategic decisions when the landscape changes monthly
       </p>
     </section>
 
     <!-- CTA -->
     <section class="cta">
-      <h2>Let's Work Together</h2>
+      <h2>Let's Build Something</h2>
       <p>
-        Looking for technical leadership, architectural guidance, or someone who documents their thinking? Let's talk.
+        I work with a small number of clients and collaborators on AI implementation — strategy through production. If you're exploring how AI fits your business, hiring for a team that needs this thinking, or just want to talk shop — I'd enjoy the conversation.
       </p>
       <div class="cta-buttons">
         <a href="/projects" class="btn-primary">View My Work</a>
@@ -209,16 +223,17 @@ const recentDecisions = allDecisions
     }
 
     .hero-title {
-      font-size: 2.25rem;
-      line-height: 1.3;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-size: 2.5rem;
+      line-height: 1.2;
+      font-weight: 400;
+      letter-spacing: -0.01em;
       margin-bottom: 1.5rem;
       color: var(--color-text);
     }
 
     .hero-title-emphasis {
-      color: var(--color-text-secondary);
+      color: var(--color-accent);
+      font-style: italic;
     }
 
     .hero-sub {
@@ -243,17 +258,19 @@ const recentDecisions = allDecisions
     .btn-primary {
       display: inline-block;
       padding: 0.75rem 1.5rem;
-      background: var(--color-text);
-      color: var(--color-bg);
+      background: var(--gradient-accent);
+      color: white;
       font-weight: 600;
       font-size: 0.9375rem;
       text-decoration: none;
       border-radius: 6px;
-      transition: opacity 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 20px var(--color-accent-glow);
     }
 
     .btn-primary:hover {
-      opacity: 0.85;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 25px var(--color-accent-muted);
     }
 
     .btn-secondary {
@@ -266,11 +283,13 @@ const recentDecisions = allDecisions
       text-decoration: none;
       border: 1px solid var(--color-border);
       border-radius: 6px;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
     }
 
     .btn-secondary:hover {
-      border-color: var(--color-text-secondary);
+      border-color: var(--color-accent-secondary);
+      color: var(--color-accent-secondary);
+      background: rgba(74, 153, 97, 0.1);
     }
 
     .hero-right {
@@ -286,16 +305,35 @@ const recentDecisions = allDecisions
     .case-snapshot {
       display: block;
       padding: 1.25rem 1.5rem;
-      background: var(--color-bg-secondary);
+      background: var(--gradient-card);
       border: 1px solid var(--color-border);
       border-radius: 8px;
       text-decoration: none;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-snapshot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .case-snapshot:hover {
-      border-color: var(--color-text-muted);
-      background: var(--color-bg-elevated);
+      border-color: var(--color-accent-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--color-accent-glow);
+    }
+
+    .case-snapshot:hover::before {
+      opacity: 1;
     }
 
     .case-label {
@@ -340,7 +378,65 @@ const recentDecisions = allDecisions
       color: var(--color-text);
     }
 
-    .recent-decisions {
+    .in-motion {
+      margin-bottom: 5rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .in-motion::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 1px;
+      background: var(--gradient-accent);
+    }
+
+    .in-motion h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .motion-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem 0;
+    }
+
+    .motion-list li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.625rem;
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .motion-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      transition: transform 0.2s ease;
+    }
+
+    .motion-list li:hover::before {
+      transform: translateX(3px);
+    }
+
+    .motion-context {
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .recent-articles {
       margin-bottom: 5rem;
     }
 
@@ -357,23 +453,47 @@ const recentDecisions = allDecisions
       letter-spacing: -0.01em;
     }
 
-    .decisions-list {
+    .articles-list {
       display: flex;
       flex-direction: column;
-      gap: 0;
-      border-top: 1px solid var(--color-border);
+      gap: 1rem;
     }
 
-    .decision-item {
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--color-border);
+    .article-item {
+      display: block;
+      padding: 1.25rem 1.5rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .decision-item:last-child {
-      border-bottom: none;
+    .article-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
-    .decision-date {
+    .article-item:hover {
+      border-color: var(--color-accent-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--color-accent-glow);
+    }
+
+    .article-item:hover::before {
+      opacity: 1;
+    }
+
+    .article-date {
       display: block;
       font-size: 0.75rem;
       font-weight: 500;
@@ -383,7 +503,7 @@ const recentDecisions = allDecisions
       margin-bottom: 0.5rem;
     }
 
-    .decision-title {
+    .article-title {
       font-size: 1.125rem;
       font-weight: 600;
       line-height: 1.3;
@@ -391,13 +511,13 @@ const recentDecisions = allDecisions
       margin-bottom: 0.5rem;
     }
 
-    .decision-context {
+    .article-description {
       font-size: 0.9375rem;
       line-height: 1.6;
       color: var(--color-text-secondary);
     }
 
-    .no-decisions {
+    .no-articles {
       color: var(--color-text-muted);
       font-style: italic;
       padding: 1.5rem 0;
@@ -424,13 +544,25 @@ const recentDecisions = allDecisions
     .cta {
       padding: 3rem 0;
       border-top: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 1px;
+      background: var(--gradient-accent);
     }
 
     .cta h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-size: 1.75rem;
+      font-weight: 400;
       margin-bottom: 0.75rem;
       letter-spacing: -0.01em;
+      color: var(--color-accent);
     }
 
     .cta p {
