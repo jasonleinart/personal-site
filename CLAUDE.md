@@ -7,7 +7,7 @@ Personal portfolio site for Jason Leinart built with Astro using the "Case" them
 - **Framework:** Astro v5
 - **Styling:** Tailwind CSS
 - **Content:** MDX files with Zod schema validation
-- **Hosting:** Cloudflare Pages (planned)
+- **Hosting:** Cloudflare Pages (auto-deploys from GitHub)
 - **CMS:** None - content in markdown files
 
 ## Key Files
@@ -185,6 +185,20 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+## Deployment
+
+Site deploys automatically via Cloudflare Pages when changes are pushed to GitHub.
+
+**Repository:** `github-personal:jasonleinart/personal-site` (main branch)
+**Live URL:** https://jasonleinart.com
+
+**Deploy process:**
+1. Commit changes locally
+2. Push to `origin main`
+3. Cloudflare Pages automatically builds and deploys
+
+Cloudflare runs `npm run build` and serves the `dist/` directory.
 
 ## File Locations
 
