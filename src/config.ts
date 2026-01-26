@@ -126,9 +126,8 @@ export const siteConfig = {
    */
   nav: [
     { label: 'Projects', href: '/projects' },
-    { label: 'Writing', href: '/writing' },
-    { label: 'Three Horizons', href: '/three-horizons' },
-    { label: 'Journey', href: '/journey' },
+    { label: 'Strategic Analysis', href: '/writing' },
+    { label: 'Playbook', href: '/three-horizons' },
     { label: 'Contact', href: '/contact' },
   ],
 } as const;
