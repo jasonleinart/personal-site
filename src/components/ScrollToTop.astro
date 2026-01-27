@@ -88,18 +88,28 @@
 </style>
 
 <script>
+  // Use AbortController to prevent listener stacking on page transitions
+  let scrollController: AbortController | null = null;
+
   function initScrollToTop() {
-    const button = document.querySelector('.scroll-to-top');
+    const button = document.querySelector<HTMLButtonElement>('.scroll-to-top');
     if (!button) return;
 
+    // Abort previous listeners before adding new ones
+    if (scrollController) {
+      scrollController.abort();
+    }
+    scrollController = new AbortController();
+    const { signal } = scrollController;
+
     const SCROLL_THRESHOLD = 300;
+    const btn = button; // Capture reference for closure
 
     function toggleVisibility() {
-      if (!button) return;
       if (window.scrollY > SCROLL_THRESHOLD) {
-        button.classList.add('is-visible');
+        btn.classList.add('is-visible');
       } else {
-        button.classList.remove('is-visible');
+        btn.classList.remove('is-visible');
       }
     }
 
@@ -110,8 +120,8 @@
       });
     }
 
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    button.addEventListener('click', scrollToTop);
+    window.addEventListener('scroll', toggleVisibility, { passive: true, signal });
+    button.addEventListener('click', scrollToTop, { signal });
 
     // Initial check
     toggleVisibility();

@@ -117,12 +117,7 @@
   --shadow-lg: 0 10px 25px rgba(26, 25, 23, 0.1);
 }
 
-/* Reduce grid visibility in light mode */
-[data-theme="light"] body::before {
-  background-image:
-    linear-gradient(rgba(179, 85, 55, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(179, 85, 55, 0.015) 1px, transparent 1px);
-}
+/* Light mode grid handled in BaseLayout.astro .bg-grid */
 
 /* CSS Reset and Base Styles */
 
@@ -161,34 +156,8 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
-/* Subtle geometric grid pattern overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    linear-gradient(rgba(196, 101, 74, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(196, 101, 74, 0.025) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Gradient glow at top of page */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 500px;
-  background: var(--gradient-glow);
-  pointer-events: none;
-  z-index: -1;
-}
+/* Decorative backgrounds (grid + glow) moved to BaseLayout.astro
+   as persistent elements to prevent flicker on navigation */
 
 /* Links */
 a {

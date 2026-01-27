@@ -92,14 +92,14 @@ const recentArticles = allArticles
       <div class="hero-grid">
         <!-- Left: Value Statement -->
         <div class="hero-left">
-          <h1 class="hero-title animate-fade-in-up">
+          <h1 class="hero-title">
             Digital Transformation & Intelligent Operations<br/>
             <span class="hero-title-emphasis">Bridging the gap between strategy and implementation for organizations looking to scale.</span>
           </h1>
-          <p class="hero-context animate-fade-in-up delay-100">
+          <p class="hero-context">
             I leverage 10+ years of operational leadership to architect systems that drive revenue, reduce overhead, and accelerate the adoption of vendor AI ecosystems.
           </p>
-          <div class="hero-cta animate-fade-in-up delay-200">
+          <div class="hero-cta">
             <a href="/projects" class="btn-primary">Explore Projects</a>
             <a href="/analysis" class="btn-secondary">Read My Analysis</a>
           </div>
@@ -108,8 +108,8 @@ const recentArticles = allArticles
         <!-- Right: Case Snapshots -->
         <div class="hero-right">
           <div class="case-snapshots">
-            {caseSnapshots.map((project, index) => (
-              <a href={`/projects/${project.id}`} class={`case-snapshot animate-slide-in-right delay-${(index + 2) * 100}`}>
+            {caseSnapshots.map((project) => (
+              <a href={`/projects/${project.id}`} class="case-snapshot">
                 <span class="case-label">Case · {project.data.role}</span>
                 <span class="case-title">{project.data.title}</span>
                 <span class="case-outcome">{project.data.outcomeSummary}</span>

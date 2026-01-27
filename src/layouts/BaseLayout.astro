@@ -120,6 +120,39 @@ import '../styles/utilities.css';
         z-index: 100;
         background: var(--color-bg);
       }
+
+      /* Decorative background elements - persistent to prevent flicker */
+      .bg-decorations {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(196, 101, 74, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(196, 101, 74, 0.025) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+
+      .bg-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 500px;
+        background: var(--gradient-glow);
+      }
+
+      /* Light mode adjustments */
+      :global([data-theme="light"]) .bg-grid {
+        background-image:
+          linear-gradient(rgba(179, 85, 55, 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(179, 85, 55, 0.015) 1px, transparent 1px);
+      }
     </style>
   </head>
   <body>
@@ -128,12 +161,18 @@ import '../styles/utilities.css';
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
+    <!-- Persistent decorative background (prevents flicker on navigation) -->
+    <div class="bg-decorations" transition:persist aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow"></div>
+    </div>
+
     <header class="site-header" transition:persist>
       <Navigation />
     </header>
-    <main>
+    <main transition:animate="fade">
       <slot />
     </main>
-    <Footer />
+    <Footer transition:persist />
   </body>
 </html>
