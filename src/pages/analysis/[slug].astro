@@ -538,13 +538,35 @@ function formatDate(date: Date): string {
         height: 300px;
       }
 
-      .article-content :global(.video-embed),
-      .article-content :global(.slides-embed) {
+      .article-content :global(.video-embed) {
         margin-left: -1rem;
         margin-right: -1rem;
         border-radius: 0;
         border-left: none;
         border-right: none;
+      }
+
+      /* Hide PDF embed on mobile, show fallback */
+      .article-content :global(.slides-embed) {
+        position: relative;
+        margin-left: 0;
+        margin-right: 0;
+        min-height: auto;
+        padding: 2rem 1rem;
+        text-align: center;
+        background: var(--color-bg-secondary);
+      }
+
+      .article-content :global(.slides-embed iframe) {
+        display: none;
+      }
+
+      .article-content :global(.slides-embed)::after {
+        content: 'PDF slides are best viewed on desktop. Use the download link below.';
+        display: block;
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+        font-style: italic;
       }
 
       .article-content :global(table) {
