@@ -81,8 +81,8 @@ const recentArticles = allArticles
     type="website"
     noSuffix
   />
-  <!-- Preload hero background for faster LCP -->
-  <link rel="preload" href="/og-image.webp" as="image" type="image/webp" slot="head" />
+  <!-- Preload hero background for faster LCP (desktop only) -->
+  <link rel="preload" href="/og-image.webp" as="image" type="image/webp" media="(min-width: 769px)" slot="head" />
 
   <!-- Structured Data for Homepage -->
   <StructuredData type="WebSite" />
@@ -625,14 +625,7 @@ const recentArticles = allArticles
       }
 
       .hero-bg {
-        width: 100%;
-        opacity: 0.3;
-      }
-
-      .hero-bg::before {
-        width: 100%;
-        background: linear-gradient(to right, var(--color-bg) 0%, transparent 50%, transparent 100%),
-                    linear-gradient(to top, var(--color-bg) 0%, transparent 30%);
+        display: none; /* Don't load background image on mobile for performance */
       }
 
       .hero-title {
