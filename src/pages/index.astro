@@ -67,7 +67,7 @@ const caseSnapshots = featuredProjects.slice(0, 3);
  * Retrieves published articles, sorts by date (newest first), and limits to
  * top 2 for the homepage preview.
  */
-const allArticles = await getCollection('writing', ({ data }) => data.draft === false);
+const allArticles = await getCollection('analysis', ({ data }) => data.draft === false);
 const recentArticles = allArticles
   .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime())
   .slice(0, 2);
@@ -101,7 +101,7 @@ const recentArticles = allArticles
           </p>
           <div class="hero-cta animate-fade-in-up delay-200">
             <a href="/projects" class="btn-primary">Explore Projects</a>
-            <a href="/writing" class="btn-secondary">Read My Writing</a>
+            <a href="/analysis" class="btn-secondary">Read My Analysis</a>
           </div>
         </div>
 
@@ -145,11 +145,11 @@ const recentArticles = allArticles
       </p>
     </section>
 
-    <!-- Recent Writing -->
+    <!-- Recent Analysis -->
     <section class="recent-articles">
       <div class="section-header">
-        <h2>Recent Writing</h2>
-        <ForwardLink href="/writing" text="View all" variant="muted" />
+        <h2>Recent Analysis</h2>
+        <ForwardLink href="/analysis" text="View all" variant="muted" />
       </div>
 
       {recentArticles.length > 0 ? (
@@ -158,7 +158,7 @@ const recentArticles = allArticles
             const date = new Date(article.data.publishDate);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             return (
-              <a href={`/writing/${article.id}`} class="article-item">
+              <a href={`/analysis/${article.id}`} class="article-item">
                 <span class="article-date">{formattedDate}</span>
                 <h3 class="article-title">{article.data.title}</h3>
                 <p class="article-description">{article.data.description}</p>

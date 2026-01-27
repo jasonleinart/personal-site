@@ -200,12 +200,15 @@ const journeyCollection = defineCollection({
  * - Publish and update dates
  * - Optional tags for categorization
  */
-const writingCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/writing' }),
+const analysisCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/analysis' }),
   schema: z.object({
     /** Article title */
     title: z.string(),
-    
+
+    /** Optional subtitle */
+    subtitle: z.string().optional(),
+
     /** Article description for SEO and previews */
     description: z.string(),
     
@@ -220,6 +223,9 @@ const writingCollection = defineCollection({
     
     /** Whether the article is a draft (hidden from production) */
     draft: z.boolean().default(false),
+
+    /** Optional audio file path for listen feature */
+    audioFile: z.string().optional(),
   }),
 });
 
@@ -355,7 +361,7 @@ export const collections = {
   projects: projectsCollection,
   decisions: decisionsCollection,
   journey: journeyCollection,
-  writing: writingCollection,
+  analysis: analysisCollection,
   uses: usesCollection,
   speaking: speakingCollection,
   testimonials: testimonialsCollection,

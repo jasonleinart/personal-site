@@ -79,13 +79,13 @@ export const pagesConfig = {
   },
 
   /**
-   * Writing/blog listing page (/writing)
+   * Strategic Analysis listing page (/analysis)
    */
-  writing: {
-    title: 'AI & Technical Writing | Strategy, Implementation & Lessons Learned',
-    description: 'Technical articles on AI implementation, system architecture, and strategic decision-making. Practical insights from building production AI systems and automation frameworks.',
-    heading: 'Writing',
-    intro: 'Technical articles, insights, and lessons learned from building software systems. I write about architecture decisions, engineering practices, and the challenges of delivering reliable software at scale.',
+  analysis: {
+    title: 'Strategic Analysis | Enterprise AI Research & Case Studies',
+    description: 'Deep-dive research and case studies on enterprise AI transformation. Analysis of strategic decisions, implementation patterns, and lessons from industry leaders.',
+    heading: 'Strategic Analysis',
+    intro: 'Deep-dive research into enterprise AI transformation. Case studies, decision frameworks, and lessons from organizations building AI at scale.',
   },
 
   /**
