@@ -61,12 +61,26 @@ import '../styles/utilities.css';
 <!DOCTYPE html>
 <html lang={siteConfig.language} data-theme="dark">
   <head>
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-M2S5CZLJ');</script>
+    <!-- Google Tag Manager (delayed for performance) -->
+    <script is:inline>
+    (function(){
+      var loaded = false;
+      function loadGTM() {
+        if (loaded) return;
+        loaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-M2S5CZLJ');
+      }
+      // Load on interaction or after 3s
+      ['scroll','click','mousemove','keydown','touchstart'].forEach(function(e){
+        window.addEventListener(e, loadGTM, {once:true,passive:true});
+      });
+      setTimeout(loadGTM, 3000);
+    })();
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8" />

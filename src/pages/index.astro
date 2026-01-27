@@ -123,7 +123,7 @@ const recentArticles = allArticles
         <!-- Featured Projects -->
         <div class="featured-projects">
           {caseSnapshots.map((project) => (
-            <a href={`/projects/${project.id}`} class="case-snapshot">
+            <a href={`/projects/${project.id}`} class="case-snapshot" data-astro-prefetch="tap">
               <span class="case-label">Case · {project.data.role}</span>
               <span class="case-title">{project.data.title}</span>
               <span class="case-outcome">{project.data.outcomeSummary}</span>
@@ -160,7 +160,7 @@ const recentArticles = allArticles
             const date = new Date(article.data.publishDate);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             return (
-              <a href={`/analysis/${article.id}`} class="article-item">
+              <a href={`/analysis/${article.id}`} class="article-item" data-astro-prefetch="tap">
                 <span class="article-date">{formattedDate}</span>
                 <h3 class="article-title">{article.data.title}</h3>
                 <p class="article-description">{article.data.description}</p>
