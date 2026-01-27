@@ -75,72 +75,40 @@ const isActive = (href: string) => {
   </div>
 </nav>
 
-<script>
-  function initMobileNav() {
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const siteNav = document.querySelector('.site-nav');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-
-    if (!hamburger || !mobileMenu || !siteNav) return;
-
-    function toggleMenu() {
-      const isOpen = siteNav!.classList.toggle('menu-open');
-      hamburger!.setAttribute('aria-expanded', String(isOpen));
+<script is:inline>
+  // Use event delegation for hamburger - works with transition:persist
+  document.addEventListener('click', (e) => {
+    const hamburger = e.target.closest('.hamburger');
+    if (hamburger) {
+      const siteNav = document.querySelector('.site-nav');
+      if (siteNav) {
+        const isOpen = siteNav.classList.toggle('menu-open');
+        hamburger.setAttribute('aria-expanded', String(isOpen));
+      }
     }
 
-    function closeMenu() {
-      siteNav!.classList.remove('menu-open');
-      hamburger!.setAttribute('aria-expanded', 'false');
+    // Close menu when clicking a mobile nav link
+    const mobileLink = e.target.closest('.mobile-nav-link');
+    if (mobileLink) {
+      const siteNav = document.querySelector('.site-nav');
+      const hamburger = document.querySelector('.hamburger');
+      if (siteNav && hamburger) {
+        siteNav.classList.remove('menu-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
     }
+  });
 
-    hamburger.addEventListener('click', toggleMenu);
-
-    // Close menu when clicking a link
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && siteNav.classList.contains('menu-open')) {
-        closeMenu();
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const siteNav = document.querySelector('.site-nav');
+      const hamburger = document.querySelector('.hamburger');
+      if (siteNav && siteNav.classList.contains('menu-open') && hamburger) {
+        siteNav.classList.remove('menu-open');
+        hamburger.setAttribute('aria-expanded', 'false');
       }
-    });
-  }
-
-  function updateActiveNav() {
-    const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-
-    navLinks.forEach((link) => {
-      const href = link.getAttribute('href');
-      let isActive = false;
-
-      if (href === '/') {
-        isActive = currentPath === '/';
-      } else if (href) {
-        isActive = currentPath.startsWith(href);
-      }
-
-      const activeClass = link.classList.contains('nav-link') ? 'nav-link--active' : 'mobile-nav-link--active';
-      link.classList.toggle(activeClass, isActive);
-      if (isActive) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
-  }
-
-  // Run on initial load
-  initMobileNav();
-  updateActiveNav();
-
-  // Also run after View Transitions navigation
-  document.addEventListener('astro:page-load', () => {
-    initMobileNav();
-    updateActiveNav();
+    }
   });
 </script>
 
