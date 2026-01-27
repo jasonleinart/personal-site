@@ -74,13 +74,15 @@ const recentArticles = allArticles
 ---
 
 <BaseLayout>
-  <SEO 
+  <SEO
     slot="head"
     title={`${siteConfig.author.name} - ${siteConfig.author.title}`}
     description={siteConfig.description}
     type="website"
     noSuffix
   />
+  <!-- Preload hero background for faster LCP -->
+  <link rel="preload" href="/og-image.webp" as="image" type="image/webp" slot="head" />
 
   <!-- Structured Data for Homepage -->
   <StructuredData type="WebSite" />
@@ -217,7 +219,7 @@ const recentArticles = allArticles
       right: -5%;
       bottom: -20%;
       width: 85%;
-      background-image: url('/og-image.png');
+      background-image: url('/og-image.webp');
       background-size: cover;
       background-position: center right;
       opacity: 0.75;

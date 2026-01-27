@@ -95,8 +95,30 @@ skills:  # optional
   - "Skill 2"
 ```
 
+### Analysis (`src/content/analysis/`)
+Strategic domain analysis articles. See positioning.md for content guidelines.
+
+**Required frontmatter:**
+```yaml
+title: "Article Title"
+subtitle: "Optional subtitle"  # optional
+description: "Article description for SEO"
+publishDate: 2025-01-15  # YYYY-MM-DD format
+updatedDate: 2025-01-20  # optional
+tags:
+  - "tag1"
+  - "tag2"
+draft: false  # boolean, optional
+audioFile: "/audio/filename.m4a"  # optional
+tldr:  # optional but recommended
+  summary: "One sentence summary"
+  points:
+    - "<strong>Point 1:</strong> Description"
+    - "<strong>Point 2:</strong> Description"
+```
+
 ### Writing (`src/content/writing/`)
-Blog posts and articles.
+Blog posts and articles (general, non-strategic).
 
 **Required frontmatter:**
 ```yaml
@@ -145,6 +167,25 @@ featured: true  # boolean
 date: 2025-01-15  # YYYY-MM-DD format
 ```
 
+### Notes (`src/content/notes/`)
+Short-form insights that highlight specific aspects of analysis or projects.
+
+**Required frontmatter:**
+```yaml
+title: "Note Title"
+date: 2025-01-15  # YYYY-MM-DD format
+relatedAnalysis: "analysis-slug"  # optional, links to related analysis
+tags:  # optional
+  - "tag1"
+  - "tag2"
+draft: false  # boolean, optional
+```
+
+**Content guidelines:**
+- Keep notes focused on a single insight
+- Link back to related Analysis or Project when applicable
+- Use for observations that don't warrant full articles
+
 ## Common Mistakes to Avoid
 
 1. **Enum values are strict:**
@@ -158,20 +199,31 @@ date: 2025-01-15  # YYYY-MM-DD format
 
 4. **URLs must be valid:** Include `https://` prefix
 
-## Site Positioning
+## Site Positioning & Content Architecture
 
-Jason's positioning: **"Builder in motion"** - not a consultant agency, but a high-agency individual doing interesting work.
+See `positioning.md` for full strategy. Key points:
 
-**Key themes:**
-- AI implementation and strategy
-- Learning in public
-- Documenting decisions and thinking
-- Building systems that move business metrics
+**Positioning:** Domain expertise demonstrated through implementation. Content for hiring managers and clients, not just practitioners.
+
+**Content architecture (Analysis / Projects / Notes):**
+
+| Type | Purpose | What Belongs | Hiring Signal |
+|------|---------|--------------|---------------|
+| **Analysis** | "I understand the domain" | Strategic landscape, 30k ft architecture, org implications | AI Strategy & Advisory |
+| **Projects** | "I can build it" | Working implementations, technical READMEs, demos | PoC Development |
+| **Notes** | "I'm in the details" | Specific insights, implementation learnings, observations | Thought Leadership |
+
+**Content relationship:** For each domain, Analysis provides strategy → Project proves implementation → Notes pull out specific insights. They link to each other.
+
+**What NOT to do:**
+- Don't put implementation details in Analysis (goes in Project README)
+- Don't put pure strategy in Projects (goes in Analysis)
+- Don't write Notes that should be full Analysis articles
 
 **Target audiences:**
-- Hiring managers (show capability and growth)
-- Potential clients/collaborators (show thinking and outcomes)
-- Peers (share learning and ideas)
+- Hiring managers for AI transformation roles
+- Potential consulting clients
+- Peers (secondary)
 
 ## Commands
 
