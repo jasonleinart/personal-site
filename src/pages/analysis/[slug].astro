@@ -76,6 +76,7 @@ const {
   updatedDate,
   tags,
   audioFile,
+  tldr,
 } = article.data;
 
 /**
@@ -162,6 +163,19 @@ function formatDate(date: Date): string {
           <source src={audioFile} type="audio/mp4" />
           Your browser does not support the audio element.
         </audio>
+      </div>
+    )}
+
+    <!-- TL;DR Summary (if provided) -->
+    {tldr && (
+      <div class="tldr">
+        <span class="tldr-label">TL;DR</span>
+        <p class="tldr-summary">{tldr.summary}</p>
+        <ul class="tldr-points">
+          {tldr.points.map((point) => (
+            <li set:html={point} />
+          ))}
+        </ul>
       </div>
     )}
 
@@ -410,6 +424,68 @@ function formatDate(date: Date): string {
       height: 40px;
     }
 
+    /* TL;DR section (rendered above TOC) */
+    .tldr {
+      margin: 0 0 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(196, 101, 74, 0.1) 0%, rgba(196, 101, 74, 0.05) 100%);
+      border: 1px solid rgba(196, 101, 74, 0.3);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tldr::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, rgba(196, 101, 74, 0.3) 100%);
+    }
+
+    .tldr-label {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      background: rgba(196, 101, 74, 0.15);
+      padding: 0.25rem 0.625rem;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .tldr-summary {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+
+    .tldr-points {
+      margin: 0;
+      padding-left: 1.25rem;
+      list-style: disc;
+    }
+
+    .tldr-points li {
+      font-size: 0.9375rem;
+      margin-bottom: 0.375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .tldr-points li:last-child {
+      margin-bottom: 0;
+    }
+
+    .tldr-points :global(strong) {
+      color: var(--color-text);
+    }
+
     /* Infographic/figure styles */
     .article-content :global(figure.infographic) {
       margin: 2.5rem 0;
@@ -429,6 +505,66 @@ function formatDate(date: Date): string {
       color: var(--color-text-muted);
       text-align: center;
       font-style: italic;
+    }
+
+    /* TLDR / Abstract callout styles */
+    .article-content :global(.tldr) {
+      margin: 0 0 2.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(196, 101, 74, 0.1) 0%, rgba(196, 101, 74, 0.05) 100%);
+      border: 1px solid rgba(196, 101, 74, 0.3);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-content :global(.tldr)::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, rgba(196, 101, 74, 0.3) 100%);
+    }
+
+    .article-content :global(.tldr-label) {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      background: rgba(196, 101, 74, 0.15);
+      padding: 0.25rem 0.625rem;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .article-content :global(.tldr p) {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+
+    .article-content :global(.tldr p:last-child) {
+      margin-bottom: 0;
+    }
+
+    .article-content :global(.tldr ul) {
+      margin: 0.75rem 0 0 0;
+      padding-left: 1.25rem;
+    }
+
+    .article-content :global(.tldr li) {
+      font-size: 0.9375rem;
+      margin-bottom: 0.375rem;
+      color: var(--color-text-secondary);
+    }
+
+    .article-content :global(.tldr strong) {
+      color: var(--color-text);
     }
 
     /* Key Insight callout styles */

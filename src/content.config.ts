@@ -211,21 +211,27 @@ const analysisCollection = defineCollection({
 
     /** Article description for SEO and previews */
     description: z.string(),
-    
+
     /** Original publication date */
     publishDate: z.coerce.date(),
-    
+
     /** Last updated date (optional) */
     updatedDate: z.coerce.date().optional(),
-    
+
     /** Tags for categorization */
     tags: z.array(z.string()).optional(),
-    
+
     /** Whether the article is a draft (hidden from production) */
     draft: z.boolean().default(false),
 
     /** Optional audio file path for listen feature */
     audioFile: z.string().optional(),
+
+    /** Optional TL;DR summary displayed above table of contents */
+    tldr: z.object({
+      summary: z.string(),
+      points: z.array(z.string()),
+    }).optional(),
   }),
 });
 
