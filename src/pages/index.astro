@@ -89,46 +89,46 @@ const recentArticles = allArticles
   <main class="home-page">
     <!-- CASE-FIRST HERO -->
     <section class="hero">
-      <div class="hero-grid">
-        <!-- Left: Value Statement -->
-        <div class="hero-left">
-          <h1 class="hero-title">
-            Digital Transformation & Intelligent Operations<br/>
-            <span class="hero-title-emphasis">Bridging the gap between strategy and implementation for organizations looking to scale.</span>
-          </h1>
-          <p class="hero-context">
-            I leverage 10+ years of operational leadership to architect systems that drive revenue, reduce overhead, and accelerate the adoption of vendor AI ecosystems.
-          </p>
-          <div class="hero-cta">
-            <a href="/projects" class="btn-primary">Explore Projects</a>
-            <a href="/analysis" class="btn-secondary">Read My Analysis</a>
-          </div>
-        </div>
-
-        <!-- Right: Case Snapshots -->
-        <div class="hero-right">
-          <div class="case-snapshots">
-            {caseSnapshots.map((project) => (
-              <a href={`/projects/${project.id}`} class="case-snapshot">
-                <span class="case-label">Case · {project.data.role}</span>
-                <span class="case-title">{project.data.title}</span>
-                <span class="case-outcome">{project.data.outcomeSummary}</span>
-              </a>
-            ))}
-          </div>
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Digital Transformation & Intelligent Operations<br/>
+          <span class="hero-title-emphasis">Bridging the gap between strategy and implementation for organizations looking to scale.</span>
+        </h1>
+        <p class="hero-context">
+          I leverage 10+ years of operational leadership to architect systems that drive revenue, reduce overhead, and accelerate the adoption of vendor AI ecosystems.
+        </p>
+        <div class="hero-cta">
+          <a href="/projects" class="btn-primary">Explore Projects</a>
+          <a href="/analysis" class="btn-secondary">Read My Analysis</a>
         </div>
       </div>
     </section>
 
     <!-- Introduction -->
     <section class="introduction">
-      <p>
-        I'm Jason Leinart — a digital transformation leader and systems architect focused on turning complex operational bottlenecks into high-velocity working systems.
-      </p>
-      <p>
-        With a background managing $100M+ operational portfolios across marketing operations and data systems, I bridge the gap between technical research and production-ready implementation. I specialize in architecting the frameworks that allow mid-market and enterprise organizations to move beyond the AI hype and into measurable, scalable adoption.
-      </p>
-      <ForwardLink href="/journey" text="Read my journey" variant="muted" />
+      <div class="intro-grid">
+        <div class="intro-text">
+          <p>
+            I'm Jason Leinart — a digital transformation leader and systems architect focused on turning complex operational bottlenecks into high-velocity working systems.
+          </p>
+          <p>
+            With a background managing $100M+ operational portfolios across marketing operations and data systems, I bridge the gap between technical research and production-ready implementation. I specialize in architecting the frameworks that allow mid-market and enterprise organizations to move beyond the AI hype and into measurable, scalable adoption.
+          </p>
+          <ForwardLink href="/journey" text="Read my journey" variant="muted" />
+        </div>
+
+        <!-- Featured Projects -->
+        <div class="featured-projects">
+          {caseSnapshots.map((project) => (
+            <a href={`/projects/${project.id}`} class="case-snapshot">
+              <span class="case-label">Case · {project.data.role}</span>
+              <span class="case-title">{project.data.title}</span>
+              <span class="case-outcome">{project.data.outcomeSummary}</span>
+            </a>
+          ))}
+        </div>
+      </div>
     </section>
 
     <!-- In Motion -->
@@ -204,20 +204,40 @@ const recentArticles = allArticles
     }
 
     .hero {
-      padding: 4rem 0 5rem;
+      position: relative;
+      padding: 5rem 0 6rem;
       border-bottom: 1px solid var(--color-border);
       margin-bottom: 4rem;
+      overflow: hidden;
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
+    .hero-bg {
+      position: absolute;
+      top: -20%;
+      right: -5%;
+      bottom: -20%;
+      width: 85%;
+      background-image: url('/og-image.png');
+      background-size: cover;
+      background-position: center right;
+      opacity: 0.75;
+      pointer-events: none;
     }
 
-    .hero-left {
-      padding-right: 2rem;
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 50%;
+      background: linear-gradient(to right, var(--color-bg) 0%, var(--color-bg) 30%, transparent 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 580px;
     }
 
     .hero-title {
@@ -301,15 +321,6 @@ const recentArticles = allArticles
       background: rgba(74, 153, 97, 0.1);
     }
 
-    .hero-right {
-      padding-top: 0.5rem;
-    }
-
-    .case-snapshots {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
 
     .case-snapshot {
       display: block;
@@ -372,19 +383,34 @@ const recentArticles = allArticles
     }
 
     .introduction {
-      max-width: 600px;
       margin-bottom: 5rem;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .intro-text {
       font-size: 1.125rem;
       line-height: 1.7;
       color: var(--color-text-secondary);
     }
 
-    .introduction p {
+    .intro-text p {
       margin-bottom: 1rem;
     }
 
-    .introduction p:first-child {
+    .intro-text p:first-child {
       color: var(--color-text);
+    }
+
+    .featured-projects {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .in-motion {
@@ -596,17 +622,24 @@ const recentArticles = allArticles
         padding: 2.5rem 0 3rem;
       }
 
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
+      .hero-bg {
+        width: 100%;
+        opacity: 0.3;
       }
 
-      .hero-left {
-        padding-right: 0;
+      .hero-bg::before {
+        width: 100%;
+        background: linear-gradient(to right, var(--color-bg) 0%, transparent 50%, transparent 100%),
+                    linear-gradient(to top, var(--color-bg) 0%, transparent 30%);
       }
 
       .hero-title {
         font-size: 1.75rem;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
       }
 
       .hero-cta {
@@ -623,7 +656,7 @@ const recentArticles = allArticles
         padding: 1rem 1.25rem;
       }
 
-      .introduction {
+      .intro-text {
         font-size: 1rem;
       }
 
