@@ -133,6 +133,11 @@ const isActive = (href: string) => {
     });
   }
 
+  // Run on initial load
+  initMobileNav();
+  updateActiveNav();
+
+  // Also run after View Transitions navigation
   document.addEventListener('astro:page-load', () => {
     initMobileNav();
     updateActiveNav();
