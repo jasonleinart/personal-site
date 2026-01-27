@@ -150,6 +150,11 @@ body {
   position: relative;
 }
 
+/* Ensure main content inherits background for iOS rendering consistency */
+main {
+  background-color: var(--color-bg);
+}
+
 /* Headlines use Instrument Serif */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Instrument Serif', Georgia, serif;
