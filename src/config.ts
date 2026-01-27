@@ -126,7 +126,8 @@ export const siteConfig = {
    */
   nav: [
     { label: 'Projects', href: '/projects' },
-    { label: 'Strategic Analysis', href: '/analysis' },
+    { label: 'Analysis', href: '/analysis' },
+    { label: 'Notes', href: '/notes' },
     { label: 'Playbook', href: '/ai-transformation-playbook' },
     { label: 'Contact', href: '/contact' },
   ],

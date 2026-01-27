@@ -333,27 +333,59 @@ const testimonialsCollection = defineCollection({
   schema: z.object({
     /** Person's name */
     name: z.string(),
-    
+
     /** Person's role/title */
     role: z.string(),
-    
+
     /** Person's company */
     company: z.string(),
-    
+
     /** Relationship context (e.g., "Worked together at Company X") */
     relationship: z.string(),
-    
+
     /** Testimonial quote */
     quote: z.string(),
-    
+
     /** LinkedIn profile URL (optional) */
     linkedin: z.string().url().optional(),
-    
+
     /** Whether to feature on homepage */
     featured: z.boolean().default(false),
-    
+
     /** Date of the testimonial */
     date: z.coerce.date(),
+  }),
+});
+
+/**
+ * Notes Collection
+ *
+ * Short-form content that highlights specific aspects of analysis articles.
+ * Lighter weight than full articles, designed for quick insights and takeaways.
+ *
+ * Features:
+ * - Optional link to related analysis article
+ * - Simple date-based organization
+ * - Tags for categorization
+ * - Draft mode for unpublished content
+ */
+const notesCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/notes' }),
+  schema: z.object({
+    /** Note title */
+    title: z.string(),
+
+    /** Publication date */
+    date: z.coerce.date(),
+
+    /** Related analysis article slug (optional) */
+    relatedAnalysis: z.string().optional(),
+
+    /** Tags for categorization */
+    tags: z.array(z.string()).optional(),
+
+    /** Whether the note is a draft */
+    draft: z.boolean().default(false),
   }),
 });
 
@@ -371,4 +403,5 @@ export const collections = {
   uses: usesCollection,
   speaking: speakingCollection,
   testimonials: testimonialsCollection,
+  notes: notesCollection,
 };

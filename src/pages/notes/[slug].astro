@@ -1,0 +1,238 @@
+---
+/**
+ * Note Detail Page
+ *
+ * Displays a single note with its content. Notes are shorter-form content
+ * that highlight specific insights, with optional links back to related analysis.
+ *
+ * Route: /notes/[slug]
+ *
+ * @page
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import BackLink from '../../components/BackLink.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => {
+    return data.draft === false;
+  });
+  return notes.map((note) => ({
+    params: { slug: note.id },
+  }));
+}
+
+const { slug } = Astro.params;
+const note = await getEntry('notes', slug!);
+
+if (!note) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await render(note);
+const { title, date, relatedAnalysis, tags } = note.data;
+
+// Get related analysis if specified
+let relatedArticle = null;
+if (relatedAnalysis) {
+  relatedArticle = await getEntry('analysis', relatedAnalysis);
+}
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+}
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={`${title} - Notes`}
+    description={`A note on ${title.toLowerCase()}`}
+    type="article"
+    publishDate={date}
+  />
+
+  <main class="note">
+    <header class="note-header">
+      <time class="note-date" datetime={date.toISOString()}>
+        {formatDate(date)}
+      </time>
+      <h1>{title}</h1>
+      {tags && tags.length > 0 && (
+        <div class="note-tags">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <article class="note-content">
+      <Content />
+    </article>
+
+    {relatedArticle && (
+      <div class="related-article">
+        <span class="related-label">From the analysis</span>
+        <a href={`/analysis/${relatedArticle.id}`} class="related-link">
+          {relatedArticle.data.title}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    )}
+
+    <BackLink href="/notes" text="All notes" />
+  </main>
+</BaseLayout>
+
+<style>
+  .note {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .note-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .note-date {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .note-header h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .note-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(74, 153, 97, 0.1);
+    border: 1px solid var(--color-accent-secondary);
+    border-radius: 4px;
+    color: var(--color-accent-secondary);
+  }
+
+  .note-content {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+  }
+
+  .note-content :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .note-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .note-content :global(strong) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .note-content :global(em) {
+    font-style: italic;
+  }
+
+  .note-content :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .note-content :global(a:hover) {
+    color: var(--color-accent-hover);
+  }
+
+  .note-content :global(ul),
+  .note-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .note-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .note-content :global(blockquote) {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-bg-secondary);
+    font-style: italic;
+  }
+
+  .related-article {
+    margin-top: 3rem;
+    padding: 1.25rem;
+    background: rgba(201, 132, 116, 0.08);
+    border: 1px solid rgba(201, 132, 116, 0.2);
+    border-radius: 8px;
+  }
+
+  .related-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .related-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+
+  .related-link:hover {
+    gap: 0.75rem;
+  }
+
+  .related-link svg {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .note {
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .note-header h1 {
+      font-size: 1.625rem;
+    }
+
+    .note-content {
+      font-size: 1rem;
+    }
+  }
+</style>

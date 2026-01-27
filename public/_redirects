@@ -1,6 +1,23 @@
+# Section redirects
 /uses /projects 301
 /uses/ /projects 301
 /decisions /projects 301
 /decisions/ /projects 301
 /speaking /contact 301
 /speaking/ /contact 301
+
+# Legacy URLs (pre-Astro migration - from Google Search Console 404s)
+/field-notes/ /notes/ 301
+/field-notes/* /notes/ 301
+/mental-models/ /analysis/ 301
+/mental-models/* /analysis/ 301
+/build-logs/ /journey/ 301
+/build-logs/* /journey/ 301
+/blog/ /analysis/ 301
+/blog/* /analysis/ 301
+/about/ / 301
+/now/ / 301
+/tag-* /analysis/ 301
+
+# Old asset paths
+/assets/Jason-Leinart-Resume.pdf https://linkedin.com/in/jason-leinart 301

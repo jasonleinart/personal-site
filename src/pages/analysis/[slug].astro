@@ -641,6 +641,52 @@ function formatDate(date: Date): string {
       transform: translateY(-2px);
     }
 
+    /* Phase list styles (implementation roadmap) */
+    .article-content :global(.phase-list) {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .article-content :global(.phase) {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .article-content :global(.phase-number) {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient-accent);
+      color: white;
+      font-weight: 600;
+      border-radius: 50%;
+      font-size: 1rem;
+    }
+
+    .article-content :global(.phase-content) {
+      flex: 1;
+    }
+
+    .article-content :global(.phase-content h4) {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 1.125rem;
+      font-weight: 400;
+      margin: 0 0 0.25rem 0;
+      color: var(--color-text);
+    }
+
+    .article-content :global(.phase-content p) {
+      margin: 0;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
     @media (max-width: 768px) {
       .article {
         padding: 1.5rem 1rem;
@@ -717,6 +763,16 @@ function formatDate(date: Date): string {
       .article-content :global(th:first-child),
       .article-content :global(td:first-child) {
         padding-left: 0.5rem;
+      }
+
+      .article-content :global(.phase) {
+        gap: 1rem;
+      }
+
+      .article-content :global(.phase-number) {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
       }
     }
   </style>
