@@ -85,13 +85,13 @@ const isActive = (href: string) => {
     if (!hamburger || !mobileMenu || !siteNav) return;
 
     function toggleMenu() {
-      const isOpen = siteNav.classList.toggle('menu-open');
-      hamburger.setAttribute('aria-expanded', String(isOpen));
+      const isOpen = siteNav!.classList.toggle('menu-open');
+      hamburger!.setAttribute('aria-expanded', String(isOpen));
     }
 
     function closeMenu() {
-      siteNav.classList.remove('menu-open');
-      hamburger.setAttribute('aria-expanded', 'false');
+      siteNav!.classList.remove('menu-open');
+      hamburger!.setAttribute('aria-expanded', 'false');
     }
 
     hamburger.addEventListener('click', toggleMenu);
