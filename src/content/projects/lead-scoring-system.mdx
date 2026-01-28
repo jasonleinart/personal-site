@@ -1,63 +1,309 @@
 ---
-title: "Production Lead Scoring System"
-role: "Builder & Strategist"
+title: "Revenue Operations: ML Lead Scoring"
+role: "Strategy & Implementation"
 year: 2025
-duration: "2 months"
-teamSize: 1
-outcomeSummary: "Built ML-powered lead scoring processing 20,000+ subscribers with real revenue impact"
-overview: "Designed and built a production machine learning system for lead scoring, collaboratively developed with AI assistance"
-problem: "Client needed to prioritize sales outreach across a large subscriber base but had no systematic way to identify high-intent leads. Manual review was impossible at scale, and basic rules-based scoring missed nuanced signals."
+outcomeSummary: "Transformed a $3M annual problem into $1M+ savings through expected value optimization—not just prediction, but business decision system"
+overview: "Revenue operations system that reframes lead scoring from classification to expected value optimization. ROI modeling before ML, threshold optimization against business constraints, deployed as API + dashboard for marketing self-service."
+problem: "Aggressive email marketing costs $3.65M annually in lost customer lifetime value. 100,000 subscribers, 0.5% churn per sales email, five emails per month—125 lost potential customers monthly. Rules-based targeting can't optimize the revenue-churn tradeoff."
 constraints:
-  - "No data science team available"
-  - "Must integrate with existing CRM (Go High Level)"
-  - "Needed production-ready, not just a prototype"
-  - "Limited ML experience at project start"
-approach: "Used collaborative AI development to bridge the ML knowledge gap. Built the system iteratively: started with data exploration in Jupyter notebooks with Claude, developed feature engineering logic together, and deployed to production using Google Cloud Functions. The 'sparring' process—working through problems step by step rather than just getting answers—built the judgment needed to make good decisions."
+  - "No dedicated data science team"
+  - "Must quantify revenue vs. churn tradeoff, not just predict probability"
+  - "Must be production-ready with API access for marketing systems"
+  - "Model selection must be defensible, not arbitrary"
+approach: "Build an end-to-end pipeline that treats model selection and threshold optimization as separate problems. Use AutoML to compare algorithms systematically, then optimize the targeting threshold against expected value—balancing revenue capture against customer churn costs."
 keyDecisions:
-  - decision: "Collaborative development with Claude rather than outsourcing or learning ML from scratch"
-    reasoning: "Traditional path would take months. Pure outsourcing would leave me unable to maintain or improve the system. Collaborative AI development let me build real capability while shipping."
+  - decision: "AutoML (PyCaret + H2O) for model comparison over manual selection"
+    reasoning: "With 19+ viable algorithms, manual comparison is impractical. AutoML provides systematic benchmarking with consistent evaluation metrics, making the model selection defensible."
     alternatives:
-      - "Hire a data science contractor"
-      - "Complete ML bootcamp first"
-      - "Use off-the-shelf scoring tool"
-  - decision: "Deploy on Google Cloud Functions with BigQuery"
-    reasoning: "Serverless reduces operational overhead. BigQuery handles the data scale without infrastructure management. Already familiar with GCP from previous work."
+      - "Manual implementation of top 3-5 algorithms"
+      - "Single algorithm with hyperparameter tuning"
+  - decision: "Blended ensemble for production over single best model"
+    reasoning: "Top models had complementary strengths. Blending XGBoost, CatBoost, and LightGBM improved generalization while reducing variance from any single model's weaknesses."
     alternatives:
-      - "AWS Lambda + Redshift"
-      - "Self-hosted on VPS"
-      - "SaaS ML platform"
+      - "Deploy single best-performing model"
+      - "Stacked ensemble with meta-learner"
+  - decision: "Threshold optimization for expected value over fixed cutoff"
+    reasoning: "A 0.5 probability cutoff is arbitrary. The business cares about maximizing value: revenue from targeting likely buyers minus cost of churning unlikely buyers. Threshold optimization finds the cutoff that maximizes this tradeoff."
+    alternatives:
+      - "Fixed probability threshold (0.5)"
+      - "Precision-recall optimization"
+  - decision: "FastAPI + Streamlit deployment over notebook delivery"
+    reasoning: "Notebooks demonstrate capability but don't create business value. An API enables integration with marketing systems; a dashboard lets non-technical users run scenarios without engineering support."
+    alternatives:
+      - "Jupyter notebook handoff"
+      - "Scheduled batch scoring only"
 techStack:
   - "Python"
+  - "PyCaret"
+  - "H2O AutoML"
+  - "XGBoost"
+  - "CatBoost"
+  - "LightGBM"
   - "scikit-learn"
-  - "Google Cloud Functions"
-  - "BigQuery"
-  - "Go High Level API"
-  - "Jupyter Notebooks"
+  - "MLflow"
+  - "SHAP"
+  - "FastAPI"
+  - "Streamlit"
+  - "Plotly"
+  - "SQLite"
+  - "pandas"
 impact:
   metrics:
-    - label: "Subscribers Scored"
-      value: "20,000+"
-    - label: "Sales Team Efficiency"
-      value: "Focused outreach on top 15% of leads"
-    - label: "Revenue Attribution"
-      value: "Direct impact on closed deals"
-  qualitative: "Transformed an overwhelming subscriber list into actionable priorities. Sales team now has confidence in who to call first. System continues to run in production with minimal maintenance."
+    - label: "Problem Size"
+      value: "$3.65M annual cost of aggressive targeting"
+    - label: "Expected Savings"
+      value: "$88K/month ($1M+/year) at optimized threshold"
+    - label: "Sales Maintained"
+      value: "91% of maximum (stakeholder-acceptable)"
+  qualitative: "Transformed a classification problem into a revenue operations system. The output isn't a probability score—it's a targeting recommendation with explicit business assumptions and a safeguard for organizational adoption."
 learnings:
-  - "Capability loading (AI assistance) is real, but the judgment comes from sparring—working through problems, not just getting answers"
-  - "Production ML is 80% data pipeline, 20% model"
-  - "Starting with exploratory notebooks before committing to architecture saves significant rework"
-  - "You don't need to become a data scientist to build ML systems—you need to know enough to make good decisions"
+  - "ROI modeling before ML code forces the right questions. 'What does this cost?' precedes 'What algorithm should we use?'"
+  - "The safeguard parameter is change management disguised as a model parameter. Mathematical optimality means nothing if stakeholders reject the recommendation."
+  - "Threshold optimization is where ML meets business. Raw predictions aren't decisions; expected value calculations translate probabilities into targeting recommendations."
+  - "Production architecture assumes integration. An API that could connect to Mailchimp or Salesforce is more valuable than a notebook that proves the math works."
 featured: true
 status: completed
-order: 1
-relatedDecisions:
-  - "ai-collaborative-development"
+order: 2
+contentOnly: true
+tldr:
+  summary: "Revenue operations system that transformed a $3M annual problem into $1M+ savings—reframing lead scoring from classification to expected value optimization with change management built in."
+  points:
+    - "<strong>Business Case First:</strong> $3.65M annual cost validated before writing ML code—ROI modeling drives architecture decisions"
+    - "<strong>Expected Value Optimization:</strong> Threshold tuning maximizes business value, not accuracy—balancing revenue capture vs. customer churn"
+    - "<strong>Change Management:</strong> Safeguard parameter maintains 90% of sales to ensure stakeholder adoption"
+    - "<strong>Production System:</strong> FastAPI + Streamlit deployment ready for Mailchimp/Salesforce integration"
 ---
 
-## The Capability Loading Story
+## The Strategic Context
 
-A year before this project, I signed up for a Python ML course. Quit after a few modules—environment setup, package dependencies, technical friction I couldn't resolve. The gap between what I wanted and what I could execute felt permanent.
+This project started with a number: **$3 million**.
 
-Same course, one year later. Claude handled the infrastructure friction. But the real difference wasn't the capability loading—it was the sparring. Working through problems together, debugging together, building understanding rather than just getting answers.
+That's the annual cost of aggressive email marketing for a company with 100,000 subscribers. Every sales email blast—five per month—triggers 500 unsubscribes. At a 5% conversion rate and $2,000 customer lifetime value, that's 125 lost potential customers per month. $250,000 in unrealized revenue. Every month.
 
-I finished the course and built this production system. Not because AI did it for me, but because AI collaboration let me develop the judgment to do it myself.
+The instinct is to fix the messaging. Write better emails. Segment by engagement. But the problem isn't creative—it's structural. Without a model of subscriber value, every targeting decision is a guess. And guesses at this scale cost millions.
+
+### From Classification to Revenue Operations
+
+Most lead scoring projects frame this as classification: predict who will buy, target them, done. But a probability score isn't a business decision.
+
+Should you target someone with a 40% purchase probability? 60%? The answer depends on what you lose when you're wrong. Target a likely buyer who unsubscribes anyway—that's churn you caused. Skip a likely buyer to "protect" them—that's revenue you left on the table.
+
+This project reframes lead scoring as **expected value optimization**: find the targeting threshold that maximizes revenue captured minus customer value destroyed. Not accuracy. Not precision-recall. Business value with explicit assumptions.
+
+### The ROI Model (Before the ML)
+
+Before writing model code, the business case needed validation. The cost simulation framework models:
+
+| Parameter | Value | Source |
+|-----------|-------|--------|
+| Email list size | 100,000 | Current state |
+| Unsubscribe rate | 0.5% per email | Historical data |
+| Sales emails/month | 5 | Marketing cadence |
+| Customer Lifetime Value | $2,000 | Finance estimate |
+| Conversion rate (if nurtured) | 5% | Historical cohort |
+
+These parameters flow into a 12-month cost projection that accounts for list growth (3.5%/month compounding). The output: **$3.65M in annual lost potential revenue** under current operations.
+
+The project goal isn't "build a classifier." It's **reduce that $3.65M by optimizing the revenue-churn tradeoff**.
+
+### The Change Management Reality
+
+Here's what most ML tutorials skip: business leaders react badly to recommendations that tank short-term revenue, even when the math is sound.
+
+The threshold optimization can find the mathematically optimal targeting cutoff. But if that cutoff drops monthly sales by 40% in month one—even with long-term gains—it won't survive the first executive review.
+
+The system includes a **safeguard parameter**: don't recommend thresholds that reduce monthly sales below X% of maximum. Default: 90%. This is a change management feature disguised as a model parameter.
+
+At the 90% safeguard level, the optimized threshold delivers:
+
+| Metric | Value |
+|--------|-------|
+| **Expected Value** | $315,236/month |
+| **Expected Savings** | $88,105/month |
+| **Monthly Sales Maintained** | $227,131 (91% of max) |
+| **Customers Saved** | 55/month |
+
+That's **$1M+ in annual savings** while maintaining sales volume that stakeholders can accept. The safeguard trades mathematical optimality for organizational adoptability.
+
+---
+
+## Pipeline Architecture
+
+The system follows a deliberate progression from data to deployment:
+
+**Data Layer** → Feature engineering from subscriber behavior, transaction history, and engagement patterns. The custom `email_lead_scoring` package handles database queries, feature pipelines, and data transformations consistently across exploration and production.
+
+**Modeling Layer** → AutoML comparison using PyCaret and H2O. Rather than picking an algorithm based on intuition, the pipeline benchmarks 19+ algorithms (XGBoost, CatBoost, LightGBM, Random Forest, Gradient Boosting, etc.) with consistent preprocessing and evaluation. MLflow tracks every experiment—hyperparameters, metrics, artifacts—making model selection auditable.
+
+**Optimization Layer** → Threshold optimization that translates predictions into targeting decisions. The system simulates expected value across 100 threshold points, accounting for:
+- Revenue from targeting subscribers who purchase
+- Cost of churning subscribers who wouldn't have purchased anyway
+- Cost of missing sales by not targeting likely buyers
+- Safeguards to prevent aggressive thresholds that tank short-term revenue
+
+**Deployment Layer** → FastAPI REST API with four endpoints:
+- `GET /get_email_subscribers` — Retrieve processed subscriber data
+- `POST /predict` — Score leads using the production model
+- `POST /calculate_lead_strategy` — Full optimization pipeline with configurable parameters
+- Streamlit dashboard for business users to run scenarios without API calls
+
+### Why This Architecture
+
+The separation matters. The modeling layer answers "who is likely to buy?" The optimization layer answers "who should we target?" These are different questions with different stakeholders.
+
+A data scientist cares about AUC and precision-recall curves. A marketing director cares about "if I target the top 30%, how much revenue do I capture and how many subscribers do I lose?" The optimization layer bridges this gap—it translates model outputs into business recommendations with explicit assumptions.
+
+---
+
+## Business Optimization
+
+The threshold optimization methodology deserves detail because it's where this project differs from typical ML tutorials.
+
+### The Expected Value Framework
+
+For any targeting threshold, the system calculates:
+
+| Component | Calculation |
+|-----------|-------------|
+| **Revenue Captured** | Sales from targeting subscribers who purchase |
+| **Churn Cost Avoided** | Value preserved by NOT targeting unlikely buyers |
+| **Missed Revenue** | Sales lost by not targeting some buyers |
+| **Churn Cost Incurred** | Value lost from targeting and churning non-buyers |
+
+Expected Value = Revenue Captured + Churn Cost Avoided - Missed Revenue - Churn Cost Incurred
+
+The optimal threshold maximizes this value, not classification accuracy.
+
+### Configurable Assumptions
+
+The optimization accepts business parameters rather than hardcoding them:
+
+- `email_list_size` — Scale of the subscriber base
+- `unsub_rate_per_sales_email` — Churn rate from aggressive targeting
+- `avg_customer_value` — Lifetime value of a retained subscriber
+- `customer_conversion_rate` — Baseline conversion probability
+- `monthly_sales_reduction_safe_guard` — Minimum acceptable revenue (prevents over-optimization)
+
+This lets business users explore scenarios: "What if we're more conservative about churn? What if customer value is higher than we assumed?"
+
+### The Safety Guard
+
+One insight from the course this project is based on: business leaders react badly to recommendations that tank short-term revenue, even if the math says it's optimal long-term. The `monthly_sales_reduction_safe_guard` parameter ensures the recommended threshold won't drop monthly sales below a specified percentage of maximum—a pragmatic concession to organizational reality.
+
+---
+
+## From Model to Product
+
+The deployment layer transforms a Jupyter notebook exercise into something a marketing team can use.
+
+### FastAPI Backend
+
+The REST API exposes the full pipeline:
+
+```
+POST /calculate_lead_strategy
+Parameters:
+  - monthly_sales_reduction_safe_gaurd: float (default 0.9)
+  - email_list_size: int (default 100000)
+  - unsub_rate_per_sales_email: float (default 0.005)
+  - avg_sales_per_month: float (default 250000)
+  - customer_conversion_rate: float (default 0.05)
+  - avg_customer_value: float (default 2000)
+
+Returns:
+  - lead_strategy: DataFrame with subscriber scores and Hot/Cold classification
+  - expected_value: Optimal threshold and projected value
+  - thresh_optim_table: Full simulation results for visualization
+```
+
+The API accepts subscriber data as JSON, runs the scoring model, performs threshold optimization with the specified parameters, and returns actionable output—including a downloadable CSV of the targeting strategy.
+
+### Streamlit Dashboard
+
+For users who don't want to call APIs, the Streamlit app provides:
+
+- File upload for subscriber data (CSV)
+- Sliders for business assumptions (monthly sales, safety guard percentage)
+- One-click analysis execution
+- Interactive expected value plot showing the optimization curve
+- Download button for the lead strategy output
+
+The dashboard calls the FastAPI backend, so the logic stays centralized. This separation means the API can serve other integrations (CRM webhooks, batch jobs) without duplicating business logic.
+
+---
+
+## Change Management & Adoption
+
+The hardest part of ML implementation isn't the model. It's getting people to use it.
+
+This system addresses what I call the "politics of AI"—the friction between departmental incentives. Marketing wants to email everyone (more touches = more sales). Finance wants to protect customer lifetime value (fewer touches = less churn). The optimization framework doesn't pick a side; it makes the tradeoff explicit and lets stakeholders negotiate with data instead of opinions.
+
+### From Black Box to Glass Box
+
+SHAP (SHapley Additive exPlanations) values transform the model from "trust me" to "here's why."
+
+When a sales lead asks why a subscriber scored 0.85, the system provides feature importance: "High engagement with pricing page. Attended two webinars. Opened 8 of last 10 emails." When a subscriber scores 0.15: "No webinar attendance. Unsubscribed from newsletter segment. Last open 45 days ago."
+
+This explainability serves three purposes:
+- **Debugging**: When predictions seem wrong, SHAP reveals which features drove the score
+- **Trust**: Stakeholders accept recommendations they can understand
+- **Learning**: Feature importance guides future data collection—if webinar attendance predicts conversion, invest in webinars
+
+### The Dashboard as Collaboration Tool
+
+The Streamlit interface isn't just a delivery mechanism—it's designed for the "Strategic Persona" (Marketing Director, RevOps Lead) to stay in the loop.
+
+The "what-if" scenario capability matters here. When a marketing director adjusts the slider from 90% to 80% sales safeguard and sees expected savings jump from $88K to $120K/month, they're not just receiving a recommendation—they're participating in the decision. The tradeoff becomes visceral.
+
+This is human-in-the-loop for strategy, not just for edge cases.
+
+### The Training Bridge
+
+Adoption doesn't happen at deployment. It happens through structured capability building.
+
+The 30-60-90 Training Plan provides the progression:
+
+| Phase | Focus | This System |
+|-------|-------|-------------|
+| **Days 1-30** | Awareness | What the system does, how scores are calculated, basic dashboard navigation |
+| **Days 31-60** | Application | Running scenarios, interpreting SHAP explanations, adjusting safeguard parameters |
+| **Days 61-90** | Mastery | Connecting outputs to campaign strategy, identifying when to override, training others |
+
+The system is designed to support this progression. Early users get clear scores and recommendations. Intermediate users get scenario tools. Advanced users get the explainability layer to challenge and refine.
+
+---
+
+## Technical Foundation
+
+### Model Selection
+
+The PyCaret AutoML comparison evaluated 19+ algorithms:
+
+- **Gradient Boosting**: XGBoost, CatBoost, LightGBM
+- **Tree-based**: Random Forest, Extra Trees, Decision Tree
+- **Linear**: Logistic Regression, Ridge Classifier
+- **Other**: SVM, KNN, Naive Bayes, Quadratic Discriminant Analysis
+
+The production model is a blended ensemble of top performers, tracked and versioned in MLflow. The selection is defensible: "We tested 19 algorithms and this ensemble performed best on holdout data."
+
+### Package Architecture
+
+The `email_lead_scoring/` package organizes reusable functions:
+
+- `database.py` — Data loading and SQL queries
+- `cost_calculations.py` — ROI modeling and cost simulation
+- `modeling.py` — Model scoring functions
+- `lead_strategy.py` — Threshold optimization logic
+- `exploratory.py` — EDA utilities
+
+This structure means the same code runs in notebooks, API endpoints, and scheduled jobs without duplication. When the model improves, one update propagates everywhere.
+
+---
+
+## Related Content
+
+{/* TODO: Link to playbook pages when created
+- **Change Management**: [30-60-90 Training Plan](/playbook/change-management) for structured adoption
+- **ROI Methodology**: [AI ROI Calculator](/playbook/roi) for business case validation
+*/}
+- **Source**: Based on DS4B 201-P from Business Science University, extended with production deployment and adoption scaffolding
