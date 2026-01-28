@@ -1,12 +1,51 @@
 # Site Positioning & Content Architecture
 
-**Core positioning:** Domain expertise demonstrated through implementation. Platform knowledge signaling enterprise readiness. Content that attracts hiring managers and clients, not just fellow practitioners.
+**Core positioning:** Practitioner who's built the systems, positioned to lead adoption at scale. Technical enough to evaluate solutions and build PoCs. Strategic enough to drive organizational change.
+
+**The differentiator:** Not an AI researcher. Not a developer. Not a pure strategist. The intersection—with change management as the throughline.
+
+---
+
+## Target Role Clusters
+
+The site targets three overlapping role types:
+
+| Cluster | Example Roles | What They Want | Site Signal |
+|---------|--------------|----------------|-------------|
+| **AI Enablement** | KPMG AI Initiatives, Ford AI Integrations, AI Enablement Coach | Change management, adoption, training, governance | Playbook + Notes |
+| **CRM/MarTech Strategy** | Deloitte CRM Strategist, Marketing Technology PM | Journey orchestration, personalization, multi-channel | Projects (CRM) |
+| **Technical Program Management** | Ford Manager AI Integrations (hybrid) | PoC development, build vs buy, business cases | Projects (AI) + Analysis |
+
+**Common thread across all clusters:** Change management. Every target role emphasizes getting organizations to adopt technology, not just building it. The technical bar is "can build PoCs and evaluate solutions"—not "AI engineer."
+
+---
+
+## Domain Experience (Actual, Not Researched)
+
+**Career pattern: Multi-location operations.** This is the throughline, not a one-job detail.
+
+| Role | Domain | Scale | Relevance |
+|------|--------|-------|-----------|
+| Marketing Director | Hospitality (bars & restaurants) | 7 locations | Distributed teams, location-specific marketing |
+| Operations/Marketing Leadership | PE-backed retail (flooring) | 50 locations, $100M+ portfolio | Enterprise scale, franchise-like complexity |
+| Adjacent | Home services (builder business) | Service operations | Consumer-facing, field coordination |
+
+**Why this matters for target roles:**
+- **Ford** - Dealer networks are multi-location operations
+- **Deloitte CRM** - Retail and hospitality are both client verticals
+- **Any enterprise role** - Franchise-like complexity, location-specific personalization, distributed team adoption
+
+**Framing principle:** Lead with the pattern ("multi-location operations across retail and hospitality"), not one job's metrics ("$100M portfolio").
+
+**Domains researched** (from WKM case studies): Legal AI, Finance AI, Healthcare AI, Manufacturing AI, Retail ML
+
+**Domains researched** (from WKM case studies): Legal AI, Finance AI, Healthcare AI, Manufacturing AI, Retail ML
 
 ---
 
 ## Content Architecture
 
-Three content types work together to demonstrate competence for AI transformation roles.
+Four content types work together to demonstrate competence across all three role clusters.
 
 ### Analysis → Strategic Landscape
 
@@ -24,6 +63,29 @@ Three content types work together to demonstrate competence for AI transformatio
 - Tool-specific tutorials
 
 **Hiring signal:** AI Strategy & Advisory, Executive Communication
+**Target cluster:** Technical Program Management, AI Enablement
+
+### Playbook → Methodology & Tools
+
+**Purpose:** "I have a repeatable process for driving adoption"
+
+**What belongs here:**
+- Change management methodology and frameworks
+- Tools for each phase (templates, calculators, checklists)
+- Adoption playbooks with metrics
+- Process discovery and ROI modeling approaches
+
+**What doesn't belong:**
+- Domain-specific strategy (goes in Analysis)
+- Project-specific implementation (goes in Projects)
+
+**Hiring signal:** Change Management, Adoption Leadership, Methodology
+**Target cluster:** AI Enablement (primary), all clusters (secondary)
+
+**Subpages planned:**
+- `/playbook/change-management` - CM tools, stakeholder mapping, resistance patterns
+- `/playbook/process-discovery` - Current state assessment, automation candidates
+- `/playbook/roi-modeling` - Business case frameworks, TCO models
 
 ### Projects → Technical Proof
 
@@ -40,6 +102,12 @@ Three content types work together to demonstrate competence for AI transformatio
 - Theoretical frameworks without proof points
 
 **Hiring signal:** PoC Development, Technical Credibility
+**Target cluster:** Technical Program Management, CRM/MarTech Strategy
+
+**Project coverage needed:**
+- AI projects (Contract Review Prototype) → AI Enablement roles
+- CRM/MarTech projects (Lead Routing, Marketing Automation) → CRM Strategy roles
+- Integration projects (BigQuery/GCP work) → Technical PM roles
 
 ### Notes → Continuous Engagement
 
@@ -48,7 +116,7 @@ Three content types work together to demonstrate competence for AI transformatio
 **What belongs here:**
 - Specific insights pulled from analysis or projects
 - Implementation learnings ("Why hybrid search matters for legal text")
-- Observations that don't warrant full articles
+- Change management observations (Westerman's Risk Slope)
 - Links back to related analysis or projects
 
 **What doesn't belong:**
@@ -56,36 +124,37 @@ Three content types work together to demonstrate competence for AI transformatio
 - Complete project documentation (goes in Projects)
 
 **Hiring signal:** Thought Leadership, Depth of Understanding
+**Target cluster:** All clusters
 
 ---
 
 ## Content Relationship Pattern
 
-For each domain (Legal AI, Finance AI, etc.), the content flows:
+Content links bidirectionally. For the Legal AI domain:
 
 ```
 Analysis: "Legal AI Roadmap"
-├── Strategic landscape
-├── Architecture decisions at 30,000 ft
-├── Organizational implications
-└── Links to → Project
-
-Project: "/contract-review-demo"
-├── Working implementation
-├── Technical README with:
-│   ├── Configuration choices
-│   ├── Evaluation metrics
-│   └── Trade-off rationale
-└── Links back to → Analysis
-
-Notes: (2-3 pieces)
-├── "Why hybrid search matters for legal text"
-├── "The citation verification problem"
-└── Links to both Analysis and Project
+├── Strategic landscape, architecture at 30,000 ft
+├── Links to → Project, Playbook
+│
+Playbook: "/playbook" (methodology)
+├── Change management frameworks
+├── Tools for each phase
+├── Links to → Analysis (why), Projects (proof)
+│
+Project: "/contract-review-prototype"
+├── Working implementation with outcomes
+├── Technical decisions with rationale
+├── Links to → Analysis, Notes
+│
+Notes: "Westerman's Risk Slope"
+├── Specific insight (accuracy baseline = adoption gate)
+├── Links to → Project
 ```
 
-**This architecture tells hiring managers:**
+**What this tells hiring managers:**
 - Analysis → "Thinks strategically about AI in [domain]"
+- Playbook → "Has methodology for driving adoption"
 - Project → "Can actually build it"
 - Notes → "Engages continuously with details"
 
@@ -172,6 +241,71 @@ The target audience—Big 4 consultants, Fortune 1000 hiring managers, mid-marke
 - AWS SAA + Azure AI certifications in progress
 - Production implementations: lead scoring system, client sites, knowledge management architecture
 - Transformation playbook synthesized from 5+ primary sources
+- Multi-location retail transformation (50 locations, $100M portfolio)
+
+---
+
+## Projects from Actual Experience
+
+The site currently only has AI projects. To cover all three target role clusters, add CRM/MarTech projects from PE/flooring experience.
+
+### Project: Contract Review Prototype (exists)
+**Cluster:** AI Enablement, Technical PM
+**Frame:** Strategic prototype validating Legal AI Roadmap methodology
+**Key signals:** Azure AI services, LangGraph orchestration, accuracy baseline, change management (Westerman)
+
+### Project: Marketing Automation Architecture (to create)
+**Cluster:** CRM/MarTech Strategy
+**Source:** GHL implementation for multi-location retail
+**Frame:** "Built marketing technology stack for 50-location retail network"
+**Key signals:**
+- Multi-location complexity (franchise-like operations)
+- Lead routing across locations (200+ daily leads)
+- Journey orchestration at scale
+- Integration architecture (not tool-specific)
+
+**Wrong frame:** "I implemented Go High Level"
+**Right frame:** "I architected a marketing automation system handling 200+ daily leads across 50 retail locations with real-time routing, multi-channel campaigns, and location-specific personalization."
+
+### Project: ML-Powered Lead Scoring (to create)
+**Cluster:** Technical PM, CRM/MarTech
+**Source:** BigQuery/GCP work, subscriber segmentation
+**Frame:** "Data pipeline and ML segmentation for 20K+ subscriber base"
+**Key signals:**
+- GCP/BigQuery (enterprise platform)
+- Predictive segmentation
+- Data quality and pipeline architecture
+- Business outcome (conversion improvement)
+
+**Wrong frame:** "I built a lead scoring system for myself"
+**Right frame:** "I built an ML pipeline that segments 20K+ subscribers by engagement patterns and purchase propensity, enabling targeted campaigns with measurable conversion lift."
+
+### Project: Process Automation Portfolio (optional)
+**Cluster:** Technical PM
+**Source:** Various automation work (Cloud Functions, API integrations)
+**Frame:** Collection of automation patterns with business outcomes
+**Key signals:**
+- API integration patterns
+- Cloud Functions / serverless
+- Measurable efficiency gains
+
+---
+
+## Platform Positioning
+
+**Emphasize (enterprise):**
+- Azure AI services (OpenAI, Document Intelligence, AI Search)
+- GCP (BigQuery, Cloud Functions)
+- AWS (when certified)
+- M365 / Copilot ecosystem
+- CRM architecture (platform-agnostic framing)
+
+**De-emphasize (SMB-coded):**
+- Go High Level by name (frame as "marketing automation architecture")
+- Tool-specific tutorials
+- SMB-scale examples
+
+---
 
 ### Build: Three Content Pillars
 

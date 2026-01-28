@@ -175,6 +175,7 @@ Short-form insights that highlight specific aspects of analysis or projects.
 title: "Note Title"
 date: 2025-01-15  # YYYY-MM-DD format
 relatedAnalysis: "analysis-slug"  # optional, links to related analysis
+relatedProject: "project-slug"  # optional, links to related project
 tags:  # optional
   - "tag1"
   - "tag2"
@@ -227,14 +228,22 @@ draft: false  # boolean, optional
 
 See `positioning.md` for full strategy. Key points:
 
-**Positioning:** Domain expertise demonstrated through implementation. Content for hiring managers and clients, not just practitioners.
+**Core positioning:** Practitioner who's built the systems, positioned to lead adoption at scale. Technical enough to build PoCs, strategic enough to drive organizational change. Change management is the throughline.
+
+**Target role clusters:**
+
+| Cluster | Example Roles | Site Signal |
+|---------|--------------|-------------|
+| **AI Enablement** | KPMG AI Initiatives, Ford AI Integrations | Playbook + Contract Review + Notes |
+| **CRM/MarTech Strategy** | Deloitte CRM Strategist | CRM/Marketing Automation projects |
+| **Technical Program Management** | Ford Manager (hybrid) | All projects + Analysis |
 
 **Content architecture (Analysis / Playbook / Projects / Notes):**
 
 | Type | Purpose | What Belongs | Hiring Signal |
 |------|---------|--------------|---------------|
 | **Analysis** | "I understand the domain" | Strategic landscape, 30k ft architecture, org implications | AI Strategy & Advisory |
-| **Playbook** | "I have a repeatable process" | Methodology phases, tools, templates | Implementation Readiness |
+| **Playbook** | "I have a repeatable process" | Methodology phases, tools, templates | Change Management, Adoption |
 | **Projects** | "I can build it" | Working implementations, technical READMEs, demos | PoC Development |
 | **Notes** | "I'm in the details" | Specific insights, implementation learnings, observations | Thought Leadership |
 
@@ -246,7 +255,7 @@ See `positioning.md` for full strategy. Key points:
 - Don't write Notes that should be full Analysis articles
 
 **Target audiences:**
-- Hiring managers for AI transformation roles
+- Hiring managers for AI transformation roles (Big 4, Fortune 1000, mid-market)
 - Potential consulting clients
 - Peers (secondary)
 
