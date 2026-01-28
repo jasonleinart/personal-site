@@ -98,7 +98,10 @@ const projectsCollection = defineCollection({
     
     /** Project status */
     status: z.enum(['completed', 'ongoing', 'archived']).default('completed'),
-    
+
+    /** Use MDX content only, skip template sections */
+    contentOnly: z.boolean().optional(),
+
     /** Custom sort order (lower numbers first) */
     order: z.number().optional(),
     
@@ -358,6 +361,49 @@ const testimonialsCollection = defineCollection({
 });
 
 /**
+ * Playbook Collection
+ *
+ * Methodology phases with tool showcases. Each entry represents a phase
+ * of the AI transformation methodology with associated tools and templates.
+ *
+ * Features:
+ * - Phase ordering for navigation
+ * - Tool showcases with descriptions
+ * - Links to related analysis articles
+ * - SEO metadata
+ */
+const playbookCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/playbook' }),
+  schema: z.object({
+    /** Phase title */
+    title: z.string(),
+
+    /** Phase description for SEO and previews */
+    description: z.string(),
+
+    /** Phase number for ordering (1-5) */
+    phase: z.number(),
+
+    /** Brief summary shown in playbook overview */
+    summary: z.string(),
+
+    /** Tools and templates used in this phase */
+    tools: z.array(z.object({
+      name: z.string(),
+      description: z.string(),
+      /** Tool type for categorization */
+      type: z.enum(['template', 'calculator', 'framework', 'checklist', 'dashboard']).optional(),
+    })).optional(),
+
+    /** Related analysis article slugs */
+    relatedAnalysis: z.array(z.string()).optional(),
+
+    /** Whether the phase page is a draft */
+    draft: z.boolean().default(false),
+  }),
+});
+
+/**
  * Notes Collection
  *
  * Short-form content that highlights specific aspects of analysis articles.
@@ -404,4 +450,5 @@ export const collections = {
   speaking: speakingCollection,
   testimonials: testimonialsCollection,
   notes: notesCollection,
+  playbook: playbookCollection,
 };

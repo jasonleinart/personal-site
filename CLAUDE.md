@@ -186,6 +186,30 @@ draft: false  # boolean, optional
 - Link back to related Analysis or Project when applicable
 - Use for observations that don't warrant full articles
 
+### Playbook (`src/content/playbook/`)
+Methodology phases with tool showcases. Each entry represents a phase of the AI transformation methodology.
+
+**Required frontmatter:**
+```yaml
+title: "Phase Title"
+description: "Phase description for SEO"
+phase: 1  # Phase number (1-5) for ordering
+summary: "Brief summary shown in playbook overview"
+tools:  # optional
+  - name: "Tool Name"
+    description: "What this tool does"
+    type: template  # MUST be: template | calculator | framework | checklist | dashboard
+relatedAnalysis:  # optional
+  - "analysis-slug"
+draft: false  # boolean, optional
+```
+
+**Content guidelines:**
+- Focus on methodology and process ("how I do it")
+- Showcase specific tools with practical descriptions
+- Link to Analysis articles for strategic context ("why it works")
+- Keep tactical and actionable
+
 ## Common Mistakes to Avoid
 
 1. **Enum values are strict:**
@@ -205,15 +229,16 @@ See `positioning.md` for full strategy. Key points:
 
 **Positioning:** Domain expertise demonstrated through implementation. Content for hiring managers and clients, not just practitioners.
 
-**Content architecture (Analysis / Projects / Notes):**
+**Content architecture (Analysis / Playbook / Projects / Notes):**
 
 | Type | Purpose | What Belongs | Hiring Signal |
 |------|---------|--------------|---------------|
 | **Analysis** | "I understand the domain" | Strategic landscape, 30k ft architecture, org implications | AI Strategy & Advisory |
+| **Playbook** | "I have a repeatable process" | Methodology phases, tools, templates | Implementation Readiness |
 | **Projects** | "I can build it" | Working implementations, technical READMEs, demos | PoC Development |
 | **Notes** | "I'm in the details" | Specific insights, implementation learnings, observations | Thought Leadership |
 
-**Content relationship:** For each domain, Analysis provides strategy → Project proves implementation → Notes pull out specific insights. They link to each other.
+**Content relationship:** Analysis provides strategic "why" → Playbook shows methodological "how" → Projects prove execution → Notes pull out specific insights. They link to each other bidirectionally.
 
 **What NOT to do:**
 - Don't put implementation details in Analysis (goes in Project README)

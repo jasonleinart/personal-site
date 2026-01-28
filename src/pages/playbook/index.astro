@@ -1,19 +1,25 @@
 ---
 /**
- * AI Transformation Playbook
+ * AI Transformation Playbook - Main Overview
  *
  * Systems-thinking approach to intelligent operations.
  * Outlines frameworks and methodology for enterprise AI transformation.
+ * Links to detailed phase subpages.
  *
- * Route: /ai-transformation-playbook
+ * Route: /playbook
  *
  * @page
  */
 
-import PageLayout from '../layouts/PageLayout.astro';
-import SEO from '../components/SEO.astro';
-import StructuredData from '../components/StructuredData.astro';
-import TableOfContents from '../components/TableOfContents.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import SEO from '../../components/SEO.astro';
+import StructuredData from '../../components/StructuredData.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import { getCollection } from 'astro:content';
+
+// Get playbook phases for linking
+const phases = await getCollection('playbook', ({ data }) => !data.draft);
+const sortedPhases = phases.sort((a, b) => a.data.phase - b.data.phase);
 
 // Define headings for table of contents
 const headings = [
@@ -124,6 +130,9 @@ const headings = [
         <div class="phase-content">
           <h3>Discovery</h3>
           <p>Mapping the human mess. We use yesterday interviews to identify where tribal knowledge acts as a bottleneck.</p>
+          {sortedPhases.find(p => p.data.phase === 1) && (
+            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 1)?.id}`} class="phase-link">View methodology & tools →</a>
+          )}
         </div>
       </div>
 
@@ -132,6 +141,9 @@ const headings = [
         <div class="phase-content">
           <h3>Opportunity Assessment</h3>
           <p>Applying the build vs. buy framework to navigate the total cost of ownership for custom builds versus vendor-delivered AI.</p>
+          {sortedPhases.find(p => p.data.phase === 2) && (
+            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 2)?.id}`} class="phase-link">View methodology & tools →</a>
+          )}
         </div>
       </div>
 
@@ -140,6 +152,9 @@ const headings = [
         <div class="phase-content">
           <h3>Architecture</h3>
           <p>Implementing the five-layer AI core—Data, Intelligence, Orchestration, Integration, and Command Center—through quick-win projects.</p>
+          {sortedPhases.find(p => p.data.phase === 3) && (
+            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 3)?.id}`} class="phase-link">View methodology & tools →</a>
+          )}
         </div>
       </div>
 
@@ -148,6 +163,9 @@ const headings = [
         <div class="phase-content">
           <h3>Change Management</h3>
           <p>Focusing on organizational readiness. We move teams from skeptical to fluent through adoption-focused training.</p>
+          {sortedPhases.find(p => p.data.phase === 4) && (
+            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 4)?.id}`} class="phase-link">View methodology & tools →</a>
+          )}
         </div>
       </div>
 
@@ -156,6 +174,9 @@ const headings = [
         <div class="phase-content">
           <h3>Measurement</h3>
           <p>Tracking actual ROI and focus-hours recaptured through custom command center dashboards.</p>
+          {sortedPhases.find(p => p.data.phase === 5) && (
+            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 5)?.id}`} class="phase-link">View methodology & tools →</a>
+          )}
         </div>
       </div>
     </div>
@@ -322,7 +343,18 @@ const headings = [
   }
 
   .phase-content p {
-    margin-bottom: 0;
+    margin-bottom: var(--space-sm);
+  }
+
+  .phase-link {
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .phase-link:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 768px) {

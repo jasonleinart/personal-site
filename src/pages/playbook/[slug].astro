@@ -1,0 +1,369 @@
+---
+/**
+ * Playbook Phase Detail Page
+ *
+ * Dynamic route that displays a playbook phase with methodology details,
+ * tool showcases, and links to related analysis articles.
+ *
+ * Features:
+ * - MDX content rendering
+ * - Tool showcase cards
+ * - Related analysis links
+ * - Navigation back to main playbook
+ *
+ * Route: /playbook/[slug]
+ *
+ * @page
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import StructuredData from '../../components/StructuredData.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import ScrollToTop from '../../components/ScrollToTop.astro';
+import BackLink from '../../components/BackLink.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+
+/**
+ * Generates static paths for all playbook phases
+ */
+export async function getStaticPaths() {
+  const phases = await getCollection('playbook', ({ data }) => {
+    return data.draft === false;
+  });
+  return phases.map((phase) => ({
+    params: { slug: phase.id },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const phase = await getEntry('playbook', slug!);
+
+if (!phase) {
+  return Astro.redirect('/404');
+}
+
+const { Content, headings } = await render(phase);
+
+const {
+  title,
+  description,
+  phase: phaseNumber,
+  summary,
+  tools,
+  relatedAnalysis,
+} = phase.data;
+
+// Get related analysis articles if specified
+let relatedArticles: any[] = [];
+if (relatedAnalysis && relatedAnalysis.length > 0) {
+  const allAnalysis = await getCollection('analysis');
+  relatedArticles = allAnalysis.filter(a => relatedAnalysis.includes(a.id));
+}
+
+// Tool type labels
+const toolTypeLabels: Record<string, string> = {
+  template: 'Template',
+  calculator: 'Calculator',
+  framework: 'Framework',
+  checklist: 'Checklist',
+  dashboard: 'Dashboard',
+};
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={`${title} - AI Transformation Playbook`}
+    description={description}
+    type="article"
+  />
+
+  <StructuredData
+    type="Article"
+    data={{
+      title: `${title} - AI Transformation Playbook`,
+      description,
+      url: Astro.url.href,
+    }}
+  />
+
+  <main class="phase-page">
+    <!-- Phase Header -->
+    <header class="phase-header">
+      <div class="phase-badge">Phase {phaseNumber}</div>
+      <h1>{title}</h1>
+      <p class="phase-summary">{summary}</p>
+    </header>
+
+    <!-- Table of Contents -->
+    <TableOfContents headings={headings} />
+
+    <!-- Phase Content -->
+    <article class="phase-content">
+      <Content />
+    </article>
+
+    <!-- Tools Section -->
+    {tools && tools.length > 0 && (
+      <section class="tools-section">
+        <h2>Tools & Templates</h2>
+        <div class="tools-grid">
+          {tools.map((tool) => (
+            <div class="tool-card">
+              {tool.type && (
+                <span class="tool-type">{toolTypeLabels[tool.type] || tool.type}</span>
+              )}
+              <h3>{tool.name}</h3>
+              <p>{tool.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Related Analysis -->
+    {relatedArticles.length > 0 && (
+      <section class="related-section">
+        <h2>Strategic Context</h2>
+        <p class="related-intro">Deep-dive analysis supporting this methodology:</p>
+        <div class="related-links">
+          {relatedArticles.map((article) => (
+            <a href={`/analysis/${article.id}`} class="related-link">
+              <span class="related-title">{article.data.title}</span>
+              <span class="related-description">{article.data.description}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <BackLink href="/playbook" text="Back to Playbook" />
+  </main>
+
+  <ScrollToTop />
+
+  <style>
+    .phase-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .phase-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      background: rgba(201, 132, 116, 0.15);
+      padding: 0.375rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .phase-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .phase-summary {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Content styles */
+    .phase-content {
+      font-size: 1.125rem;
+      line-height: 1.7;
+      color: var(--color-text);
+      margin-bottom: 3rem;
+    }
+
+    .phase-content :global(h2) {
+      font-size: 1.75rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .phase-content :global(h3) {
+      font-size: 1.375rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .phase-content :global(p) {
+      margin-bottom: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .phase-content :global(ul),
+    .phase-content :global(ol) {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .phase-content :global(li) {
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
+    }
+
+    .phase-content :global(strong) {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .phase-content :global(a) {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+
+    /* Tools Section */
+    .tools-section {
+      margin-bottom: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .tools-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    .tools-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .tool-card {
+      padding: 1.25rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+    }
+
+    .tool-type {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-accent-secondary);
+      background: rgba(74, 153, 97, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      margin-bottom: 0.75rem;
+    }
+
+    .tool-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .tool-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Related Section */
+    .related-section {
+      margin-bottom: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .related-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .related-intro {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .related-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .related-link {
+      display: block;
+      padding: 1.25rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .related-link:hover {
+      border-color: var(--color-accent);
+    }
+
+    .related-title {
+      display: block;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .related-description {
+      display: block;
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .phase-page {
+        padding: 1.5rem 1rem;
+      }
+
+      .phase-header h1 {
+        font-size: 2rem;
+      }
+
+      .phase-summary {
+        font-size: 1.125rem;
+      }
+
+      .phase-content {
+        font-size: 1rem;
+      }
+
+      .phase-content :global(h2) {
+        font-size: 1.5rem;
+      }
+
+      .phase-content :global(h3) {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</BaseLayout>

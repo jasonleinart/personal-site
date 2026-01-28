@@ -39,6 +39,7 @@ import ScrollToTop from '../../components/ScrollToTop.astro';
 import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import ImpactMetrics from '../../components/ImpactMetrics.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 
@@ -71,7 +72,7 @@ if (!project) {
 }
 
 // Render the content (v6-compatible method)
-const { Content } = await render(project);
+const { Content, headings } = await render(project);
 
 const {
   title,
@@ -91,6 +92,7 @@ const {
   relatedProjects,
   relatedDecisions,
   status,
+  contentOnly,
 } = project.data;
 
 // Status display configuration
@@ -118,6 +120,22 @@ const allText = [
   project.body || '',
 ].join(' ');
 const readingTime = formatReadingTime(calculateReadingTime(allText));
+
+/**
+ * Combines frontmatter section headings with MDX content headings
+ * for a complete table of contents
+ */
+const frontmatterHeadings = [
+  { depth: 2, text: 'Overview', slug: 'overview' },
+  { depth: 2, text: 'Problem', slug: 'problem' },
+  { depth: 2, text: 'Constraints', slug: 'constraints' },
+  { depth: 2, text: 'Approach', slug: 'approach' },
+  { depth: 2, text: 'Key Decisions', slug: 'key-decisions' },
+  { depth: 2, text: 'Tech Stack', slug: 'tech-stack' },
+  { depth: 2, text: 'Result & Impact', slug: 'result-impact' },
+  { depth: 2, text: 'Learnings', slug: 'learnings' },
+];
+const allHeadings = [...frontmatterHeadings, ...headings];
 ---
 
 <BaseLayout>
@@ -173,91 +191,101 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       <p class="outcome-summary">{outcomeSummary}</p>
     </header>
 
-    <!-- Overview Section -->
-    <section class="case-study-section">
-      <h2>Overview</h2>
-      <p>{overview}</p>
-    </section>
+    <!-- Table of Contents (for MDX content when contentOnly) -->
+    {contentOnly && <TableOfContents headings={headings} />}
 
-    <!-- Problem Section -->
-    <section class="case-study-section">
-      <h2>Problem</h2>
-      <p>{problem}</p>
-    </section>
+    {!contentOnly && (
+      <>
+        <!-- Table of Contents -->
+        <TableOfContents headings={allHeadings} />
 
-    <!-- Constraints Section -->
-    <section class="case-study-section">
-      <h2>Constraints</h2>
-      <ul class="constraints-list">
-        {constraints.map((constraint) => (
-          <li>{constraint}</li>
-        ))}
-      </ul>
-    </section>
+        <!-- Overview Section -->
+        <section class="case-study-section">
+          <h2 id="overview">Overview</h2>
+          <p>{overview}</p>
+        </section>
 
-    <!-- Approach Section -->
-    <section class="case-study-section">
-      <h2>Approach</h2>
-      <p>{approach}</p>
-    </section>
+        <!-- Problem Section -->
+        <section class="case-study-section">
+          <h2 id="problem">Problem</h2>
+          <p>{problem}</p>
+        </section>
 
-    <!-- Key Decisions Section -->
-    <section class="case-study-section">
-      <h2>Key Decisions</h2>
-      <div class="decisions-list">
-        {keyDecisions.map((decision) => (
-          <div class="decision-item">
-            <h3 class="decision-title">{decision.decision}</h3>
-            <div class="decision-reasoning">
-              <strong>Reasoning:</strong>
-              <p>{decision.reasoning}</p>
-            </div>
-            {decision.alternatives && decision.alternatives.length > 0 && (
-              <div class="decision-alternatives">
-                <strong>Alternatives considered:</strong>
-                <ul>
-                  {decision.alternatives.map((alt) => (
-                    <li>{alt}</li>
-                  ))}
-                </ul>
+        <!-- Constraints Section -->
+        <section class="case-study-section">
+          <h2 id="constraints">Constraints</h2>
+          <ul class="constraints-list">
+            {constraints.map((constraint) => (
+              <li>{constraint}</li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Approach Section -->
+        <section class="case-study-section">
+          <h2 id="approach">Approach</h2>
+          <p>{approach}</p>
+        </section>
+
+        <!-- Key Decisions Section -->
+        <section class="case-study-section">
+          <h2 id="key-decisions">Key Decisions</h2>
+          <div class="decisions-list">
+            {keyDecisions.map((decision) => (
+              <div class="decision-item">
+                <h3 class="decision-title">{decision.decision}</h3>
+                <div class="decision-reasoning">
+                  <strong>Reasoning:</strong>
+                  <p>{decision.reasoning}</p>
+                </div>
+                {decision.alternatives && decision.alternatives.length > 0 && (
+                  <div class="decision-alternatives">
+                    <strong>Alternatives considered:</strong>
+                    <ul>
+                      {decision.alternatives.map((alt) => (
+                        <li>{alt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </section>
 
-    <!-- Tech Stack Section -->
-    <section class="case-study-section">
-      <h2>Tech Stack</h2>
-      <ul class="tech-stack-list">
-        {techStack.map((tech) => (
-          <li>{tech}</li>
-        ))}
-      </ul>
-    </section>
+        <!-- Tech Stack Section -->
+        <section class="case-study-section">
+          <h2 id="tech-stack">Tech Stack</h2>
+          <ul class="tech-stack-list">
+            {techStack.map((tech) => (
+              <li>{tech}</li>
+            ))}
+          </ul>
+        </section>
 
-    <!-- Result/Impact Section -->
-    <section class="case-study-section">
-      <h2>Result & Impact</h2>
-      
-      {/* Display metrics with visualization */}
-      {impact.metrics && impact.metrics.length > 0 && (
-        <ImpactMetrics metrics={impact.metrics} />
-      )}
-      
-      <p class="impact-qualitative">{impact.qualitative}</p>
-    </section>
+        <!-- Result/Impact Section -->
+        <section class="case-study-section">
+          <h2 id="result-impact">Result & Impact</h2>
 
-    <!-- Learnings Section -->
-    <section class="case-study-section">
-      <h2>Learnings</h2>
-      <ul class="learnings-list">
-        {learnings.map((learning) => (
-          <li>{learning}</li>
-        ))}
-      </ul>
-    </section>
+          {/* Display metrics with visualization */}
+          {impact.metrics && impact.metrics.length > 0 && (
+            <ImpactMetrics metrics={impact.metrics} />
+          )}
+
+          <p class="impact-qualitative">{impact.qualitative}</p>
+        </section>
+
+        <!-- Learnings Section -->
+        <section class="case-study-section">
+          <h2 id="learnings">Learnings</h2>
+          <ul class="learnings-list">
+            {learnings.map((learning) => (
+              <li>{learning}</li>
+            ))}
+          </ul>
+        </section>
+      </>
+    )}
 
     <!-- Additional MDX Content (if any) -->
     {Content && (
@@ -398,16 +426,17 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     .decision-item {
       padding: 1.5rem;
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      background: var(--color-bg-secondary);
+      border: 1px solid rgba(201, 132, 116, 0.3);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 0 8px 8px 0;
+      background: rgba(201, 132, 116, 0.05);
     }
 
     .decision-title {
       font-size: 1.25rem;
       font-weight: 600;
       margin-bottom: 1rem;
-      color: var(--color-text);
+      color: var(--color-accent);
     }
 
     .decision-reasoning,
@@ -464,6 +493,189 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       font-size: 1.0625rem;
       line-height: 1.7;
       color: var(--color-text-secondary);
+    }
+
+    /* MDX Content Styles */
+    .case-study-content :global(h2) {
+      font-size: 1.75rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--color-text);
+    }
+
+    .case-study-content :global(h3) {
+      font-size: 1.375rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .case-study-content :global(p) {
+      margin-bottom: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .case-study-content :global(ul),
+    .case-study-content :global(ol) {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .case-study-content :global(li) {
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
+    }
+
+    .case-study-content :global(strong) {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .case-study-content :global(hr) {
+      margin: 3rem 0;
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .case-study-content :global(a) {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+
+    .case-study-content :global(a:hover) {
+      color: var(--color-accent-hover);
+    }
+
+    /* Table styles with terracotta accents */
+    .case-study-content :global(table) {
+      width: 100%;
+      margin: 2rem 0;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+
+    .case-study-content :global(thead) {
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    .case-study-content :global(th) {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--color-text);
+      background: rgba(201, 132, 116, 0.08);
+    }
+
+    .case-study-content :global(td) {
+      padding: 0.875rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .case-study-content :global(tr:hover td) {
+      background: rgba(201, 132, 116, 0.04);
+    }
+
+    .case-study-content :global(th:first-child),
+    .case-study-content :global(td:first-child) {
+      border-left: 3px solid var(--color-accent);
+      padding-left: 1rem;
+    }
+
+    /* Key Insight callout styles */
+    .case-study-content :global(.key-insight) {
+      margin: 1.5rem 0 2rem;
+      padding: 1rem 1.25rem;
+      background: rgba(201, 132, 116, 0.08);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .case-study-content :global(.key-insight strong) {
+      color: var(--color-accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Demo link button styles */
+    .case-study-content :global(.demo-link) {
+      display: inline-block;
+      padding: 0.875rem 1.5rem;
+      background: rgba(201, 132, 116, 0.1);
+      border: 1px solid var(--color-accent);
+      border-radius: 6px;
+      color: var(--color-accent);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin: 1rem 0;
+    }
+
+    .case-study-content :global(.demo-link:hover) {
+      background: rgba(201, 132, 116, 0.2);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    /* Decision cards in MDX content */
+    .case-study-content :global(.decision-card) {
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(201, 132, 116, 0.3);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 0 8px 8px 0;
+      background: rgba(201, 132, 116, 0.05);
+    }
+
+    .case-study-content :global(.decision-card h3) {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem 0;
+      color: var(--color-accent);
+    }
+
+    .case-study-content :global(.decision-card p) {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* Code blocks */
+    .case-study-content :global(code) {
+      font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
+      font-size: 0.9em;
+      background: var(--color-bg-secondary);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      color: var(--color-text);
+    }
+
+    .case-study-content :global(pre) {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .case-study-content :global(pre code) {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+      line-height: 1.6;
     }
 
     @media (max-width: 768px) {
