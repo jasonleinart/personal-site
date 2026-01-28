@@ -427,6 +427,9 @@ const notesCollection = defineCollection({
     /** Note title */
     title: z.string(),
 
+    /** Brief description/abstract for card display */
+    description: z.string().optional(),
+
     /** Publication date */
     date: z.coerce.date(),
 
