@@ -14,6 +14,7 @@ Personal portfolio site for Jason Leinart built with Astro using the "Case" them
 - `src/content.config.ts` - Content collection schemas (source of truth for frontmatter)
 - `src/config.ts` - Site configuration (reads from `.env`)
 - `.env` - Environment variables (personal info, social links)
+- `docs/` - Strategy documentation (positioning, content architecture, target audience)
 
 ## Content Collections
 
@@ -53,6 +54,11 @@ learnings:
 featured: true  # boolean
 status: completed  # MUST be: completed | ongoing | archived
 order: 1  # optional, for sorting
+contentOnly: true  # optional, skip template sections and render MDX body only
+tldr:  # optional, summary displayed above content
+  summary: "One sentence summary"
+  points:
+    - "<strong>Point 1:</strong> Description"
 ```
 
 ### Decisions (`src/content/decisions/`)
@@ -96,7 +102,7 @@ skills:  # optional
 ```
 
 ### Analysis (`src/content/analysis/`)
-Strategic domain analysis articles. See positioning.md for content guidelines.
+Strategic domain analysis articles. See `docs/positioning.md` for content guidelines.
 
 **Required frontmatter:**
 ```yaml
@@ -173,6 +179,7 @@ Short-form insights that highlight specific aspects of analysis or projects.
 **Required frontmatter:**
 ```yaml
 title: "Note Title"
+description: "Brief abstract for card display"  # optional but recommended
 date: 2025-01-15  # YYYY-MM-DD format
 relatedAnalysis: "analysis-slug"  # optional, links to related analysis
 relatedProject: "project-slug"  # optional, links to related project
@@ -213,20 +220,27 @@ draft: false  # boolean, optional
 
 ## Common Mistakes to Avoid
 
-1. **Enum values are strict:**
+1. **MDX comments use JSX syntax:** Use `{/* comment */}` not `<!-- comment -->`
+
+2. **Enum values are strict:**
    - `status`: Must be exactly `completed`, `ongoing`, or `archived` (not `complete`)
    - `type` (journey): Must be exactly `milestone`, `learning`, or `transition`
    - `type` (speaking): Must be exactly `conference`, `meetup`, `podcast`, `workshop`, or `webinar`
 
-2. **Dates must be valid:** Use `YYYY-MM-DD` format
+3. **Dates must be valid:** Use `YYYY-MM-DD` format
 
-3. **Arrays can't be empty if required:** Provide at least one item for `constraints`, `keyDecisions`, `techStack`, `learnings`, `alternatives`
+4. **Arrays can't be empty if required:** Provide at least one item for `constraints`, `keyDecisions`, `techStack`, `learnings`, `alternatives`
 
-4. **URLs must be valid:** Include `https://` prefix
+5. **URLs must be valid:** Include `https://` prefix
 
 ## Site Positioning & Content Architecture
 
-See `positioning.md` for full strategy. Key points:
+See `docs/positioning.md` for full strategy. Related docs:
+- `docs/content-architecture.md` - Content type relationships
+- `docs/content-strategy.md` - Content creation guidelines
+- `docs/target-audience.md` - Audience personas and signals
+
+Key points:
 
 **Core positioning:** Practitioner who's built the systems, positioned to lead adoption at scale. Technical enough to build PoCs, strategic enough to drive organizational change. Change management is the throughline.
 

@@ -1,0 +1,153 @@
+---
+title: "Small Business Digital Architecture"
+role: "Technical Marketing"
+year: 2025
+duration: "3 weeks"
+teamSize: 1
+outcomeSummary: "Modern web platform with headless CMS—client self-service, near-perfect performance scores, $0/month hosting"
+overview: "Custom web architecture for a local catering business: Astro static site with Sanity headless CMS, deployed on Cloudflare's global CDN. Client manages all content without technical support."
+problem: "Small businesses face a web presence tradeoff: template platforms (Squarespace, Wix) lack brand differentiation; custom agency builds cost $5-15K and create ongoing dependency. This client needed professional presence with full content autonomy."
+constraints:
+  - "Budget-conscious—traditional agency costs not justified for business scale"
+  - "Client must control content without technical support"
+  - "Performance-critical for local SEO (mobile-first, fast load times)"
+  - "Must scale with business growth without platform migration"
+approach: "Build a modern JAMstack architecture that separates content from presentation. Headless CMS gives client full content control through a visual editor. Static generation ensures fast load times and zero hosting costs. The architecture scales from single-page to full e-commerce without rebuilding."
+keyDecisions:
+  - decision: "Static site generator (Astro) over traditional CMS"
+    reasoning: "Static sites load faster, cost nothing to host, and have no security vulnerabilities to maintain. The JAMstack pattern is enterprise-grade architecture applied to small business scale."
+    alternatives:
+      - "WordPress with managed hosting"
+      - "Squarespace or Wix"
+  - decision: "Headless CMS (Sanity) over embedded content management"
+    reasoning: "Separating content from presentation means the client edits through a purpose-built interface, not a code editor. Content becomes portable—same CMS could feed a mobile app or digital signage later."
+    alternatives:
+      - "Markdown files with no CMS"
+      - "WordPress as headless backend"
+  - decision: "Global CDN deployment (Cloudflare Pages) over traditional hosting"
+    reasoning: "Edge deployment means fast load times regardless of user location. Free tier handles significant traffic. Automatic SSL, DDoS protection, and zero server maintenance."
+    alternatives:
+      - "Shared hosting"
+      - "Netlify or Vercel"
+techStack:
+  - "Astro"
+  - "Sanity CMS"
+  - "Tailwind CSS"
+  - "Cloudflare Pages"
+  - "Cloudflare DNS"
+impact:
+  metrics:
+    - label: "Performance"
+      value: "95+ Lighthouse score (mobile)"
+    - label: "Hosting Cost"
+      value: "$0/month (CDN free tier)"
+    - label: "Client Autonomy"
+      value: "100% content self-service"
+  qualitative: "Client updates menus, photos, and event information without technical support. Site performance supports local SEO goals. Architecture pattern is reusable—same stack now powers three small business sites."
+learnings:
+  - "JAMstack architecture applies enterprise patterns (CDN, headless CMS, CI/CD) to small business budgets"
+  - "Headless CMS investment pays back in client autonomy—zero ongoing support requests for content changes"
+  - "Performance is a business outcome: faster sites rank better locally, convert better on mobile"
+  - "The architecture scales with the business—adding e-commerce or booking doesn't require platform migration"
+featured: false
+status: completed
+order: 4
+contentOnly: true
+tldr:
+  summary: "Modern web architecture for small business: headless CMS for client self-service, static generation for performance, CDN deployment for zero hosting costs."
+  points:
+    - "<strong>Architecture:</strong> JAMstack pattern—enterprise-grade approach applied to small business scale"
+    - "<strong>Client Autonomy:</strong> Headless CMS enables 100% content self-service without technical support"
+    - "<strong>Performance:</strong> 95+ Lighthouse scores support local SEO and mobile conversion"
+    - "<strong>Economics:</strong> $0/month hosting, no ongoing development dependency"
+---
+
+## The Business Case
+
+Small businesses face a lose-lose choice for web presence:
+
+**Template platforms** (Squarespace, Wix, WordPress.com) get you online quickly but produce generic results. Every competitor uses the same templates. Customization hits walls. Performance suffers under bloated themes.
+
+**Custom agency builds** cost $5-15K upfront plus ongoing maintenance fees. The business becomes dependent on the agency for every text change. And most agencies still deliver WordPress sites with the same performance and security issues.
+
+This project demonstrates a third path: **enterprise architecture patterns applied to small business economics**.
+
+The same stack that powers high-traffic marketing sites—static generation, headless CMS, global CDN—works at any scale. The difference is who benefits from the performance and cost advantages.
+
+---
+
+## Architecture Decisions
+
+### Why Static Generation
+
+Traditional CMS platforms (WordPress, Drupal) generate pages on every request. A server runs PHP, queries a database, assembles HTML, and sends it to the browser. This creates:
+
+- **Performance overhead**: Every page load requires server processing
+- **Security surface**: Database and admin interfaces are attack vectors
+- **Hosting costs**: Servers need resources even when idle
+
+Static generation inverts this. Pages are built once at deploy time and served as pre-rendered HTML from a CDN. No server processing, no database queries, no security vulnerabilities in the request path.
+
+For a small business site with content that changes weekly (not per-request), static generation is strictly superior.
+
+### Why Headless CMS
+
+"Headless" means the CMS manages content but doesn't control presentation. Sanity provides:
+
+- **Visual editing interface**: Client sees real-time preview while editing
+- **Structured content**: Menus, events, and testimonials have defined schemas
+- **API access**: Content is available via API for any frontend (web, mobile, signage)
+- **Generous free tier**: Small business usage fits comfortably
+
+The client logs into Sanity, edits text or uploads photos, and clicks publish. A webhook triggers a rebuild. New content is live in under a minute—no developer involvement.
+
+### Why CDN Deployment
+
+Cloudflare Pages deploys static sites to 300+ edge locations globally. Benefits:
+
+- **Speed**: Content served from the nearest edge location
+- **Cost**: Free tier handles substantial traffic
+- **Security**: Automatic SSL, DDoS protection included
+- **Reliability**: No single server to fail
+
+The same infrastructure that serves Netflix and Discord serves this catering website—for $0/month.
+
+---
+
+## Reusable Pattern
+
+This architecture has now powered three small business sites:
+
+1. **Catering business**: Menu showcases, event galleries, inquiry forms
+2. **Professional services**: Service descriptions, team bios, contact routing
+3. **This portfolio**: Analysis articles, project case studies, content collections
+
+Each implementation took 2-4 weeks. The pattern is consistent:
+
+- Astro handles page generation and routing
+- Sanity (or markdown for developer-managed sites) handles content
+- Tailwind handles styling with consistent design tokens
+- Cloudflare handles deployment and CDN
+
+The learning investment amortizes across projects. The architecture scales from brochure site to content-heavy platform without migration.
+
+---
+
+## Performance Results
+
+Lighthouse scores for the catering site:
+
+| Category | Score |
+|----------|-------|
+| Performance | 98 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+| SEO | 100 |
+
+These scores directly support business goals:
+
+- **Local SEO**: Google rewards fast, mobile-optimized sites in local pack results
+- **Mobile conversion**: 3-second load times lose 53% of mobile visitors
+- **Trust signals**: Fast sites feel professional; slow sites feel amateur
+
+The client didn't ask for a 98 performance score. They asked for a professional website that helps the business grow. The architecture delivers both.
