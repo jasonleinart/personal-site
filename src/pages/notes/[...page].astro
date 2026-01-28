@@ -67,15 +67,21 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
-// Get related analysis titles for display
-const notesWithAnalysis = await Promise.all(
+// Get related content titles for display
+const notesWithRelated = await Promise.all(
   notes.map(async (note) => {
     let relatedTitle = null;
-    if (note.data.relatedAnalysis) {
+    let relatedType = null;
+    if (note.data.relatedProject) {
+      const project = await getEntry('projects', note.data.relatedProject);
+      relatedTitle = project?.data.title;
+      relatedType = 'project';
+    } else if (note.data.relatedAnalysis) {
       const analysis = await getEntry('analysis', note.data.relatedAnalysis);
       relatedTitle = analysis?.data.title;
+      relatedType = 'analysis';
     }
-    return { ...note, relatedTitle };
+    return { ...note, relatedTitle, relatedType };
   })
 );
 ---
@@ -97,9 +103,9 @@ const notesWithAnalysis = await Promise.all(
       <PageStats text={totalNotes === 1 ? '1 note' : `${totalNotes} notes`} />
     </header>
 
-    {notesWithAnalysis.length > 0 ? (
+    {notesWithRelated.length > 0 ? (
       <div class="notes-list">
-        {notesWithAnalysis.map((note) => (
+        {notesWithRelated.map((note) => (
           <a href={`/notes/${note.id}`} class="note-item">
             <div class="note-meta">
               <time datetime={note.data.date.toISOString()}>
@@ -108,7 +114,7 @@ const notesWithAnalysis = await Promise.all(
               {note.relatedTitle && (
                 <>
                   <span class="meta-separator">·</span>
-                  <span class="related-analysis">Related: {note.relatedTitle}</span>
+                  <span class="related-content">Related: {note.relatedTitle}</span>
                 </>
               )}
             </div>
@@ -193,7 +199,7 @@ const notesWithAnalysis = await Promise.all(
     opacity: 0.5;
   }
 
-  .related-analysis {
+  .related-content {
     color: var(--color-accent);
   }
 

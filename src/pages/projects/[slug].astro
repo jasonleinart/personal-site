@@ -93,6 +93,7 @@ const {
   relatedDecisions,
   status,
   contentOnly,
+  tldr,
 } = project.data;
 
 // Status display configuration
@@ -189,7 +190,27 @@ const allHeadings = [...frontmatterHeadings, ...headings];
         <span class="meta-item">{readingTime}</span>
       </div>
       <p class="outcome-summary">{outcomeSummary}</p>
+      {techStack && techStack.length > 0 && (
+        <div class="tech-tags">
+          {techStack.map((tech) => (
+            <span class="tech-tag">{tech}</span>
+          ))}
+        </div>
+      )}
     </header>
+
+    <!-- TL;DR Summary (if provided) -->
+    {tldr && (
+      <div class="tldr">
+        <span class="tldr-label">TL;DR</span>
+        <p class="tldr-summary">{tldr.summary}</p>
+        <ul class="tldr-points">
+          {tldr.points.map((point) => (
+            <li set:html={point} />
+          ))}
+        </ul>
+      </div>
+    )}
 
     <!-- Table of Contents (for MDX content when contentOnly) -->
     {contentOnly && <TableOfContents headings={headings} />}
@@ -306,6 +327,68 @@ const allHeadings = [...frontmatterHeadings, ...headings];
   <ScrollToTop />
 
   <style>
+    /* TL;DR section */
+    .tldr {
+      margin: 0 0 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(196, 101, 74, 0.1) 0%, rgba(196, 101, 74, 0.05) 100%);
+      border: 1px solid rgba(196, 101, 74, 0.3);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tldr::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, rgba(196, 101, 74, 0.3) 100%);
+    }
+
+    .tldr-label {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      background: rgba(196, 101, 74, 0.15);
+      padding: 0.25rem 0.625rem;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .tldr-summary {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+
+    .tldr-points {
+      margin: 0;
+      padding-left: 1.25rem;
+      list-style: disc;
+    }
+
+    .tldr-points li {
+      font-size: 0.9375rem;
+      margin-bottom: 0.375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .tldr-points li:last-child {
+      margin-bottom: 0;
+    }
+
+    .tldr-points :global(strong) {
+      color: var(--color-text);
+    }
+
     .case-study {
       max-width: 800px;
       margin: 0 auto;
@@ -372,6 +455,22 @@ const allHeadings = [...frontmatterHeadings, ...headings];
       font-size: 1.125rem;
       line-height: 1.6;
       color: var(--color-text-secondary);
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .tech-tag {
+      font-size: 0.8125rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(74, 153, 97, 0.1);
+      border: 1px solid var(--color-accent-secondary);
+      border-radius: 4px;
+      color: var(--color-accent-secondary);
     }
 
     .case-study-section {

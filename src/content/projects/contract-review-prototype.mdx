@@ -1,0 +1,207 @@
+---
+title: "Contract Review AI"
+role: "AI Strategy & Implementation"
+year: 2026
+outcomeSummary: "Strategic prototype demonstrating how AI-native development bridges the gap between high-level strategy and production-ready implementation"
+overview: "A methodology demonstrator that moves the 'Courtroom-Grade' RAG framework from the Legal AI Roadmap into a measurable business use case—complete with ROI modeling, compliance architecture, and change management scaffolding."
+problem: "A mid-size law firm spends $33,000/month on manual contract review. The Legal AI Roadmap provides the strategic framework, but strategy without implementation is just slides. This prototype proves the methodology works."
+constraints:
+  - "Must quantify business impact, not just technical metrics"
+  - "Must satisfy ABA Rule 5.3 explainability requirements"
+  - "Must surface adoption resistance before scaling"
+  - "Must use modular architecture for future reuse"
+  - "Cannot use proprietary legal databases (Westlaw, Lexis) for demonstration"
+approach: "Build a functional prototype that validates the strategic framework while generating real operational data. Use rapid iteration to surface constraints early, align stakeholders through hands-on testing, and create the validation gates required for production investment."
+keyDecisions:
+  - decision: "Agentic architecture over monolithic RAG pipeline"
+    reasoning: "ABA Rule 5.3 requires lawyers to supervise AI-generated work. An agentic approach with discrete, auditable steps creates the explainability trail that compliance demands—each decision point is logged and reviewable."
+    alternatives:
+      - "Single-pass RAG with confidence scores"
+      - "Human-in-the-loop at output only"
+  - decision: "Risk-based triage over uniform processing"
+    reasoning: "Not all contracts need the same level of review. Routing into Green/Yellow/Orange/Red risk lanes optimizes high-cost human capital for where it matters—complex edge cases—while automation handles routine checks."
+    alternatives:
+      - "Uniform processing for all contracts"
+      - "Complexity scoring without routing"
+  - decision: "FastAPI + LangGraph over notebook prototype"
+    reasoning: "A functional API provides immediate value and real usage data. Notebooks demonstrate concepts; APIs generate the operational metrics needed to validate ROI projections."
+    alternatives:
+      - "Jupyter notebook demonstration"
+      - "Streamlit interface only"
+  - decision: "Modular AI Core over single-purpose build"
+    reasoning: "The document processing, retrieval, and generation layers are designed for reuse. This reduces the cost of future automation initiatives—contract review is the wedge, not the ceiling."
+    alternatives:
+      - "Purpose-built for contracts only"
+      - "Vendor platform integration"
+techStack:
+  - "Python"
+  - "FastAPI"
+  - "LangGraph"
+  - "Azure OpenAI (GPT-4o-mini)"
+  - "Azure Document Intelligence"
+  - "Azure AI Search"
+impact:
+  metrics:
+    - label: "Efficiency Gap"
+      value: "$33,000/month (manual review baseline)"
+    - label: "Triage Accuracy"
+      value: "Target >90% correct risk classification"
+    - label: "Faithfulness Score"
+      value: "Target >0.95 (courtroom-grade threshold)"
+  qualitative: "Validates that the Legal AI Roadmap translates to working systems. Provides the operational data needed to justify pilot investment and surfaces adoption constraints before they become blockers."
+learnings:
+  - "Prototypes are adoption tools, not just technical proofs—hands-on testing surfaces resistance that surveys miss"
+  - "ROI modeling must happen before architecture decisions, not after"
+  - "Explainability isn't a feature request; it's a compliance requirement that shapes the entire design"
+  - "The 'AI Core' abstraction pays dividends immediately—the same retrieval layer serves multiple use cases"
+featured: true
+status: completed
+order: 1
+contentOnly: true
+tldr:
+  summary: "A strategic prototype that moves the Legal AI Roadmap from theory to validated business case—demonstrating how AI-native development bridges strategy and production."
+  points:
+    - "<strong>Business Problem:</strong> $33K/month manual contract review bottleneck targeted with Green/Yellow/Orange/Red triage model"
+    - "<strong>Architecture:</strong> Agentic design with discrete, auditable steps for ABA Rule 5.3 compliance"
+    - "<strong>Methodology:</strong> Prototype as adoption wedge—surfaces edge cases and resistance before scaling"
+    - "<strong>Path Forward:</strong> Explicit validation gates from PoC to Pilot to Production"
+---
+
+## The Strategic Context
+
+This prototype exists because of a gap I've seen repeatedly: strategic AI roadmaps that never become working systems.
+
+The [Legal AI Roadmap](/analysis/legal-ai-roadmap) provides the framework—why legal AI requires different architecture than general-purpose applications, what "courtroom-grade" reliability actually means, and how firms should sequence their adoption. But frameworks don't process contracts. This prototype does.
+
+The business problem is specific: a mid-size firm's contract review workflow consumes $33,000/month in attorney time. Three partners spend 15+ hours weekly on routine commercial agreements that follow predictable patterns. The efficiency gap isn't theoretical—it's a line item.
+
+The mission here isn't to build a CoCounsel competitor. It's to demonstrate how an AI-native approach uses rapid prototyping to move from strategic framework to validated business case, surfacing the operational constraints and stakeholder concerns that determine whether initiatives scale or stall.
+
+---
+
+## Opportunity Assessment & ROI
+
+Before writing code, the business case needs validation. The triage model defines the target operating state:
+
+**Green Lane (Score 80-100):** Standard terms, low risk. Human review optional. AI handles initial review, flags deviations from templates, and drafts summary memos.
+
+**Yellow Lane (Score 60-79):** Some concerns worth checking. Human review recommended. AI pre-processes and highlights areas requiring attention.
+
+**Orange Lane (Score 40-59):** Material risks identified. Human review required. Attorney focuses on flagged sections with AI pre-analysis.
+
+**Red Lane (Score 0-39):** Critical issues or deal-breakers. Senior escalation required. Attorney maintains full review responsibility with AI providing research support.
+
+The goal isn't replacing attorneys—it's routing their attention to where it creates the most value.
+
+### ROI & TCO Projection: Moving Beyond the "2-Cent" PoC
+
+The $0.02 variable cost is a feasibility benchmark, not a final production estimate. A true business case must account for infrastructure, governance, and maintenance.
+
+| Cost Category | PoC (Feasibility) | Pilot (Operational) | Production (Strategic) |
+|---------------|-------------------|---------------------|------------------------|
+| **Variable Cost** | $0.02 / contract (API only) | $0.50 / contract (Logging, Audit Trail) | $1.00+ / contract (Monitoring & Drift Detection) |
+| **Infrastructure** | Local / Dev environment | Cloud-hosted instances (Azure/AWS) | High-availability, scalable architecture |
+| **Governance** | Experimental | Human-in-the-Loop (HITL) verification | Continuous GRC audits & ABA Rule 5.3 compliance |
+| **Maintenance** | Zero | Prompt engineering & versioning | Model fine-tuning & technical debt management |
+
+The [AI ROI Calculator](/playbook/roi) and [Build vs. Buy Decision Matrix](/playbook/assessment) exist to pressure-test these projections before committing to production investment.
+
+---
+
+## The Architecture Rationale
+
+The technical choices flow from two requirements that most AI demos ignore: **explainability for compliance** and **modularity for reuse**.
+
+### Explainability for ABA Rule 5.3
+
+ABA Model Rule 5.3 requires lawyers to supervise nonlawyer assistants—and regulators have made clear this extends to AI systems. A black-box model that produces contract summaries isn't sufficient. The firm needs to answer: *Why did the system flag this clause? What precedents informed this recommendation? Where did this language come from?*
+
+The agentic architecture addresses this directly. Rather than a single-pass RAG pipeline, the system operates as specialized agents running in parallel:
+
+1. **Clause Extractor** — Parses contract structure, identifies clause types, extracts defined terms (with RAG grounding)
+2. **Risk Assessor** — Evaluates clauses against playbook standards, flags deviations, assigns risk scores
+3. **Compliance Checker** — Detects GDPR, HIPAA, and jurisdiction-specific requirements
+4. **Missing Clause Detector** — Identifies required clauses absent from the contract
+
+These agents run concurrently after extraction—cutting analysis time from ~180s to ~90s. Each logs its inputs, reasoning, and outputs. When a partner asks why a clause was flagged, the answer is traceable—not "the model thought so" but "deviation from standard indemnification language per [Firm Template 2024-03]."
+
+### Modularity for the AI Core
+
+The document processing, vector storage, and retrieval layers aren't built for contracts alone. They're designed as a reusable AI Core that reduces the marginal cost of future automation:
+
+- **Document Processing Layer** — Handles ingestion, chunking, and metadata extraction for any document type
+- **Intelligence Layer** — Manages embeddings, hybrid search, and retrieval across use cases
+- **Orchestration Layer** — Coordinates agents and manages workflow state via LangGraph
+
+Contract review is the wedge. The same infrastructure supports due diligence document analysis, research memo generation, and knowledge management—initiatives that become faster and cheaper because the foundation already exists.
+
+---
+
+## Change Management & Adoption
+
+The hardest part of AI implementation isn't the technology. It's the organizational change.
+
+### The Prototype as Adoption Wedge
+
+This PoC isn't just a technical proof—it's an adoption tool. Hands-on pilot testing with actual attorneys surfaces two categories of insight that surveys and stakeholder interviews miss:
+
+**Edge cases the training data didn't anticipate.** The first week of pilot testing revealed that the firm's legacy contracts used inconsistent clause numbering that broke the document parser. That's not a bug report—it's operational intelligence that shapes production requirements.
+
+**Psychological resistance that sounds like technical objections.** "The AI doesn't understand context" often means "I'm worried about my job." "It's not accurate enough" sometimes means "I don't trust anything I didn't write myself." These concerns are valid and need to be addressed—but they require change management responses, not engineering fixes.
+
+### From "Replacement" to "Teammate"
+
+The framing matters. Positioning AI as a tool that replaces attorney judgment creates resistance. Positioning it as a teammate that handles routine work so attorneys can focus on complex matters creates advocates.
+
+The pilot program is structured to reinforce this:
+
+- Attorneys see AI handling the tedious parts they don't enjoy (template review, boilerplate checking)
+- Attorneys retain full authority over flagged items and final output
+- Time savings are tracked and attributed—"this system gave you back 6 hours this week"
+
+The [30-60-90 Training Plan](/playbook/change-management) structures this progression from awareness through fluency. The [Resistance Response Playbook](/playbook/change-management) provides decision trees for the specific objections that surface during adoption.
+
+---
+
+## Path to Production
+
+A prototype that impresses in demo but fails in production is worse than no prototype—it burns credibility and budget. The validation gates are explicit:
+
+### PoC → Pilot Criteria
+
+- **Triage Accuracy >90%** — Contracts routed to correct risk lane at least 90% of the time
+- **Faithfulness Score >0.95** — Generated summaries accurately reflect source documents (RAGAS evaluation)
+- **Source Traceability** — Every flagged issue must reference the specific clause and section in the contract being reviewed
+- **User Acceptance** — Pilot attorneys report the system is "useful" or "very useful" in exit surveys
+
+### Pilot → Production Criteria
+
+- **Throughput Increase >20%** — Measurable reduction in time-to-completion for contract review
+- **Adoption Rate >70%** — Majority of eligible attorneys actively using the system
+- **Sustained Accuracy** — Metrics hold stable over 60+ days of production usage
+- **Audit Compliance** — Logging and explainability features pass internal compliance review
+
+### Current Deployment
+
+The prototype runs on Azure AI services (OpenAI, Document Intelligence, AI Search) for enterprise-grade security and compliance, with compute hosted on Hetzner VPS for cost efficiency during the demo phase.
+
+**What Azure provides now:**
+- Data sovereignty and compliance certifications (FedRAMP, HIPAA BAA)
+- Enterprise SLAs for AI services
+- Consistent auth and networking across services
+
+**What production deployment would add:**
+- Azure Container Apps for auto-scaling compute
+- Comprehensive audit logging
+- Monitoring and alerting for model drift
+- Disaster recovery and data backup procedures
+
+The prototype validates the approach with enterprise-grade AI infrastructure. Production scales the compute layer to match.
+
+---
+
+## Related Content
+
+- **Strategic Framework:** [Legal AI Roadmap](/analysis/legal-ai-roadmap) — The "why" behind the architecture decisions
+- **Live Demo:** [Try the Contract Review Tool](/tools/contract-review) — Functional prototype for hands-on testing
+- **Methodology:** [Change Management Phase](/playbook/change-management) — The adoption scaffolding referenced above

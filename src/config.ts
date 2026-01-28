@@ -128,7 +128,7 @@ export const siteConfig = {
     { label: 'Projects', href: '/projects' },
     { label: 'Analysis', href: '/analysis' },
     { label: 'Notes', href: '/notes' },
-    { label: 'Playbook', href: '/ai-transformation-playbook' },
+    { label: 'Playbook', href: '/playbook' },
     { label: 'Contact', href: '/contact' },
   ],
 } as const;

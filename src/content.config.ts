@@ -102,6 +102,12 @@ const projectsCollection = defineCollection({
     /** Use MDX content only, skip template sections */
     contentOnly: z.boolean().optional(),
 
+    /** Optional TL;DR summary displayed above table of contents */
+    tldr: z.object({
+      summary: z.string(),
+      points: z.array(z.string()),
+    }).optional(),
+
     /** Custom sort order (lower numbers first) */
     order: z.number().optional(),
     
@@ -426,6 +432,9 @@ const notesCollection = defineCollection({
 
     /** Related analysis article slug (optional) */
     relatedAnalysis: z.string().optional(),
+
+    /** Related project slug (optional) */
+    relatedProject: z.string().optional(),
 
     /** Tags for categorization */
     tags: z.array(z.string()).optional(),

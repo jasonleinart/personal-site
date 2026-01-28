@@ -1,6 +1,8 @@
 # Section redirects
 /ai-transformation-playbook /playbook 301
 /ai-transformation-playbook/ /playbook 301
+/projects/contract-review-demo /projects/contract-review-prototype 301
+/projects/contract-review-demo/ /projects/contract-review-prototype 301
 /uses /projects 301
 /uses/ /projects 301
 /decisions /projects 301
