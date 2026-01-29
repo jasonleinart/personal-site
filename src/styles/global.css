@@ -320,3 +320,190 @@ pre code {
 .glow-accent {
   box-shadow: 0 0 20px var(--color-accent-glow);
 }
+
+/* ============================================
+   PROSE CONTENT STYLES
+   Global styles for article/note/playbook content.
+   Apply .prose-content to any content wrapper.
+   ============================================ */
+
+.prose-content {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+
+/* Headings */
+.prose-content h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.prose-content h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+/* Paragraphs */
+.prose-content p {
+  margin-bottom: 1.5rem;
+}
+
+.prose-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Strong/Bold */
+.prose-content strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* Links */
+.prose-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.prose-content a:hover {
+  color: var(--color-accent-hover);
+}
+
+/* Lists */
+.prose-content ul,
+.prose-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  list-style-position: outside;
+}
+
+.prose-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+/* Horizontal Rules */
+.prose-content hr {
+  margin: 2.5rem 0;
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Blockquotes */
+.prose-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-bg-secondary);
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* Tables - Terracotta accent styling */
+.prose-content table {
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.prose-content thead {
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.prose-content th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  background: rgba(201, 132, 116, 0.08);
+}
+
+.prose-content th:first-child {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+}
+
+.prose-content td {
+  padding: 0.875rem 1rem;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose-content td:first-child {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+}
+
+.prose-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* Code */
+.prose-content code {
+  font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
+  font-size: 0.9em;
+  background-color: var(--color-bg-secondary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+}
+
+.prose-content pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.prose-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Video Embeds */
+.prose-content .video-embed {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.prose-content .video-embed iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .prose-content {
+    font-size: 1rem;
+  }
+
+  .prose-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .prose-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .prose-content table {
+    font-size: 0.875rem;
+  }
+
+  .prose-content th,
+  .prose-content td {
+    padding: 0.625rem 0.75rem;
+  }
+}

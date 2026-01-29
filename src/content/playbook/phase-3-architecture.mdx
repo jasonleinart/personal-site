@@ -1,0 +1,144 @@
+---
+title: "Architecture"
+description: "Design and implement AI solutions using the five-layer model. Includes the Model Gate checkpoint to validate technical soundness, bias testing, and failure modes before deployment."
+phase: 3
+summary: "I implement solutions through a five-layer architecture (Data, Intelligence, Orchestration, Integration, Command Center) then validate everything passes the Model Gate before rollout."
+tools:
+  - name: "Five-Layer Architecture Template"
+    description: "Solution design framework mapping your implementation to Data, Intelligence, Orchestration, Integration, and Command Center layers. Ensures nothing gets forgotten."
+    type: framework
+  - name: "AI Solution Design Document"
+    description: "Technical specification template covering data flows, model selection, integration points, and operational requirements. The blueprint your team builds from."
+    type: template
+  - name: "Model Selection Matrix"
+    description: "Comparison framework for evaluating AI/ML approaches against your requirements. Covers accuracy needs, latency constraints, interpretability requirements, and maintenance burden."
+    type: framework
+  - name: "Integration Mapping Worksheet"
+    description: "Document every system touchpoint, data flow, and API dependency. Surfaces integration complexity before it becomes implementation surprise."
+    type: template
+  - name: "Model Gate Checklist"
+    description: "Quality checkpoint validating technical performance, bias testing, explainability, failure mode analysis, and red team findings before deployment approval."
+    type: checklist
+  - name: "Failure Mode Analysis Template"
+    description: "Systematic identification of how the system can fail, likelihood of each failure, impact severity, and mitigation strategies. Required for Model Gate passage."
+    type: template
+  - name: "Bias & Fairness Assessment"
+    description: "Framework for evaluating model outputs across protected classes and edge cases. Documents what was tested, what was found, and what mitigations were applied."
+    type: checklist
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "legal-ai-roadmap"
+tldr:
+  summary: "Design AI solutions that actually work in production. The five-layer model ensures you're building complete systems, not just models. The Model Gate catches problems before users do."
+  points:
+    - "<strong>Five-layer model:</strong> Data, Intelligence, Orchestration, Integration, Command Center. Most failed AI projects are missing at least one layer."
+    - "<strong>Quick wins first:</strong> Start with contained problems that prove value. Boil-the-ocean architectures die in committee."
+    - "<strong>Model Gate:</strong> Technical validation, bias testing, explainability review, failure mode analysis. The checkpoint before anything reaches users."
+draft: false
+---
+
+## Governance Lens
+
+Architecture is where governance gets concrete. Abstract policies about "responsible AI" become specific requirements: What bias testing did you perform? What happens when the model fails? Who can explain why it made a particular decision?
+
+The AI Governance Framework specifies **12 failure modes** to design against. Four of them are architecture decisions:
+
+| Failure Mode | What Goes Wrong | Architecture Prevention |
+|--------------|-----------------|------------------------|
+| **Single point of failure** | One component down takes everything down | Redundancy and graceful degradation |
+| **Unexplainable outputs** | Model makes decisions nobody can justify | Explainability layer from the start |
+| **Drift blindness** | Model degrades and nobody notices | Monitoring in Command Center |
+| **Integration brittleness** | Upstream changes break downstream | Loose coupling and contract testing |
+
+The Three Lines of Defence model also shapes architecture. The system itself must log decisions, flag anomalies, and fail safely. Monitoring dashboards must expose what's happening. Everything must be reconstructable for audit. Build these in from the start—retrofitting observability is painful and usually incomplete.
+
+---
+
+## The Methodology
+
+### The Five-Layer Model
+
+Most AI projects focus on the model and treat everything else as an afterthought. Then they wonder why something that worked in a notebook doesn't work in production.
+
+I've watched a team spend four months building a sophisticated recommendation model, only to discover they had no way to get product catalog updates into the system faster than once per week. The model was fine. The data layer didn't exist.
+
+| Layer | What It Does | Common Failure |
+|-------|--------------|----------------|
+| **Data** | Pipelines, transformation, quality monitoring | "Real-time" system fed by 4-hour batch job |
+| **Intelligence** | Model training, versioning, inference | Works in notebook, 47 seconds at scale |
+| **Orchestration** | Workflow coordination, error handling | Models work alone, can't collaborate |
+| **Integration** | APIs, auth, upstream/downstream connections | Model works, ERP integration takes 6 months |
+| **Command Center** | Dashboards, alerting, outcome tracking | Adoption flatlines, nobody notices for 8 months |
+
+The model is a component, not the system. Build all five layers or watch your notebook demo fail in production.
+
+### Quick Wins First
+
+Don't start with the enterprise-wide AI platform. Start with a contained problem that proves value.
+
+A good quick win has four characteristics:
+
+1. **Clear boundaries** — You know where it starts and ends
+2. **Measurable outcome** — You can tell if it worked
+3. **Limited blast radius** — If it fails, the damage is contained
+4. **Path to scale** — Success creates options, not dead ends
+
+One contract review assistant handling a specific clause type beats a general-purpose legal AI that handles nothing well. I watched a financial services firm spend 18 months building a "unified AI platform" that never launched. Meanwhile, a competitor shipped six focused solutions and learned more in month one than the platform team learned in the entire project.
+
+### Build for Failure
+
+Every system fails. The question is whether you designed for it.
+
+The Failure Mode Analysis Template walks through: **What can go wrong? How likely is it? What's the impact? What's the mitigation?**
+
+A model that returns low-confidence results needs a fallback path—maybe route to human review. A data pipeline that occasionally fails needs retry logic and alerting. An integration depending on an external API needs timeout handling and degraded-mode behavior.
+
+One insurance company's claims processing AI had no fallback. When the model service went down during a hurricane, exactly when claim volume spiked, the entire claims operation stopped. Not degraded. Stopped. Design the failure paths with the same care as the happy path.
+
+---
+
+## The Model Gate
+
+The Model Gate is the checkpoint between Architecture and Change Management. Before anything reaches users, I validate five things.
+
+### Technical Validation
+
+**Does the model work at production scale?**
+
+Test with production volume, production data patterns, and production latency requirements. "Works on my laptop" isn't validation. One team's model ran fine on sample data but took 47 seconds per inference at full scale. They found out in production.
+
+### Bias Testing
+
+**Does the model treat people fairly?**
+
+A hiring model that worked great in aggregate turned out to systematically underrate candidates from certain universities—not from explicit bias, but because training data reflected a decade of biased human decisions. Document what you tested, what you found, and what you did about it.
+
+### Explainability Review
+
+**Can you justify the model's decisions?**
+
+High-stakes decisions like lending or hiring require full explainability. Recommendations need enough for user trust. Internal automation might only need explainability for debugging. Whatever the requirement, build it before you need it—adding explainability later is architecturally painful.
+
+### Failure Mode Sign-off
+
+**Has someone outside the build team reviewed the failure analysis?**
+
+Fresh eyes catch what familiarity misses. The builders are too close to see their own blind spots.
+
+### Red Team Review
+
+**Has someone tried to break it?**
+
+One red team session found a customer service bot would cheerfully provide refund instructions for products the company didn't sell. Nobody had tested what happened when users lied about their purchases. Red teaming isn't QA—it's creative destruction.
+
+---
+
+## Common Mistakes
+
+**Intelligence-only architecture.** The notebook demo looks great. Production fails because there's no data pipeline, no monitoring, no integration, no way to know if it's working.
+
+**Big bang implementation.** I've never seen a company successfully deploy a "unified AI platform" as their first AI project. Quick wins build credibility. Boil-the-ocean architectures destroy it.
+
+**Skipping the Command Center.** When something breaks, you won't know until users complain—or worse, until they quietly stop using it and you never find out why.
+
+**Treating the Model Gate as a formality.** Problems caught here cost 10x less than problems in production, 100x less than problems that make the news. Take it seriously.

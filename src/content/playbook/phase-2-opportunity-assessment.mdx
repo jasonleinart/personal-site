@@ -1,0 +1,142 @@
+---
+title: "Opportunity Assessment"
+description: "Evaluate automation candidates through build vs. buy analysis and ROI modeling. Includes the Data Gate checkpoint to validate data readiness before solution design."
+phase: 2
+summary: "I take discovery outputs and pressure-test them through build vs. buy frameworks and ROI models—then validate everything passes the Data Gate before moving to architecture."
+tools:
+  - name: "Current State Cost Worksheet"
+    description: "Guided worksheet for capturing labor costs, error costs, delay costs, and opportunity costs of the current process. Forces specificity before modeling ROI."
+    type: template
+  - name: "AI ROI Calculator"
+    description: "Core financial model with cost inputs, benefit projections, payback period, and NPV calculations. Includes sensitivity analysis for key assumptions."
+    type: calculator
+  - name: "Build vs Buy Decision Matrix"
+    description: "Weighted comparison framework across cost, time-to-value, risk, and capability dimensions. Produces defensible recommendation with documented reasoning."
+    type: framework
+  - name: "Vendor Evaluation Scorecard"
+    description: "Multi-criteria scoring rubric for evaluating AI vendors. Covers technical fit, integration complexity, pricing model, and support quality."
+    type: calculator
+  - name: "TCO Checklist"
+    description: "Comprehensive checklist of total cost of ownership factors: implementation, licensing, maintenance, training, support, and hidden costs most teams miss."
+    type: checklist
+  - name: "Assumptions & Risk Log"
+    description: "Track every assumption in your ROI model with confidence levels and sensitivity analysis. When assumptions change, you know which projections to revisit."
+    type: template
+  - name: "Data Gate Checklist"
+    description: "Quality checkpoint validating data ownership, quality, privacy compliance, and representativeness before any solution design begins."
+    type: checklist
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Turn discovery findings into defensible business cases. This phase answers: Should you build or buy? What's the real ROI? Is the data ready?"
+  points:
+    - "<strong>Current-state costing:</strong> Quantify the problem before solving it. If you can't put a number on the pain, you can't justify the investment."
+    - "<strong>Build vs. buy:</strong> Custom builds feel powerful but carry hidden costs. Vendor solutions ship faster but create dependencies. The matrix forces honest evaluation."
+    - "<strong>Data Gate:</strong> The checkpoint before architecture. Validates data ownership, quality, compliance, and whether the data actually represents reality."
+draft: false
+---
+
+## Governance Lens
+
+Most AI projects die in assessment, not implementation. They die because someone couldn't answer basic questions: What does this cost today? What's the realistic payback? Who owns the data?
+
+The AI Governance Framework requires **quantified business cases** before approving solution design. Not "this will save time" but "this costs $247,000 annually in rework, and you can capture 60% of that within 18 months."
+
+| Requirement | What It Validates | Why It Matters |
+|-------------|-------------------|----------------|
+| **Financial justification** | ROI model with documented assumptions | Prevents projects that can't pay back |
+| **Build vs. buy rationale** | Decision matrix with weighted criteria | Creates accountability for vendor choices |
+| **Data readiness** | Data Gate checklist | Catches data problems before they become architecture problems |
+
+The Data Gate deserves special attention. I've watched teams build sophisticated models on data that turned out to be incomplete, biased, or owned by a department that wouldn't share it. The gate exists to catch those problems early.
+
+---
+
+## The Methodology
+
+### Current-State Costing
+
+You can't calculate ROI without knowing what the problem costs today. Most teams skip this step because it's tedious, then wonder why leadership won't approve their project.
+
+I force specificity across four cost categories:
+
+- **Labor costs** — What do people spend time on?
+- **Error costs** — What happens when the process goes wrong?
+- **Delay costs** — What's the cost of waiting?
+- **Opportunity costs** — What could people do instead?
+
+A paralegal spending 3 hours per contract at $85/hour across 200 contracts monthly is $51,000/year in labor alone. One insurance company traced $340,000 in annual claims rework to data entry errors in a single intake form. These numbers exist—you just have to dig for them.
+
+Don't estimate. Interview the people doing the work. Check numbers against system logs when possible. Leadership will challenge your assumptions. Have the receipts.
+
+### Build vs. Buy Analysis
+
+The instinct is usually wrong. Engineers want to build. Executives want to buy. Neither accounts for the full picture.
+
+| Dimension | Build Advantage | Buy Advantage |
+|-----------|-----------------|---------------|
+| **Cost** | No licensing fees, full ownership | Lower upfront, predictable ongoing |
+| **Time-to-value** | Slower but customizable | Faster but constrained |
+| **Risk** | You own the failures | Vendor owns reliability |
+| **Capability** | Exactly what you need | What the market offers |
+
+Weight these based on your context. A startup with engineers and no budget weights differently than an enterprise with procurement cycles and compliance requirements.
+
+The output is a documented rationale that explains why you're building or buying, what you're trading off, and what would change the decision.
+
+### ROI Modeling
+
+The AI ROI Calculator produces three numbers that matter:
+
+1. **Payback period** — When do benefits exceed costs? If the answer is "3 years" for technology that might be obsolete in 2, you have a problem.
+2. **Net present value** — What's this worth in today's dollars? Makes projects comparable.
+3. **Sensitivity analysis** — What happens if your assumptions are wrong? If a 20% miss on adoption rate kills the business case, you need to de-risk adoption.
+
+Every ROI model has assumptions. The Assumptions & Risk Log tracks them explicitly: What did you assume? How confident are you? What happens if you're wrong?
+
+I've seen projects approved on assumptions nobody remembered six months later. When the project underperformed, nobody could explain why. Document your assumptions or own the confusion.
+
+---
+
+## The Data Gate
+
+The Data Gate is the first formal checkpoint in the BSPF methodology. Before any solution design begins, you validate four things.
+
+### Ownership
+
+**Who controls the data you need?**
+
+This sounds obvious until you discover the customer data lives in Marketing's Salesforce, the transaction data lives in Finance's ERP, and neither department has agreed to share it with your project. I've watched a 6-month initiative stall for 4 months on data access negotiations that should have happened in week one.
+
+### Quality
+
+**Is the data clean enough to use?**
+
+"Clean enough" depends on the use case. A recommendation engine can tolerate some noise. A fraud detection model can't. Check completeness rates, update frequency, and error rates in key fields.
+
+### Compliance
+
+**What regulations apply?**
+
+GDPR, CCPA, HIPAA, and industry-specific rules all constrain what you can do with data. Finding out after you've built something is expensive. One healthcare client had to scrap three months of work because nobody checked HIPAA implications until the compliance review.
+
+### Representativeness
+
+**Does the data reflect reality?**
+
+A model trained on last year's data might not work if the business changed. A model trained on one region might not generalize to others. Check what time period the data covers, whether there are known gaps, and whether the underlying process has changed since collection.
+
+---
+
+## Common Mistakes
+
+**Skipping current-state costing.** "We know it's expensive" isn't a business case. Leadership approves numbers, not intuitions.
+
+**Building when you should buy.** Custom solutions feel like control. They're also maintenance burden, hiring dependency, and technical debt. Unless differentiation requires custom, buy.
+
+**Buying when you should build.** Vendor lock-in is real. If the capability is core to your business and the vendor's roadmap diverges from yours, you've outsourced your strategy.
+
+**Ignoring the Data Gate.** The excitement to start building is strong. But a model built on data you don't own, can't access, or that violates compliance is a model you'll rebuild.
+
+**ROI models without sensitivity analysis.** Every assumption is a risk. If you don't know which assumptions matter most, you don't understand your own business case.

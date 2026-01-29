@@ -1,0 +1,136 @@
+---
+title: "Process Discovery"
+description: "Map the human mess before proposing technical solutions. Discovery methodology for identifying tribal knowledge bottlenecks, current-state workflows, and automation candidates."
+phase: 1
+summary: "I use yesterday interviews and structured observation to surface where tribal knowledge acts as a bottleneck—before proposing any technical solution."
+tools:
+  - name: "Intake Document"
+    description: "Initial discovery form capturing problem statement, scope, stakeholders, constraints, and timeline for new engagements."
+    type: template
+  - name: "Executive Interview Guide"
+    description: "Strategic conversation template covering priorities, pain points, and success metrics. Designed to surface what leadership actually cares about vs. what they say they care about."
+    type: template
+  - name: "Observation Checklist"
+    description: "Field observation form capturing process steps, handoffs, exceptions, and workarounds as they happen—not as people describe them."
+    type: checklist
+  - name: "SIPOC Template"
+    description: "High-level process map identifying Suppliers, Inputs, Process steps, Outputs, and Customers. Creates shared vocabulary before diving into details."
+    type: framework
+  - name: "Swimlane Template"
+    description: "Cross-functional diagram showing handoffs and responsibilities across roles. You'll see where work stalls waiting for other people."
+    type: template
+  - name: "Automation Scorecard"
+    description: "Score processes on volume, standardization, error rate, and strategic value to prioritize automation candidates objectively."
+    type: calculator
+  - name: "Findings Report Template"
+    description: "Structured presentation of discovery findings for stakeholder review. Forces synthesis before jumping to solutions."
+    type: template
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Map the human mess before proposing technical solutions. Most AI projects fail because teams build what they assume is needed, not what's actually needed."
+  points:
+    - "<strong>Yesterday interviews:</strong> Ask 'What did you do yesterday?' instead of 'Walk me through your process.' You get workarounds and tribal knowledge, not sanitized descriptions."
+    - "<strong>Structured observation:</strong> Shadow 2-3 people. Interviews show what people think they do; watching shows what they actually do."
+    - "<strong>Automation scoring:</strong> Not every inefficient process should be automated. Score on volume, standardization, error rate, and strategic value."
+    - "<strong>Data Gate prep:</strong> Leave with a data inventory that answers: who owns it, is it clean, what regulations apply?"
+draft: false
+---
+
+## Governance Lens
+
+The most expensive AI failure mode is building the wrong thing well. I've seen teams spend six months on a solution that nobody asked for because they skipped proper discovery.
+
+The AI Governance Framework I use tracks **12 failure modes** that derail transformation initiatives. Three of them trace back to poor discovery:
+
+| Failure Mode | What Happens | How I Prevent It |
+|--------------|--------------|-------------------|
+| **Solution-in-search-of-problem** | Team builds capability nobody asked for | Yesterday interviews surface actual pain |
+| **Data quality blindness** | Model trained on garbage data | Current-state mapping shows where data actually flows |
+| **Stakeholder misalignment** | Different people want different outcomes | Executive interviews reveal hidden agendas |
+
+Before building any model, I need to understand four things: What decisions will this system influence? Who bears the consequences when it's wrong? What's the current error rate without AI? Where does sensitive data flow?
+
+That's not bureaucracy. It's insurance against building something that works technically but fails organizationally.
+
+---
+
+## The Methodology
+
+### Yesterday Interviews
+
+The standard discovery question, "Walk me through your process," produces sanitized descriptions of how work *should* happen. People describe the ideal, not the actual.
+
+I flip this by asking: **"What did you actually do yesterday?"**
+
+That question gets you:
+- Workarounds nobody documented
+- Tribal knowledge living in one person's head
+- Exceptions eating 40% of someone's time
+- Handoffs where work goes to die
+
+I run 45-minute conversations with 6-10 people across the workflow. Not managers describing their team's work—the people doing it. A contract analyst at a law firm told me she spent 3 hours every Monday copying data between two systems that "definitely talk to each other" according to IT.
+
+### Structured Observation
+
+Interviews tell you what people *think* they do. Watching them tells you what they actually do.
+
+I shadow 2-3 people through their workflow, capturing:
+- Every system they touch
+- Every context switch
+- Every time they wait for something
+- Every time they say "let me just..." and do something undocumented
+
+The observation checklist standardizes what I capture so findings are comparable across roles.
+
+### Process Mapping (SIPOC → Swimlane)
+
+SIPOC gives you the 30,000-foot view: Who provides inputs? What goes in? What comes out? Who receives it?
+
+Once everyone agrees on SIPOC, you have shared vocabulary. When someone says "the application," everyone knows whether they mean the customer's application or the software application. I've watched teams argue for 20 minutes because they were using the same word for different things.
+
+Swimlane diagrams then show the handoff reality. Most process inefficiency isn't in the tasks themselves. It's in the white space between roles where work sits waiting for someone else.
+
+### Automation Scoring
+
+Not every inefficient process should be automated. The Automation Scorecard forces objective prioritization across four dimensions:
+
+| Dimension | Question |
+|-----------|----------|
+| **Volume** | How often does this happen? |
+| **Standardization** | How consistent is the process? |
+| **Error rate** | How often does it go wrong? |
+| **Strategic value** | Does automating this actually matter? |
+
+High volume + high standardization + low strategic value = classic automation candidate.
+
+Low volume + low standardization + high strategic value = probably needs human judgment. Automating it would create more problems than it solves.
+
+---
+
+## What Comes Next
+
+You leave discovery with three outputs that feed the next phase (Opportunity Assessment):
+
+1. **Current-state documentation** — How things actually work today, not how the process document says they should
+2. **Prioritized opportunity list** — Ranked automation candidates with scores
+3. **Data inventory** — What data exists, where it lives, who owns it
+
+The data inventory matters most because it feeds the **Data Gate**—the first quality checkpoint in the BSPF methodology. Before any solution design begins, that gate validates data ownership, data quality, privacy/compliance requirements, and whether the data actually reflects reality.
+
+You don't leave discovery with a list of cool things to build. You leave with enough evidence to pass the Data Gate and justify moving forward.
+
+---
+
+## Common Mistakes
+
+**Interviewing only managers.** They know what should happen, not what does happen. Talk to the people doing the work.
+
+**Accepting "it depends" as an answer.** Push for specific conditions. "It depends" usually means 2-3 common paths and a long tail of exceptions. Get them to name the paths.
+
+**Mapping the happy path only.** The happy path already works. Value comes from understanding exceptions, errors, and escalations. One insurance company I worked with had 47 exception codes. Twelve of them covered 89% of cases.
+
+**Jumping to solutions.** If you're designing solutions during discovery, you're not done discovering. The goal is understanding the problem deeply enough that the right solution becomes obvious.
+
+**Skipping the baseline.** If you don't know the current error rate, processing time, or cost, you can't measure improvement later. Capture baseline metrics even when they're painful to gather. "We don't track that" is a finding, not an excuse.

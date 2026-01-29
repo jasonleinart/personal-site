@@ -10,6 +10,25 @@ Personal portfolio site for Jason Leinart built with Astro using the "Case" them
 - **Hosting:** Cloudflare Pages (auto-deploys from GitHub)
 - **CMS:** None - content in markdown files
 
+## Styling
+
+All prose content (analysis, playbook, notes) uses the `.prose-content` class from `src/styles/global.css`. This provides:
+- Terracotta-accented tables (left border, header styling)
+- Consistent typography, headings, lists, blockquotes
+- Responsive sizing
+
+**Never duplicate these styles in page templates.** See `docs/styling-spec.md` for details.
+
+## Writing Quality Gate
+
+All content must pass the anti-AI writing rules in `Workspace/writing/universal/anti-ai-patterns.md`. Key rules:
+
+- No inanimate subjects "doing" things ("This highlights...", "The data demonstrates...")
+- No banned buzzwords (transformative, leverage, seamlessly, robust, etc.)
+- No mechanical transitions (Furthermore, Moreover, Additionally)
+- Use human subjects, specific examples with names/numbers, varied sentence lengths
+- Self-check: Would a human actually write this?
+
 ## Key Files
 - `src/content.config.ts` - Content collection schemas (source of truth for frontmatter)
 - `src/config.ts` - Site configuration (reads from `.env`)
@@ -209,6 +228,11 @@ tools:  # optional
     type: template  # MUST be: template | calculator | framework | checklist | dashboard
 relatedAnalysis:  # optional
   - "analysis-slug"
+tldr:  # optional but recommended
+  summary: "One sentence summary"
+  points:
+    - "<strong>Point 1:</strong> Description"
+    - "<strong>Point 2:</strong> Description"
 draft: false  # boolean, optional
 ```
 

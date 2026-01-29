@@ -404,6 +404,12 @@ const playbookCollection = defineCollection({
     /** Related analysis article slugs */
     relatedAnalysis: z.array(z.string()).optional(),
 
+    /** Optional TL;DR summary displayed above content */
+    tldr: z.object({
+      summary: z.string(),
+      points: z.array(z.string()),
+    }).optional(),
+
     /** Whether the phase page is a draft */
     draft: z.boolean().default(false),
   }),
