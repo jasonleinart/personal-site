@@ -1,7 +1,7 @@
 # CLAUDE.md - Project Instructions
 
 ## Project Overview
-Personal portfolio site for Jason Leinart built with Astro using the "Case" theme. Focus on showcasing AI systems work, strategic thinking, and the "builder in motion" positioning.
+Personal portfolio site for Jason Leinart built with Astro. A systems architect disguised as a marketer—transitioning into AI-native operations, bringing cross-domain fluency and problem-led leadership. Change management is the throughline.
 
 ## Tech Stack
 - **Framework:** Astro v5
@@ -212,6 +212,14 @@ draft: false  # boolean, optional
 - Keep notes focused on a single insight
 - Link back to related Analysis or Project when applicable
 - Use for observations that don't warrant full articles
+- If referencing external companies/products, add a **Sources** footer (not inline links):
+  ```markdown
+  ---
+
+  **Sources**
+  - [Company Name](https://example.com)
+  - [Product Name](https://example.com)
+  ```
 
 ### Playbook (`src/content/playbook/`)
 Methodology phases with tool showcases. Each entry represents a phase of the AI transformation methodology.
@@ -266,7 +274,7 @@ See `docs/positioning.md` for full strategy. Related docs:
 
 Key points:
 
-**Core positioning:** Practitioner who's built the systems, positioned to lead adoption at scale. Technical enough to build PoCs, strategic enough to drive organizational change. Change management is the throughline.
+**Core positioning:** A systems architect disguised as a marketer—transitioning into AI-native operations. Not an AI researcher, not a developer, not a pure strategist. The value is in working the intersections: Systems + Marketing + Data + Technology + Operations + Strategy. Change management is the throughline.
 
 **Target role clusters:**
 

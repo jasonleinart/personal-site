@@ -1,0 +1,399 @@
+---
+/**
+ * Advisory Page
+ *
+ * "Work With Me" page for Three Horizons LLC consultancy. Positions Jason as a
+ * Principal Systems Architect specializing in AI-native operations and transformation
+ * for multi-location enterprises.
+ *
+ * Route: /advisory
+ *
+ * @page
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+import { siteConfig } from '../config';
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title="Advisory Services - AI Transformation for Distributed Operations"
+    description="Principal Systems Architect specializing in AI-native operations, data architecture, and change management for multi-location enterprises."
+    type="website"
+  />
+
+  <main class="advisory-page">
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Bridging the Gap Between AI Strategy and Operational Reality</h1>
+      <p class="hero-sub">
+        I architect the systems, data pipelines, and change management frameworks that enable distributed organizations to adopt AI at scale.
+      </p>
+      <div class="hero-proof">
+        <span class="proof-item">60% increase in booked appointments</span>
+        <span class="separator">·</span>
+        <span class="proof-item">70% reduction in manual handling</span>
+        <span class="separator">·</span>
+        <span class="proof-item">50+ location rollouts</span>
+      </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section class="capabilities">
+      <h2>The Intersections</h2>
+      <p class="capabilities-intro">
+        I work across domains that rarely talk to each other. The value is in synthesis—combining frames to see what specialists miss.
+      </p>
+
+      <div class="capabilities-grid">
+        <div class="capability-card">
+          <h3>AI Strategy & Governance</h3>
+          <p>
+            Bridging domain research with practical risk frameworks. I translate what academic literature says about AI in Legal, Finance, Healthcare, and Manufacturing into actionable governance using NIST AI RMF and industry-specific compliance requirements.
+          </p>
+        </div>
+
+        <div class="capability-card">
+          <h3>Systems & Data Architecture</h3>
+          <p>
+            Designing the plumbing that supports intelligent operations. Marketing automation architecture, BigQuery data pipelines, distributed CRM systems, and automated workflows that handle 20K+ record datasets across multi-location portfolios.
+          </p>
+        </div>
+
+        <div class="capability-card">
+          <h3>Change Management</h3>
+          <p>
+            Driving organizational adoption—not just building the system, but ensuring it gets used. I've led technology rollouts across 7 to 50+ locations, turning pilot projects into operational standards across $100M+ portfolios.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integrated Proof Section -->
+    <section class="proof-section">
+      <h2>See the Work</h2>
+      <div class="proof-grid">
+        <a href="/analysis" class="proof-link">
+          <span class="proof-label">View My Research</span>
+          <span class="proof-description">Strategic analysis across Legal AI, Enterprise Transformation, and domain-specific adoption patterns.</span>
+        </a>
+        <a href="/playbook" class="proof-link">
+          <span class="proof-label">The Methodology</span>
+          <span class="proof-description">A 5-phase AI transformation playbook with governance gates and change management checkpoints.</span>
+        </a>
+        <a href="/projects" class="proof-link">
+          <span class="proof-label">The Evidence</span>
+          <span class="proof-description">Case studies including Predictive RevenueOps, Enterprise Workflow Automation, and multi-location system integrations.</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Let's Talk</h2>
+      <p>
+        I partner with organizations navigating the gap between AI capability and operational readiness. If you're planning a transformation initiative or evaluating how AI fits into your distributed operations, let's start a conversation.
+      </p>
+      <div class="cta-buttons">
+        <a href={`mailto:${siteConfig.author.email}?subject=Strategic%20Briefing%20Request`} class="btn-primary">
+          Schedule a Strategic Briefing
+        </a>
+        <a href="/playbook" class="btn-secondary">
+          Explore the AI Transformation Playbook
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <footer class="advisory-footer">
+      <p>Operating through <strong>Three Horizons LLC</strong></p>
+    </footer>
+  </main>
+
+  <style>
+    .advisory-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* Hero */
+    .hero {
+      padding-bottom: 3rem;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+      max-width: 700px;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 650px;
+    }
+
+    .hero-proof {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9375rem;
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    .hero-proof .separator {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+
+    /* Capabilities */
+    .capabilities {
+      margin-bottom: 4rem;
+    }
+
+    .capabilities h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .capabilities-intro {
+      font-size: 1.0625rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .capability-card {
+      padding: 1.5rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .capability-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-accent);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .capability-card h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .capability-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Proof Section */
+    .proof-section {
+      margin-bottom: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .proof-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .proof-link {
+      display: block;
+      padding: 1.25rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .proof-link:hover {
+      border-color: var(--color-accent-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--color-accent-glow);
+    }
+
+    .proof-label {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .proof-description {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 2.5rem;
+      background: linear-gradient(135deg, rgba(196, 101, 74, 0.08) 0%, rgba(196, 101, 74, 0.03) 100%);
+      border: 1px solid rgba(196, 101, 74, 0.2);
+      border-radius: 12px;
+      margin-bottom: 3rem;
+    }
+
+    .cta-section h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+    }
+
+    .cta-section > p {
+      font-size: 1.0625rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+      max-width: 550px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.875rem 1.75rem;
+      background: var(--gradient-accent);
+      color: white;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 20px var(--color-accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 25px var(--color-accent-muted);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 0.875rem 1.75rem;
+      background: transparent;
+      color: var(--color-text);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    /* Footer */
+    .advisory-footer {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .advisory-footer p {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .advisory-footer strong {
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .advisory-page {
+        padding: 2rem 1rem 3rem;
+      }
+
+      .hero h1 {
+        font-size: 1.875rem;
+      }
+
+      .hero-sub {
+        font-size: 1.125rem;
+      }
+
+      .hero-proof {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .hero-proof .separator {
+        display: none;
+      }
+
+      .capabilities-grid,
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-section {
+        padding: 1.75rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        text-align: center;
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>
