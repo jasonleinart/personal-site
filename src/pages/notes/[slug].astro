@@ -14,6 +14,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SEO from '../../components/SEO.astro';
 import BackLink from '../../components/BackLink.astro';
 import { getCollection, getEntry, render } from 'astro:content';
+import { getReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes', ({ data }) => {
@@ -33,6 +34,8 @@ if (!note) {
 
 const { Content } = await render(note);
 const { title, date, relatedAnalysis, relatedProject, tags } = note.data;
+
+const readingTime = getReadingTime(note.body || '');
 
 // Get related content if specified
 let relatedArticle = null;
@@ -64,10 +67,14 @@ function formatDate(date: Date): string {
 
   <main class="note">
     <header class="note-header">
-      <time class="note-date" datetime={date.toISOString()}>
-        {formatDate(date)}
-      </time>
       <h1>{title}</h1>
+      <div class="note-meta">
+        <time class="note-date" datetime={date.toISOString()}>
+          {formatDate(date)}
+        </time>
+        <span class="meta-separator">·</span>
+        <span class="reading-time">{readingTime}</span>
+      </div>
       {tags && tags.length > 0 && (
         <div class="note-tags">
           {tags.map((tag) => (
@@ -118,13 +125,8 @@ function formatDate(date: Date): string {
 
   .note-header {
     margin-bottom: 2.5rem;
-  }
-
-  .note-date {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin-bottom: 0.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .note-header h1 {
@@ -132,7 +134,23 @@ function formatDate(date: Date): string {
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 1.25;
-    margin: 0;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .note-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+  }
+
+  .meta-separator {
+    opacity: 0.5;
+  }
+
+  .note-date {
+    color: var(--color-text-secondary);
   }
 
   .note-tags {
@@ -200,6 +218,10 @@ function formatDate(date: Date): string {
 
     .note-header h1 {
       font-size: 1.625rem;
+    }
+
+    .note-meta {
+      font-size: 0.875rem;
     }
 
     .note-content {

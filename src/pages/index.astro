@@ -40,6 +40,7 @@ import ForwardLink from '../components/ForwardLink.astro';
 import Testimonials from '../components/Testimonials.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config';
+import { getReadingTime } from '../utils/readingTime';
 
 /**
  * Queries and filters featured projects for hero section
@@ -70,6 +71,17 @@ const caseSnapshots = featuredProjects.slice(0, 3);
 const allArticles = await getCollection('analysis', ({ data }) => data.draft === false);
 const recentArticles = allArticles
   .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime())
+  .slice(0, 2);
+
+/**
+ * Queries recent notes for preview section
+ *
+ * Retrieves published notes, sorts by date (newest first), and limits to
+ * top 2 for the homepage preview.
+ */
+const allNotes = await getCollection('notes', ({ data }) => data.draft !== true);
+const recentNotes = allNotes
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 2);
 ---
 
@@ -146,30 +158,63 @@ const recentArticles = allArticles
       </p>
     </section>
 
-    <!-- Recent Analysis -->
-    <section class="recent-articles">
-      <div class="section-header">
-        <h2>Recent Analysis</h2>
-        <ForwardLink href="/analysis" text="View all" variant="muted" />
-      </div>
-
-      {recentArticles.length > 0 ? (
-        <div class="articles-list">
-          {recentArticles.map((article) => {
-            const date = new Date(article.data.publishDate);
-            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            return (
-              <a href={`/analysis/${article.id}`} class="article-item" data-astro-prefetch="tap">
-                <span class="article-date">{formattedDate}</span>
-                <h3 class="article-title">{article.data.title}</h3>
-                <p class="article-description">{article.data.description}</p>
-              </a>
-            );
-          })}
+    <!-- Recent Analysis & Notes -->
+    <section class="recent-content">
+      <div class="recent-grid">
+        <!-- Analysis Column -->
+        <div class="recent-column">
+          <div class="section-header">
+            <h2>Recent Analysis</h2>
+            <ForwardLink href="/analysis" text="View all" variant="muted" />
+          </div>
+          {recentArticles.length > 0 ? (
+            <div class="content-list">
+              {recentArticles.map((article) => {
+                const date = new Date(article.data.publishDate);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const readTime = getReadingTime(article.body || '');
+                return (
+                  <a href={`/analysis/${article.id}`} class="content-item" data-astro-prefetch="tap">
+                    <span class="content-meta">{formattedDate} · {readTime}</span>
+                    <h3 class="content-title">{article.data.title}</h3>
+                    <p class="content-description">{article.data.description}</p>
+                  </a>
+                );
+              })}
+            </div>
+          ) : (
+            <p class="no-content">No articles published yet.</p>
+          )}
         </div>
-      ) : (
-        <p class="no-articles">No articles published yet.</p>
-      )}
+
+        <!-- Notes Column -->
+        <div class="recent-column">
+          <div class="section-header">
+            <h2>Recent Notes</h2>
+            <ForwardLink href="/notes" text="View all" variant="muted" />
+          </div>
+          {recentNotes.length > 0 ? (
+            <div class="content-list">
+              {recentNotes.map((note) => {
+                const date = new Date(note.data.date);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const readTime = getReadingTime(note.body || '');
+                return (
+                  <a href={`/notes/${note.id}`} class="content-item" data-astro-prefetch="tap">
+                    <span class="content-meta">{formattedDate} · {readTime}</span>
+                    <h3 class="content-title">{note.data.title}</h3>
+                    {note.data.description && (
+                      <p class="content-description">{note.data.description}</p>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          ) : (
+            <p class="no-content">No notes published yet.</p>
+          )}
+        </div>
+      </div>
     </section>
 
     <!-- Testimonials -->
@@ -478,15 +523,26 @@ const recentArticles = allArticles
       max-width: 600px;
     }
 
-    .recent-articles {
+    .recent-content {
       margin-bottom: 5rem;
+    }
+
+    .recent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .recent-column {
+      display: flex;
+      flex-direction: column;
     }
 
     .section-header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .section-header h2 {
@@ -495,15 +551,15 @@ const recentArticles = allArticles
       letter-spacing: -0.01em;
     }
 
-    .articles-list {
+    .content-list {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
 
-    .article-item {
+    .content-item {
       display: block;
-      padding: 1.25rem 1.5rem;
+      padding: 1.25rem;
       background: var(--gradient-card);
       border: 1px solid var(--color-border);
       border-radius: 8px;
@@ -511,9 +567,10 @@ const recentArticles = allArticles
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      min-height: 180px;
     }
 
-    .article-item::before {
+    .content-item::before {
       content: '';
       position: absolute;
       top: 0;
@@ -525,17 +582,17 @@ const recentArticles = allArticles
       transition: opacity 0.3s ease;
     }
 
-    .article-item:hover {
+    .content-item:hover {
       border-color: var(--color-accent-muted);
       transform: translateY(-2px);
       box-shadow: 0 8px 30px var(--color-accent-glow);
     }
 
-    .article-item:hover::before {
+    .content-item:hover::before {
       opacity: 1;
     }
 
-    .article-date {
+    .content-meta {
       display: block;
       font-size: 0.75rem;
       font-weight: 500;
@@ -545,7 +602,7 @@ const recentArticles = allArticles
       margin-bottom: 0.5rem;
     }
 
-    .article-title {
+    .content-title {
       font-size: 1.125rem;
       font-weight: 600;
       line-height: 1.3;
@@ -553,13 +610,13 @@ const recentArticles = allArticles
       margin-bottom: 0.5rem;
     }
 
-    .article-description {
-      font-size: 0.9375rem;
-      line-height: 1.6;
+    .content-description {
+      font-size: 0.875rem;
+      line-height: 1.5;
       color: var(--color-text-secondary);
     }
 
-    .no-articles {
+    .no-content {
       color: var(--color-text-muted);
       font-style: italic;
       padding: 1.5rem 0;
@@ -660,13 +717,18 @@ const recentArticles = allArticles
         font-size: 1rem;
       }
 
+      .recent-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
       .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
       }
 
-      .decision-title {
+      .content-title {
         font-size: 1rem;
       }
 
