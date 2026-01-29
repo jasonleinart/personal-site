@@ -17,6 +17,8 @@
 /mental-models/* /analysis/ 301
 /build-logs/ /journey/ 301
 /build-logs/* /journey/ 301
+/blog/intj-fit-in-tech /analysis/ 301
+/blog/intj-fit-in-tech/ /analysis/ 301
 /blog/ /analysis/ 301
 /blog/* /analysis/ 301
 /about/ / 301
