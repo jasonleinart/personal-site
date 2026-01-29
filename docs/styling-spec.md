@@ -82,9 +82,24 @@ If a page needs additional styles beyond `.prose-content`:
 
 ---
 
+## Button Styles
+
+**Use global `.btn-primary` and `.btn-secondary` classes** for all CTAs.
+
+```html
+<a href="/path" class="btn-primary">Primary CTA</a>
+<a href="/path" class="btn-secondary">Secondary CTA</a>
+```
+
+- **Primary:** Terracotta gradient background, white text, glow effect
+- **Secondary:** Transparent with border, green (sage) hover state
+
+---
+
 ## Don't Duplicate
 
 **Never add these to page templates** (they're in global.css):
+- Button styles (.btn-primary, .btn-secondary)
 - Table styles (thead, th, td, borders)
 - Heading styles (h2, h3)
 - Paragraph margins
