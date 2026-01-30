@@ -470,24 +470,20 @@ pre code {
   background: rgba(201, 132, 116, 0.08);
 }
 
-.prose-content th:first-child {
-  border-left: 3px solid var(--color-accent);
-  padding-left: 1rem;
-}
-
 .prose-content td {
   padding: 0.875rem 1rem;
   color: var(--color-text-secondary);
   border-bottom: 1px solid var(--color-border);
 }
 
+.prose-content tr:hover td {
+  background: rgba(201, 132, 116, 0.04);
+}
+
+.prose-content th:first-child,
 .prose-content td:first-child {
   border-left: 3px solid var(--color-accent);
   padding-left: 1rem;
-}
-
-.prose-content tr:last-child td {
-  border-bottom: none;
 }
 
 /* Code */

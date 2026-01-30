@@ -36,10 +36,12 @@ Defined in `src/styles/global.css`:
 - **h3**: 1.375rem, semibold
 
 ### Tables (Terracotta Accent)
-- Left border: 3px solid `--color-accent` on first column
+- Left border: 3px solid `--color-accent` on first column (th:first-child, td:first-child)
 - Header: 2px bottom border in accent color
-- Header background: `rgba(201, 132, 116, 0.08)`
-- Cell padding: 0.875rem
+- Header background: `rgba(201, 132, 116, 0.08)` (subtle terracotta tint)
+- Cell padding: 0.875rem 1rem
+- Row dividers: 1px solid `--color-border` on td
+- Row hover: `rgba(201, 132, 116, 0.04)` background on tr:hover td
 
 ### Blockquotes
 - Left border: 4px solid `--color-accent`

@@ -2,9 +2,8 @@
 /**
  * AI Transformation Playbook - Main Overview
  *
- * Systems-thinking approach to intelligent operations.
- * Outlines frameworks and methodology for enterprise AI transformation.
- * Links to detailed phase subpages.
+ * NIST-aligned 6-phase methodology for enterprise AI transformation.
+ * Systems-thinking approach with change management as the throughline.
  *
  * Route: /playbook
  *
@@ -15,18 +14,12 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import SEO from '../../components/SEO.astro';
 import StructuredData from '../../components/StructuredData.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
-import { getCollection } from 'astro:content';
-
-// Get playbook phases for linking
-const phases = await getCollection('playbook', ({ data }) => !data.draft);
-const sortedPhases = phases.sort((a, b) => a.data.phase - b.data.phase);
 
 // Define headings for table of contents
 const headings = [
   { depth: 2, text: 'The Strategic Framework: Three Horizons of Impact', slug: 'strategic-framework' },
   { depth: 2, text: 'The Diagnostic: Maturity Evolution Audit', slug: 'diagnostic' },
-  { depth: 2, text: 'The Implementation: 5-Phase Methodology', slug: 'implementation' },
-  { depth: 2, text: 'Strategic Assets & Research', slug: 'strategic-assets' },
+  { depth: 2, text: 'The 6-Phase Methodology', slug: 'implementation' },
 ];
 ---
 
@@ -57,7 +50,7 @@ const headings = [
 
     <hr />
 
-    <h2 id="strategic-framework">1. The Strategic Framework: Three Horizons of Impact</h2>
+    <h2 id="strategic-framework">The Strategic Framework: Three Horizons of Impact</h2>
 
     <p>We categorize AI initiatives by their scale of impact and architectural requirements to ensure every project aligns with long-term business goals.</p>
 
@@ -80,117 +73,105 @@ const headings = [
 
     <hr />
 
-    <h2 id="diagnostic">2. The Diagnostic: Maturity Evolution Audit</h2>
+    <h2 id="diagnostic">The Diagnostic: Maturity Evolution Audit</h2>
 
     <p>Before building, we audit the plumbing gap—the friction between your current state and your desired horizon. Every organization operates within this four-level maturity pattern:</p>
 
-    <table class="maturity-table">
-      <thead>
-        <tr>
-          <th>Level</th>
-          <th>Maturity State</th>
-          <th>Operational Reality</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Level 1</strong></td>
-          <td>Applications</td>
-          <td>Individual AI tools with manual coordination and high friction.</td>
-        </tr>
-        <tr>
-          <td><strong>Level 2</strong></td>
-          <td>Integrated Systems</td>
-          <td>Connected workflows leveraging vendor AI ecosystems like M365 and Salesforce.</td>
-        </tr>
-        <tr>
-          <td><strong>Level 3</strong></td>
-          <td>Coordination Layer</td>
-          <td>Proactive AI management and multi-agent system optimization.</td>
-        </tr>
-        <tr>
-          <td><strong>Level 4</strong></td>
-          <td>Operating System</td>
-          <td>Seamless, high-velocity human-AI collaboration as the natural operating mode.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p class="note"><strong>Strategic Note:</strong> For the Fortune 1000, Level 2 is often the primary goal to maintain vendor accountability while maximizing AI utility.</p>
+    <div class="prose-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Maturity State</th>
+            <th>Operational Reality</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Level 1</strong></td>
+            <td>Applications</td>
+            <td>Individual AI tools with manual coordination and high friction.</td>
+          </tr>
+          <tr>
+            <td><strong>Level 2</strong></td>
+            <td>Integrated Systems</td>
+            <td>Connected workflows leveraging vendor AI ecosystems like M365 and Salesforce.</td>
+          </tr>
+          <tr>
+            <td><strong>Level 3</strong></td>
+            <td>Coordination Layer</td>
+            <td>Proactive AI management and multi-agent system optimization.</td>
+          </tr>
+          <tr>
+            <td><strong>Level 4</strong></td>
+            <td>Operating System</td>
+            <td>Seamless, high-velocity human-AI collaboration as the natural operating mode.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <hr />
 
-    <h2 id="implementation">3. The Implementation: 5-Phase Methodology</h2>
+    <h2 id="implementation">The 6-Phase Methodology</h2>
 
-    <p>This is the delivery mechanism—taking the diagnostic data and turning it into production reality.</p>
+    <p>This is the delivery mechanism—taking the diagnostic data and turning it into production reality. Each phase maps to specific NIST AI RMF subcategories, making this methodology defensible for enterprise governance requirements.</p>
 
     <div class="phase-list">
       <div class="phase">
         <div class="phase-number">1</div>
         <div class="phase-content">
-          <h3>Discovery</h3>
-          <p>Mapping the human mess. We use yesterday interviews to identify where tribal knowledge acts as a bottleneck.</p>
-          {sortedPhases.find(p => p.data.phase === 1) && (
-            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 1)?.id}`} class="phase-link">View methodology & tools →</a>
-          )}
+          <h3>Understand</h3>
+          <p><em>What's the actual problem?</em> Before touching technology, establish the business outcome, stakeholders, and driver hypotheses. Define context and intended use (NIST Map 1.1).</p>
+          <span class="phase-output">Output: Context defined; accountability gaps identified</span>
         </div>
       </div>
 
       <div class="phase">
         <div class="phase-number">2</div>
         <div class="phase-content">
-          <h3>Opportunity Assessment</h3>
-          <p>Applying the build vs. buy framework to navigate the total cost of ownership for custom builds versus vendor-delivered AI.</p>
-          {sortedPhases.find(p => p.data.phase === 2) && (
-            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 2)?.id}`} class="phase-link">View methodology & tools →</a>
-          )}
+          <h3>Assess</h3>
+          <p><em>Where are we now?</em> Map current workflows, quantify the problem in dollars, and assess process readiness. The Mess-O-Meter determines if you're ready for AI or need to standardize first.</p>
+          <span class="phase-output">Output: Prioritized Transformation Roadmap</span>
         </div>
       </div>
 
       <div class="phase">
         <div class="phase-number">3</div>
         <div class="phase-content">
-          <h3>Architecture</h3>
-          <p>Implementing the five-layer AI core—Data, Intelligence, Orchestration, Integration, and Command Center—through quick-win projects.</p>
-          {sortedPhases.find(p => p.data.phase === 3) && (
-            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 3)?.id}`} class="phase-link">View methodology & tools →</a>
-          )}
+          <h3>Design</h3>
+          <p><em>What do we build?</em> Apply the Intent Filter, make build vs. buy decisions, and classify governance requirements. For GAI, address confabulation, information integrity, and content provenance.</p>
+          <span class="phase-output">Output: System-level governance gaps identified</span>
         </div>
       </div>
 
       <div class="phase">
         <div class="phase-number">4</div>
         <div class="phase-content">
-          <h3>Change Management</h3>
-          <p>Focusing on organizational readiness. We move teams from skeptical to fluent through adoption-focused training.</p>
-          {sortedPhases.find(p => p.data.phase === 4) && (
-            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 4)?.id}`} class="phase-link">View methodology & tools →</a>
-          )}
+          <h3>Govern</h3>
+          <p><em>How do we do it right?</em> Assess failure modes, red team adversarially, establish RACI accountability, and configure KRI monitoring. Governance intensity scales with the Intent Filter.</p>
+          <span class="phase-output">Output: Governance Attestation (implemented, not planned)</span>
         </div>
       </div>
 
       <div class="phase">
         <div class="phase-number">5</div>
         <div class="phase-content">
-          <h3>Measurement</h3>
-          <p>Tracking actual ROI and focus-hours recaptured through custom command center dashboards.</p>
-          {sortedPhases.find(p => p.data.phase === 5) && (
-            <a href={`/playbook/${sortedPhases.find(p => p.data.phase === 5)?.id}`} class="phase-link">View methodology & tools →</a>
-          )}
+          <h3>Adopt</h3>
+          <p><em>How do we get buy-in?</em> Activate champions, address resistance, execute training on AI limitations. Target 10-30% override rate—0% is a red flag for automation bias.</p>
+          <span class="phase-output">Output: Adoption Scorecard (human readiness)</span>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-number">6</div>
+        <div class="phase-content">
+          <h3>Prove</h3>
+          <p><em>Did it work?</em> Validate actual vs. projected ROI, track trustworthiness KRIs, and make the Scale/Retool/Retire decision at 90 days.</p>
+          <span class="phase-output">Output: 90-Day ROI Validation; Scale/Retool/Retire decision</span>
         </div>
       </div>
     </div>
-
-    <hr />
-
-    <h2 id="strategic-assets">4. Strategic Assets & Research</h2>
-
-    <p>My methodology is continuously updated with deep-dive research into industry-specific regulatory and operational constraints.</p>
-
-    <ul>
-      <li><strong>Case Study:</strong> Why the JPM focus on vendor-delivered AI is the blueprint for enterprise transformation.</li>
-      <li><strong>Framework:</strong> The mid-market governance matrix for classifying risk and PII.</li>
-    </ul>
 
   </article>
 </PageLayout>
@@ -272,31 +253,6 @@ const headings = [
     margin-bottom: 0;
   }
 
-  /* Maturity Table */
-  .maturity-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--space-xl) 0;
-    font-size: 0.9375rem;
-  }
-
-  .maturity-table th,
-  .maturity-table td {
-    padding: var(--space-md);
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .maturity-table th {
-    color: var(--color-text);
-    font-weight: var(--font-weight-semibold);
-    background: var(--gradient-card);
-  }
-
-  .maturity-table td {
-    color: var(--color-text-secondary);
-  }
-
   .note {
     padding: var(--space-md);
     background: rgba(201, 132, 116, 0.1);
@@ -340,21 +296,25 @@ const headings = [
   .phase-content h3 {
     margin-top: 0;
     margin-bottom: var(--space-xs);
+    font-size: 1.5rem;
   }
 
   .phase-content p {
     margin-bottom: var(--space-sm);
   }
 
-  .phase-link {
-    font-size: 0.875rem;
-    color: var(--color-accent);
-    text-decoration: none;
+  .phase-content p em {
+    color: var(--color-text);
+    font-style: normal;
     font-weight: var(--font-weight-medium);
   }
 
-  .phase-link:hover {
-    text-decoration: underline;
+  .phase-output {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--space-xs);
   }
 
   @media (max-width: 768px) {
