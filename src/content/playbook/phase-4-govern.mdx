@@ -1,0 +1,280 @@
+---
+title: "Govern"
+description: "Implement oversight and controls for responsible AI deployment. Assess failure modes, test adversarially, establish accountability, and configure monitoring."
+phase: 4
+summary: "How do we do this responsibly? Implement governance controls—failure mode assessment, red teaming, accountability structures, and KRI monitoring."
+tools:
+  - name: "Failure Mode Checklist"
+    description: "Assess 8 AI failure modes (hallucination, bias, drift, etc.) with likelihood, impact, and mitigations."
+    type: checklist
+  - name: "Red Team Protocol"
+    description: "Adversarial testing procedures for pre-deployment stress testing. Go/no-go decision based on findings."
+    type: framework
+  - name: "Three Lines RACI"
+    description: "Accountability matrix with attestation. Named individuals, not teams—diffuse accountability is no accountability."
+    type: template
+  - name: "KRI Template"
+    description: "Key risk indicators with thresholds that trigger the Incident Severity Framework."
+    type: template
+  - name: "Vendor Governance Template"
+    description: "Third-party AI oversight for 'Buy' components. You can outsource infrastructure, not accountability."
+    type: template
+  - name: "Shadow AI Assessment"
+    description: "Policy template for addressing unauthorized consumer AI usage. Prohibition vs. 'pave the desire paths.'"
+    type: checklist
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Governance isn't a checkbox—it's how you build the trust required for successful adoption. This phase converts requirements into implemented controls."
+  points:
+    - "<strong>Governance by Intent:</strong> Cost Centers need different controls than Revenue Centers. Scale governance to risk."
+    - "<strong>Split accountability:</strong> For Buy + Build Vertical, govern both layers—vendor provides infrastructure, you own outputs."
+    - "<strong>BSPF Gates:</strong> Data Gate (before modeling) and Model Gate (before deployment) enforce quality checkpoints."
+    - "<strong>Attestation, not planning:</strong> Phase output is implemented governance with sign-off, not a plan to implement governance."
+draft: false
+---
+
+Abstract policies about responsible AI mean nothing until they become specific controls. What bias testing did you perform? What happens when the model fails? Who can explain why it made a particular decision?
+
+This phase converts governance requirements into implemented controls with sign-off. Not plans to implement governance—actual governance, attested and operational.
+
+**"How do we do this responsibly?"**
+
+The answer varies based on what you're building. A customer-facing revenue agent needs different controls than an internal efficiency tool. One-size-fits-all governance either over-constrains low-risk applications or under-protects high-risk ones.
+
+---
+
+## Framework Connections
+
+This phase is where governance goes from abstract to concrete.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | Gates (Data Gate, Model Gate) enforce quality checkpoints |
+| **Governance** | Full implementation: failure modes, red teaming, RACI, KRIs (NIST Measure 2.1-2.13, Govern 2.1-2.2) |
+| **Change Management** | Clarify accountability; build trust through transparency |
+
+Governance isn't a checkbox. It's how you build the trust required for successful adoption in Phase 5.
+
+---
+
+## Governance by Intent
+
+The Intent Filter from Phase 3 determines governance intensity. Different intents require different controls.
+
+### Cost Center (Internal Efficiency)
+
+| Focus | Key Controls | Quality Gate |
+|-------|--------------|--------------|
+| Productivity, operational risk | Automation bias monitoring, internal data privacy | **Data Gate**: Authorized use of internal corporate knowledge |
+
+Internal tools can tolerate some friction in exchange for speed. Employees can be trained on limitations. Errors stay internal.
+
+### Revenue Center (External Growth)
+
+| Focus | Key Controls | Quality Gate |
+|-------|--------------|--------------|
+| Public safety, brand reputation | Rigorous red-teaming, output provenance, legal review | **Model Gate**: External bias testing, legal review of expertise layer |
+
+Customer-facing agents carry brand risk. Errors become public. Regulatory exposure increases. Governance intensity must match.
+
+Applying startup-speed governance to enterprise-risk applications creates liability. Applying enterprise governance to low-risk internal tools creates unnecessary friction. Match controls to actual risk.
+
+---
+
+## Split Accountability
+
+If you chose Buy + Build Vertical in Phase 3, governance splits across two layers.
+
+| Layer | Governance Focus | NIST Alignment |
+|-------|------------------|----------------|
+| **"Buy" Layer** (Infrastructure) | Vendor oversight—verify platform meets security and reliability standards | Govern 6.1-6.2 (Third-party risk) |
+| **"Build" Layer** (Expertise) | Full organizational accountability—failure modes focus on your encoded domain knowledge | Measure 2.1-2.13 (Failure modes) |
+
+The vendor provides infrastructure. You own the quality and trustworthiness of what it produces.
+
+A law firm using Claude for contract analysis still bears malpractice risk if the output is wrong. OpenAI doesn't get sued—the firm does. Govern accordingly. Verify vendor security posture, but don't confuse vendor compliance with your accountability.
+
+---
+
+## Key Activities
+
+### Failure Mode Assessment
+
+Every system fails. The question is whether you designed for it.
+
+Identify applicable failure modes for your specific system:
+
+- Hallucination/confabulation
+- Bias and fairness issues
+- Model drift over time
+- Data quality degradation
+- Integration brittleness
+- Single points of failure
+
+For each mode: rate likelihood, rate impact, define mitigations, define monitoring.
+
+One insurance company's claims processing AI had no fallback. When the model service went down during a hurricane—exactly when claim volume spiked—the entire claims operation stopped. Not degraded. Stopped. Four days to restore manual processes. Design failure paths with the same care as happy paths.
+
+### Red Team Testing
+
+Red teaming isn't QA. It's creative destruction. The goal is finding vulnerabilities before users do.
+
+One red team session found a customer service bot would cheerfully provide refund instructions for products the company didn't sell. Nobody had tested what happened when users lied about their purchases. That's the kind of finding that prevents public embarrassment.
+
+For Revenue Center applications, red team the expertise layer specifically. Can adversarial prompts extract proprietary methodology? Can users manipulate outputs through creative framing? Document vulnerabilities, implement remediations, then make a go/no-go decision based on residual risk.
+
+### Accountability Setup
+
+Diffuse accountability is no accountability. The RACI matrix must have named individuals, not teams.
+
+- **Responsible:** Who does the work?
+- **Accountable:** Who owns the outcome? (One person only)
+- **Consulted:** Who provides input?
+- **Informed:** Who needs to know?
+
+Define escalation paths. Assign Three Lines of Defence roles. Get sign-off from every accountable party before proceeding.
+
+When something breaks at 2 AM, "the AI team" isn't an answer. A named individual with a phone number is.
+
+### Monitoring Configuration
+
+KRI thresholds mean nothing without configured dashboards.
+
+Before go-live:
+- Define key risk indicators with specific thresholds
+- Configure dashboards that surface violations
+- Establish alert protocols and response procedures
+- Connect KRIs to the Incident Severity Framework
+
+One client defined elaborate KRIs but never built the dashboards. Six months later, model drift had degraded accuracy by 23%. Nobody noticed because nobody was watching.
+
+### Shadow AI Policy
+
+Shadow AI—employees using ChatGPT, Claude, or Gemini for work without approval—creates governance risk. Sensitive data flows to systems you don't control.
+
+But prohibition alone rarely works. It just drives usage underground.
+
+| Approach | When to Use |
+|----------|-------------|
+| **Prohibition** | Highly regulated environments; severe data sensitivity; no resources for alternatives |
+| **Pave the Desire Paths** | Most organizations—provide sanctioned enterprise alternatives that are better than consumer options |
+
+JPMorgan Chase faced this with 200,000+ employees. Their solution: radical democratization of secure internal tools. The LLM Suite brought AI usage "back into the light" by making the secure option objectively better than public alternatives. Employees migrated naturally because the internal tools were faster, connected to internal data, and more context-aware.
+
+The question isn't whether employees will use AI. It's whether they'll use AI you govern or AI you don't.
+
+---
+
+## BSPF Gate Integration
+
+Two quality gates enforce checkpoints before proceeding.
+
+### Data Gate (Before Modeling)
+
+| Checkpoint | Question |
+|------------|----------|
+| **Ownership** | Who owns this data? Is use authorized? |
+| **Quality** | Accurate, complete, timely? |
+| **Privacy/Compliance** | PII concerns? GDPR, HIPAA, regulatory requirements? |
+| **Representativeness** | Reflects current business reality? Free of historical bias? |
+
+Data problems discovered after deployment cost ten times what they cost here. One healthcare client scrapped three months of work because nobody checked HIPAA implications until deployment review.
+
+### Model Gate (Before Deployment)
+
+| Checkpoint | Question |
+|------------|----------|
+| **Technical Validation** | Performs at production scale with production latency? |
+| **Business Validation** | Makes sense to domain experts? |
+| **Bias/Fairness** | Treats segments equitably? |
+| **Explainability** | Can justify decisions to stakeholders? |
+| **Failure Modes** | Assessed and mitigated? |
+| **Red Teaming** | Adversarially tested? |
+
+One team's model ran fine on sample data but took 47 seconds per inference at full scale. They discovered this in production. Test with production volume, production data patterns, and production latency requirements before deployment.
+
+A hiring model that worked great in aggregate turned out to systematically underrate candidates from certain universities—not from explicit bias, but because training data reflected a decade of biased human decisions. Document what you tested, what you found, and what you did about it.
+
+---
+
+## Incident Severity Framework
+
+When issues occur, classify and respond appropriately.
+
+| Level | Trigger | Response |
+|-------|---------|----------|
+| **1 - Low** | Minor deviations, within thresholds | Routine monitoring |
+| **2 - Medium** | Below target thresholds, no external exposure | 24-hour corrective action |
+| **3 - High** | Significant issues, potential external exposure | System restriction, emergency team activation |
+| **4 - Critical** | Confirmed harm or breach | Complete shutdown, external notification, incident response |
+
+Define these levels before you need them. During an incident is the wrong time to debate severity classification.
+
+---
+
+## NIST AI RMF Mapping
+
+Connecting Phase 4 activities to NIST requirements ensures nothing gets missed.
+
+| Activity | NIST Mapping | Integration Point |
+|----------|--------------|-------------------|
+| **Failure Mode Assessment** | Measure 2.1-2.13 | Rate GAI-specific risks like confabulation |
+| **Accountability (RACI)** | Govern 2.1-2.2 | Define who owns risk of agent outputs |
+| **Monitoring (KRIs)** | Measure 4.1-4.3 | Define thresholds that trigger Incident Severity Framework |
+| **Red Teaming** | Measure 2.7 | Stress-test expertise layer against adversarial prompts |
+
+---
+
+## Phase Output
+
+At this stage, your Gap Analysis becomes an **Attestation**.
+
+The deliverables aren't plans—they're implemented controls:
+
+1. **Failure mode assessment** — Documented with mitigations operational
+2. **Red team report** — Findings addressed, residual risk accepted
+3. **RACI matrix** — Signed by all accountable parties
+4. **KRI dashboards** — Configured and monitored
+5. **Gate passage** — Data Gate and/or Model Gate cleared
+
+The test is whether you can deliver something like this to leadership:
+
+> "For this Revenue Center agent, we have closed the gap in Manage 4.3 by implementing a real-time safety layer that filters all external outputs. Red team testing found three vulnerabilities; all have been remediated. All Phase 4 exit criteria have been met, and the system is cleared for the Adopt phase."
+
+That's attestation, not aspiration. Governance implemented, not governance planned.
+
+---
+
+## Exit Criteria
+
+Before moving to **Adopt**:
+
+- [ ] Failure modes assessed with mitigations documented (including GAI-specific)
+- [ ] Red team testing completed with findings addressed
+- [ ] RACI matrix approved by all accountable parties
+- [ ] KRI thresholds defined and monitoring configured
+- [ ] Data Gate passed (if applicable)
+- [ ] Model Gate passed (if applicable)
+- [ ] Deployment approval obtained per risk classification
+- [ ] Governance attestation signed (implemented, not planned)
+- [ ] For Revenue Center: Legal review of expertise layer completed
+
+If any of these are missing, you're deploying without governance. That's how incidents happen.
+
+---
+
+## Common Mistakes
+
+**Governance as checkbox.** Teams rush through to ship faster. But governance builds trust. If stakeholders don't trust the Govern phase was rigorous, they'll resist adoption. Take it seriously or watch adoption fail despite working technology.
+
+**Skipping red team.** "It's low risk" isn't an excuse. Even internal agents can leak PII or produce discriminatory content if not tested adversarially. The customer service bot giving refund instructions for products you don't sell? That's what red teaming catches.
+
+**Unclear accountability.** Everyone assumes someone else owns the risk. Get named individuals in the RACI, with actual sign-off. "The AI team is responsible" means nobody is responsible.
+
+**KRIs without monitoring.** Defining thresholds accomplishes nothing if dashboards don't exist. Configure monitoring before go-live. The client who discovered 23% accuracy degradation after six months? They had KRIs. They just never built the dashboards.
+
+**Same controls for all use cases.** Cost Centers need different governance than Revenue Centers. Internal tools can move faster with lighter controls. Customer-facing agents need rigorous review. Match governance intensity to actual risk.
+
+**Treating gates as formality.** Problems caught in the Model Gate cost 10x less than problems in production, 100x less than problems that make the news. The hiring model with university bias? Caught in the Model Gate, it's a finding. Caught in production, it's a lawsuit.

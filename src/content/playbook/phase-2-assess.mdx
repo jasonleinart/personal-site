@@ -1,0 +1,248 @@
+---
+title: "Assess"
+description: "Quantify the current state through process discovery, automation scoring, and cost analysis. Establish the baseline for proving value later."
+phase: 2
+summary: "Where are we now, and how bad is the gap? Map actual workflows, score automation potential, quantify the dollar impact, and assess organizational readiness."
+tools:
+  - name: "Observation Checklist"
+    description: "Field observation form capturing process steps, handoffs, exceptions, and workarounds as they happen—not as people describe them."
+    type: checklist
+  - name: "SIPOC Template"
+    description: "High-level process map identifying Suppliers, Inputs, Process steps, Outputs, and Customers. Creates shared vocabulary."
+    type: framework
+  - name: "Swimlane Template"
+    description: "Cross-functional diagram showing handoffs and responsibilities across roles. Reveals where work stalls waiting for others."
+    type: template
+  - name: "Automation Scorecard"
+    description: "Score processes on volume, standardization, error rate, and strategic value to prioritize automation candidates."
+    type: calculator
+  - name: "Mess-O-Meter"
+    description: "Assess process readiness before AI. Standardize before you automate—AI amplifies chaos if the underlying process is broken."
+    type: checklist
+  - name: "Current State Cost Worksheet"
+    description: "Capture labor costs, error costs, delay costs, and opportunity costs. No dollars = no business case."
+    type: template
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Proof of Value requires a baseline. This phase establishes the quantified current state against which success is measured."
+  points:
+    - "<strong>Process discovery:</strong> Observe actual work, not documented process. Ask 'show me' not 'tell me.'"
+    - "<strong>Mess-O-Meter:</strong> Score process readiness. Green (proceed), Yellow (fix gaps), Red (standardization sprint), Black (redesign needed)."
+    - "<strong>Cost quantification:</strong> 'It's obviously valuable' isn't a business case. Put dollars on the problem."
+    - "<strong>POV not POC:</strong> Establish the baseline for Proof of Value. Without quantification, you can't prove impact later."
+draft: false
+---
+
+Most AI initiatives die in Pilot Purgatory. The team proves the chatbot works, the demo looks impressive, leadership nods approvingly—and then nothing happens. No budget for scaling. No path to production. The project quietly dissolves because nobody could answer the question that actually matters: Is this worth the investment?
+
+The Assess phase exists to prevent that outcome. Everything you do here establishes the baseline that makes Proof of Value possible later.
+
+**"Where are we now, and how bad is the gap?"**
+
+If you can't quantify the problem in dollars, you can't justify the solution. And if you can't prove value in Phase 6, you won't get funding for the next initiative.
+
+---
+
+## Framework Connections
+
+This phase applies all three frameworks to assessment and quantification.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | Steps 3-4: Measure drivers, uncover problems, quantify dollar impact |
+| **Governance** | Assess data quality and process readiness (NIST Map 2.1-2.2, Govern 1.1, 2.3) |
+| **Change Management** | Document current pain points; identify where resistance will come from |
+
+The quantification you do here becomes the baseline against which success is measured in Phase 6. Skip this phase and you'll have nothing to compare against when leadership asks "Did it work?"
+
+---
+
+## POV vs. POC: The Critical Distinction
+
+Most AI projects prove the wrong thing. They demonstrate technical feasibility when they should be demonstrating business impact.
+
+| | POC (Insufficient) | POV (Required) |
+|---|-------------------|----------------|
+| **Proves** | Technical feasibility | Business impact |
+| **Deliverable** | "We built a chatbot" | "Chatbot reduced ticket volume 30%" |
+| **Leads to** | "Now what?" | Budget for scaling |
+| **Measurement** | It works | It's worth it |
+
+The distinction matters because POC projects get stuck. They work technically but can't justify continued investment. POV projects scale because they've already demonstrated return.
+
+Before leaving this phase, you should be able to complete this sentence:
+
+> "If this initiative succeeds, we will [measurable outcome] worth [$X] annually."
+
+If you can't fill in the blanks with real numbers, you're not ready for Phase 3.
+
+---
+
+## Key Activities
+
+### Process Discovery
+
+Phase 1 identified stakeholders and hypothesized drivers. Now you document what actually happens.
+
+SIPOC gives the 30,000-foot view: who provides inputs, what goes in, what comes out, who receives it. Once everyone agrees on SIPOC, you have shared vocabulary. I've watched teams argue for 20 minutes because they were using the same word—"the application"—to mean different things.
+
+Swimlane diagrams show the handoff reality. Most process inefficiency isn't in the tasks themselves. It's in the white space between roles where work sits waiting for someone else. A claims processor might complete their part in 10 minutes, but the file sits in a queue for three days waiting for underwriting review.
+
+The observation checklist standardizes what you capture so findings are comparable across roles and teams.
+
+### Automation Assessment: The Mess-O-Meter
+
+Here's where most teams make a critical mistake: they try to automate broken processes. AI doesn't fix chaos—it amplifies it. Faster garbage is still garbage.
+
+**Principle: Standardize before you automate.**
+
+The Mess-O-Meter diagnostic evaluates six dimensions of process readiness:
+
+- Workflow documentation quality
+- Tribal knowledge dependency
+- Conversational bottlenecks (decisions made via email or hallway chat)
+- Manual micro-decisions
+- Data readiness
+- Decision criteria clarity
+
+Each dimension scores 0-10. Total score determines readiness:
+
+| Score | Rating | What It Means |
+|-------|--------|---------------|
+| **0-10** | Green | Proceed to AI |
+| **11-25** | Yellow | Address specific gaps first |
+| **26-40** | Red | Standardization sprint required |
+| **41-60** | Black | Process redesign needed |
+
+A manufacturing client wanted to automate their quality inspection workflow. The Mess-O-Meter scored it Black—42 points. Tribal knowledge dependency alone scored 9 because one senior inspector made judgment calls that nobody else understood and nothing documented. We spent eight weeks standardizing decision criteria before touching AI. Without that work, the model would have learned one person's undocumented intuition and failed the moment he retired.
+
+### Cost Quantification
+
+You can't calculate ROI without knowing what the problem costs today. Most teams skip this step because it's tedious, then wonder why leadership won't approve their project.
+
+I force specificity across four cost categories:
+
+**Labor costs** — What do people spend time on? A paralegal spending 3 hours per contract at $85/hour across 200 contracts monthly is $51,000/year in labor alone.
+
+**Error costs** — What happens when the process goes wrong? One insurance company traced $340,000 in annual claims rework to data entry errors in a single intake form.
+
+**Delay costs** — What's the cost of waiting? If a contract sits in review for an extra week, what deals slip? What penalties accrue?
+
+**Opportunity costs** — What could people do instead? Senior associates doing document review aren't doing client development.
+
+Don't estimate. Interview the people doing the work. Check numbers against system logs when possible. Leadership will challenge your assumptions. Have the receipts.
+
+One addition that most teams miss: include the **cost of risk**. What's the potential cost of AI hallucination? Data leakage? Biased outputs reaching customers? These risks have dollar values too—regulatory fines, reputation damage, legal exposure. Factor them in.
+
+### Trustworthiness Baseline
+
+You can't claim AI is better than humans if you don't know the human baseline. You can't design appropriate oversight if you don't know where oversight already exists.
+
+Document three things:
+
+**Current error rates** — How often does the manual process get it wrong? If humans make mistakes 8% of the time, an AI that's wrong 5% of the time is an improvement. An AI that's wrong 12% of the time is a step backward.
+
+**Existing oversight mechanisms** — Where do humans already catch errors? A second reviewer who flags problems 40% of the time represents a checkpoint you might need to preserve.
+
+**Data provenance** — Where did the training data come from? Who owns it? Does it reflect the population it will serve, or does it encode historical biases?
+
+This baseline becomes critical in Phase 6 when you're validating whether the AI actually improved outcomes.
+
+---
+
+## The Readiness Scorecard
+
+Process readiness and trustworthiness readiness are separate dimensions. A process can pass one and fail the other.
+
+| Dimension | Tool | Question It Answers |
+|-----------|------|---------------------|
+| **Process Readiness** | Mess-O-Meter | Can we automate this without amplifying chaos? |
+| **Trustworthiness Readiness** | NIST Gap Analysis | Do we have the governance infrastructure to deploy AI responsibly? |
+
+A process can score Green on the Mess-O-Meter but still fail trustworthiness readiness if data ownership is undefined or bias hasn't been assessed. Both dimensions must clear before moving to Design.
+
+---
+
+## Data Readiness Assessment
+
+Data problems discovered in Phase 4 cost ten times what they cost in Phase 2. Assess readiness now.
+
+**Ownership: Who controls the data you need?**
+
+This sounds obvious until you discover the customer data lives in Marketing's Salesforce, the transaction data lives in Finance's ERP, and neither department has agreed to share it with your project. I've watched a 6-month initiative stall for 4 months on data access negotiations that should have happened in week one.
+
+**Quality: Is the data clean enough to use?**
+
+Clean enough depends on the use case. A recommendation engine can tolerate some noise. A fraud detection model can't. Check completeness rates, update frequency, and error rates in key fields.
+
+**Compliance: What regulations apply?**
+
+GDPR, CCPA, HIPAA, industry-specific rules—all constrain what you can do with data. Finding out after you've built something is expensive. One healthcare client had to scrap three months of work because nobody checked HIPAA implications until the compliance review.
+
+**Representativeness: Does the data reflect reality?**
+
+A model trained on last year's data might not work if the business changed. A model trained on one region might not generalize to others. Check what time period the data covers, whether there are known gaps, and whether the underlying process has changed since collection.
+
+Add two checks for AI-specific concerns: Does the data reflect the population it will serve (bias)? Can you trace where it came from (provenance)?
+
+---
+
+## NIST AI RMF Mapping
+
+Connecting Phase 2 activities to NIST requirements ensures nothing gets missed.
+
+| Activity | NIST Mapping | Integration Point |
+|----------|--------------|-------------------|
+| **Process Discovery** | Map 1.1, 5.1-5.2 | Identify where human-in-the-loop oversight is missing or required |
+| **Automation Assessment** | Map 2.1-2.2 | Evaluate technical limits and whether data supports intended outputs |
+| **Mess-O-Meter** | Govern 1.1, 2.3 | Flag tribal knowledge dependencies as governance risk |
+| **Cost Quantification** | Manage 1.1-1.2 | Include cost of risk in financial projections |
+
+The "Integration Point" column shows what elevates assessment from checkbox exercise to expert practice.
+
+---
+
+## Phase Output
+
+The ultimate deliverable is a **Prioritized Transformation Roadmap** that combines business value with governance requirements:
+
+1. **Opportunity Scorecard** — Automation candidates ranked by business value
+2. **Mess-O-Meter scores** — Process readiness by candidate
+3. **NIST Gap Analysis** — Governance requirements by risk level
+4. **Quantified baseline** — Dollars at stake, current error rates, cost of risk
+
+The test is whether you can deliver something like this to leadership:
+
+> "Process X is our best automation candidate—$280,000 annual impact, high volume, standardized workflow. It scores Green on the Mess-O-Meter. But it handles PII, so we need to address data governance gaps before Design. Process Y has higher dollar impact but scores Black on process readiness. We recommend a 6-week standardization sprint before considering AI."
+
+That framing shows you're not just cheerleading AI. You're identifying what needs to happen and in what order.
+
+---
+
+## Exit Criteria
+
+Before moving to **Design**:
+
+- [ ] Current state process documented (not just described)
+- [ ] Pain points validated with stakeholders
+- [ ] Problem quantified in dollars (cost of status quo + cost of risk)
+- [ ] Process readiness assessed (Mess-O-Meter scores for each candidate)
+- [ ] Data availability, quality, bias, and provenance evaluated
+- [ ] Automation candidates prioritized with risk severity
+- [ ] Trustworthiness baseline established (current error rates, existing oversight)
+
+If any of these are missing, you're building a business case on assumptions. Assumptions get challenged. Assumptions lose funding.
+
+---
+
+## Common Mistakes
+
+**Documenting the ideal instead of the actual.** People describe how work should happen. The process document says one thing; reality says another. When someone explains their workflow, ask "show me" instead of "tell me." Observation reveals what interviews hide.
+
+**Skipping quantification.** "We know it's expensive" isn't a business case. "It's obviously valuable" doesn't get budget approved. I've watched promising initiatives die because the team couldn't answer "How much does this cost today?" Leadership approves numbers, not intuitions.
+
+**Automating the mess.** The pressure to move fast is real. Stakeholders want results. But AI amplifies whatever process it touches. If the process is chaos, AI creates faster chaos. Run the Mess-O-Meter. If it scores Red or Black, standardize first. The extra weeks save months of rework later.
+
+**Ignoring the trustworthiness baseline.** Teams get excited about AI accuracy without knowing human accuracy. They design oversight mechanisms without knowing what oversight already exists. Capture the baseline or lose the ability to prove improvement.

@@ -1,0 +1,254 @@
+---
+title: "Design"
+description: "Make informed build vs. buy decisions, evaluate vendors, define solution architecture, and classify governance requirements based on intent."
+phase: 3
+summary: "What are we going to build (or buy)? Apply the Intent Filter, make build vs. buy decisions, evaluate vendors, and complete governance classification."
+tools:
+  - name: "Build vs. Buy Matrix"
+    description: "Weighted decision framework across cost, time-to-value, risk, and capability. Includes the 'Buy + Build Vertical' hybrid option."
+    type: framework
+  - name: "Vendor Evaluation Scorecard"
+    description: "Multi-criteria scoring for AI vendors covering technical fit, security, pricing, and GAI-specific concerns."
+    type: calculator
+  - name: "Use Case Intake Form"
+    description: "Governance intake with 12 key questions on data rights, bias testing, explainability, and human oversight. Determines risk classification."
+    type: checklist
+  - name: "TCO Checklist"
+    description: "Total cost of ownership factors: implementation, licensing, maintenance, training, and hidden costs most teams miss."
+    type: checklist
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "legal-ai-roadmap"
+tldr:
+  summary: "Binary 'build or buy' thinking creates deadlock. This phase applies strategic filters and considers hybrid approaches."
+  points:
+    - "<strong>Intent Filter:</strong> Cost Center (internal efficiency) vs. Revenue Center (external growth) determines governance intensity and strategy."
+    - "<strong>Buy + Build Vertical:</strong> Buy the infrastructure (LLM, RAG, hosting). Build the moat (domain expertise, methodology). Own the outputs."
+    - "<strong>Use Case Intake:</strong> 12 questions covering data rights, bias, explainability, oversight. Risk classification drives approval routing."
+    - "<strong>GAI concerns:</strong> Confabulation management, information integrity, human-AI configuration, content provenance."
+draft: false
+---
+
+Binary "build or buy" debates can stall projects for months. Engineers want to build because custom means control. Executives want to buy because vendors mean speed. Both are usually wrong—or at least incomplete.
+
+Design isn't about picking technology. It's about making strategic decisions that align with business intent. The wrong decision here compounds through every phase that follows.
+
+**"What are we going to build (or buy)?"**
+
+The answer depends on something most teams never clarify: Is this AI meant to reduce internal costs or generate external revenue? That distinction changes everything.
+
+---
+
+## Framework Connections
+
+This phase applies all three frameworks to solution design decisions.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | Step 5: Encode algorithms, develop solution approach |
+| **Governance** | Risk classification, third-party oversight (NIST Govern 6.1-6.2, Measure 1.1) |
+| **Change Management** | Co-design with end users; address concerns early before they become resistance |
+
+The Intent Filter shapes every decision in this phase. Apply it first.
+
+---
+
+## The Intent Filter
+
+Before touching build-vs-buy matrices or vendor scorecards, answer one question: Is this AI a cost center or a revenue center?
+
+| Intent | Strategy | Governance Focus |
+|--------|----------|------------------|
+| **Cost Center** (Internal Efficiency) | Favor buying the rails | Internal data security, employee productivity metrics. Goal: reduce toil, speed up outcomes |
+| **Revenue Center** (External Growth) | Favor building or Buy + Build Vertical | Customer trust, public fairness, brand reputation. Goal: build the moat |
+
+A revenue-generating AI agent that touches customers is fundamentally different from an internal efficiency tool. The governance requirements diverge. The risk tolerance diverges. The accountability structures diverge.
+
+An internal document summarization tool can tolerate occasional errors—humans review the output anyway. A customer-facing pricing agent that makes mistakes damages brand trust and potentially triggers regulatory scrutiny. Same technology, completely different design requirements.
+
+The Intent Filter isn't bureaucracy. It's the decision that prevents you from applying startup-speed governance to enterprise-risk applications.
+
+---
+
+## Build vs. Buy Framework
+
+Once you know the intent, evaluate the build-vs-buy tradeoffs honestly.
+
+| Factor | Favors Build | Favors Buy |
+|--------|--------------|------------|
+| **Competitive advantage** | Core differentiator | Commodity capability |
+| **Data sensitivity** | Can't share externally | Acceptable vendor access |
+| **Internal capability** | Have ML/engineering talent | Lack expertise |
+| **Time to value** | Can invest in development | Need immediate solution |
+| **Long-term cost** | Lower TCO at scale | Higher TCO but faster start |
+
+The instinct is usually wrong. Engineers underestimate maintenance burden. Executives underestimate integration complexity. A startup with engineers and no budget weights these factors differently than an enterprise with procurement cycles and compliance requirements.
+
+But here's the thing: binary thinking creates deadlock. Most AI solutions shouldn't be pure build or pure buy.
+
+---
+
+## Buy + Build Vertical
+
+The hybrid strategy resolves build-vs-buy paralysis.
+
+**Buy the Rails:** Purchase commodity AI infrastructure—the LLM, RAG pipeline, cloud hosting. Don't waste 12+ months building what already exists. OpenAI, Anthropic, Google, and a dozen others have spent billions on foundation models. You're not going to build a better one.
+
+**Build the Moat:** Develop the vertical domain layer—proprietary methodology, expert knowledge, specialized workflows that no generic vendor can provide. This is where your competitive advantage lives.
+
+| Layer | Strategy | Ownership |
+|-------|----------|-----------|
+| **Infrastructure** (LLM, hosting, RAG) | Buy | Vendor provides, you configure |
+| **Domain/Expertise** (methodology, knowledge) | Build | You own completely |
+| **Outputs** (customer-facing results) | Yours | Full accountability regardless of vendor |
+
+The critical insight: You can outsource infrastructure, but you cannot outsource accountability. The vendor provides the rails; you own the quality and trustworthiness of what it produces.
+
+A law firm using GPT-4 for contract analysis still owns every output that reaches clients. If the model hallucinates a clause interpretation, the firm bears the malpractice risk—not OpenAI. Design accordingly.
+
+---
+
+## Vendor Evaluation
+
+If you're buying (or buying the rails in a hybrid approach), evaluate vendors on more than feature checklists.
+
+The Vendor Evaluation Scorecard covers:
+- Technical capability fit
+- Security and compliance posture
+- Integration complexity
+- Pricing model and total cost of ownership
+- Support quality and SLA guarantees
+
+For Generative AI specifically, add these questions:
+
+**Data training policy:** Will the vendor train on your data? Your customers' data? What opt-outs exist?
+
+**Confabulation handling:** How does the system signal uncertainty? What guardrails prevent confident-sounding hallucinations?
+
+**Content provenance:** Can outputs be traced? Is there watermarking or metadata for AI-generated content?
+
+One enterprise client discovered—after signing a contract—that their vendor's default setting allowed training on customer interactions. Six months of sensitive data had already been ingested. Ask these questions before signing, not after.
+
+---
+
+## Use Case Intake & Risk Classification
+
+The Use Case Intake Form is a governance checkpoint, not a bureaucratic obstacle. It classifies risk level and routes to appropriate approval.
+
+The form covers 12 areas:
+- Data rights and sources
+- Bias testing approach
+- Explainability requirements
+- Human oversight design
+- Compliance requirements
+- Monitoring and alerting plan
+
+Based on data sensitivity, model autonomy, impact severity, and failure likelihood, each use case gets classified:
+
+| Risk Level | Approval Routing |
+|------------|------------------|
+| **Low** | Gatekeeper approval |
+| **Medium** | Department + SME review |
+| **High** | Full governance committee |
+| **Prohibited** | Rejected |
+
+The routing isn't about slowing things down. It's about matching governance intensity to actual risk. A low-risk internal tool shouldn't need committee review. A high-risk customer-facing agent shouldn't skip it.
+
+---
+
+## GAI-Specific Concerns
+
+Generative AI introduces risks that traditional ML governance doesn't cover. NIST AI 600-1 identifies specific concerns to address in design.
+
+| Concern | Question to Answer | Why It Matters |
+|---------|-------------------|----------------|
+| **Confabulation Management** | How will the system signal when it's uncertain? | Prevents blind trust in hallucinated outputs |
+| **Information Integrity** | What's the vendor's policy on training data? | Protects IP and prevents data leakage |
+| **Human-AI Configuration** | Is the interface designed to prevent automation bias? | Maintains appropriate human oversight |
+| **Content Provenance** | How will users know output was AI-generated? | Enables accountability and transparency |
+
+These aren't theoretical concerns. A customer service bot that confidently provides wrong refund instructions damages customer trust. A research assistant that fabricates citations undermines work product. Design the safeguards before deployment, not after the incident.
+
+---
+
+## Quick Wins First
+
+Don't start with the enterprise-wide AI platform. Start with a contained problem that proves value.
+
+A good quick win has four characteristics:
+
+1. **Clear boundaries** — You know where it starts and ends
+2. **Measurable outcome** — You can tell if it worked
+3. **Limited blast radius** — If it fails, the damage is contained
+4. **Path to scale** — Success creates options, not dead ends
+
+One contract review assistant handling a specific clause type beats a general-purpose legal AI that handles nothing well.
+
+I watched a financial services firm spend 18 months building a unified AI platform that never launched. Requirements kept expanding. Stakeholders kept adding use cases. The architecture grew to accommodate everything and delivered nothing. Meanwhile, a competitor shipped six focused solutions and learned more in month one than the platform team learned in the entire project.
+
+Quick wins build credibility. Boil-the-ocean architectures destroy it.
+
+---
+
+## NIST AI RMF Mapping
+
+Connecting Phase 3 activities to NIST requirements ensures governance is built in, not bolted on.
+
+| Activity | NIST Mapping | Consulting Level-Up |
+|----------|--------------|---------------------|
+| **Build vs. Buy Matrix** | Govern 6.1-6.2 | Evaluate GAI providers on training data transparency and PII safeguards |
+| **Solution Architecture** | Measure 1.1, 1.3 | Design instrumentation to track confabulation rates from Day 1 |
+| **Use Case Intake** | Map 1.1, 1.5, 5.1 | Satisfy NIST "Context" and "Impact" mapping requirements |
+| **Risk Classification** | Manage 1.1 | Ensure High Risk triggers specific NIST Manage actions |
+
+The "Consulting Level-Up" column shows what separates checkbox compliance from expert practice.
+
+---
+
+## Phase Output
+
+By the end of Phase 3, your analysis shifts from organization-level gaps to system-level gaps.
+
+The deliverables:
+1. **Intent classification** — Cost Center or Revenue Center, documented
+2. **Build/Buy/Hybrid decision** — With rationale and tradeoff acknowledgment
+3. **Vendor selection** (if buying) — With contract terms and data policies reviewed
+4. **Risk classification** — With required governance controls identified
+5. **TCO estimate** — With assumptions documented
+
+The test is whether you can deliver something like this to leadership:
+
+> "This customer support agent is a Revenue Center application—it touches customers directly. We recommend Buy + Build Vertical: use Anthropic's Claude for the foundation, build our product knowledge layer internally. Risk classification is High due to customer exposure, which means we need full governance committee approval and red-team testing before deployment. We've identified a gap in confabulation management that we'll address in the Govern phase."
+
+That framing shows you're making strategic decisions, not just picking vendors.
+
+---
+
+## Exit Criteria
+
+Before moving to **Govern**:
+
+- [ ] Intent Filter applied (Cost Center vs. Revenue Center)
+- [ ] Build vs. buy decision made and documented
+- [ ] Time to value validated against stakeholder patience threshold
+- [ ] Vendor selected (if buying) with data policies documented
+- [ ] Solution architecture defined (if building)
+- [ ] Use Case Intake Form completed with GAI concerns addressed
+- [ ] Risk classification assigned with required governance controls identified
+- [ ] TCO estimated with assumptions documented
+
+If any of these are missing, you're designing without strategic clarity. That ambiguity will surface as conflict in later phases.
+
+---
+
+## Common Mistakes
+
+**Binary build-or-buy thinking.** Teams debate for months while competitors ship. Consider Buy + Build Vertical—most solutions are hybrid. Buy the infrastructure, build the expertise, own the outputs.
+
+**Building when you should buy.** Custom solutions feel like control. They're also maintenance burden, hiring dependency, and technical debt. Unless the capability is a core differentiator, buy the rails. Spend your engineering cycles on the moat.
+
+**Buying without governance.** "It's just SaaS" doesn't excuse you from responsibility. You own the outputs regardless of who provides the infrastructure. Document vendor data policies. Verify compliance posture. Understand what happens when the vendor's model changes behavior.
+
+**Same governance for all use cases.** A customer-facing revenue agent needs different controls than an internal efficiency tool. The Intent Filter exists for this reason. Applying startup-speed governance to enterprise-risk applications creates liability. Applying enterprise governance to low-risk tools creates unnecessary friction.
+
+**Big bang implementation.** I've never seen a company successfully deploy a unified AI platform as their first AI project. Start contained. Prove value. Scale what works. The 18-month platform that never launches teaches you nothing except how to waste 18 months.

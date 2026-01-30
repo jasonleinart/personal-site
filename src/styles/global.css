@@ -433,6 +433,57 @@ pre code {
   line-height: 1.7;
 }
 
+/* Terracotta bullet/number markers */
+.prose-content ul li::marker {
+  color: var(--color-accent);
+}
+
+.prose-content ol li::marker {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Task list checkboxes - hide bullets, style checkboxes */
+.prose-content ul:has(input[type="checkbox"]) {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose-content ul li:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.prose-content input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid var(--color-accent);
+  border-radius: 3px;
+  background: transparent;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.prose-content input[type="checkbox"]:checked {
+  background: var(--color-accent);
+  position: relative;
+}
+
+.prose-content input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Horizontal Rules */
 .prose-content hr {
   margin: 2.5rem 0;
@@ -440,13 +491,16 @@ pre code {
   border-top: 1px solid var(--color-border);
 }
 
-/* Blockquotes */
+/* Blockquotes - Key Insight style */
 .prose-content blockquote {
-  margin: 1.5rem 0;
-  padding: 1rem 1.5rem;
-  border-left: 4px solid var(--color-accent);
-  background: var(--color-bg-secondary);
-  font-style: italic;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  background: rgba(201, 132, 116, 0.08);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  font-style: normal;
   color: var(--color-text-secondary);
 }
 

@@ -1,0 +1,227 @@
+---
+title: "Adopt"
+description: "Drive organizational adoption through champion networks, resistance management, and training that addresses AI limitations. Technology that nobody uses is expensive furniture."
+phase: 5
+summary: "How do we get people to actually use this? Activate champions, address resistance, execute training on both capabilities and limitations, build psychological safety."
+tools:
+  - name: "Stakeholder Assessment"
+    description: "Map stakeholders by influence and disposition. Identifies champions, blockers, and fence-sitters so you know where to focus energy."
+    type: framework
+  - name: "Champion Network Planner"
+    description: "Recruit and track champions across departments. Target one per 10-15 users, prioritizing 'skeptic champions' whose endorsement carries weight."
+    type: template
+  - name: "Resistance Response Playbook"
+    description: "Match interventions to resistance root causes. Job security fear requires different response than skill gap anxiety or workflow disruption."
+    type: framework
+  - name: "30/60/90 Training Plan"
+    description: "Phased training with competency validation. Includes AI limitations training and planted hallucination tests for override readiness."
+    type: template
+  - name: "Communication Calendar"
+    description: "Sequenced messaging: Awareness (weeks before), Understanding (days before), Adoption (launch and after). Prevents information overload and silence gaps."
+    type: template
+  - name: "Psychological Safety Assessment"
+    description: "Measure team safety for AI use. Low safety kills adoption—users need to feel safe questioning AI outputs and flagging errors."
+    type: checklist
+relatedAnalysis:
+  - "ai-change-management"
+  - "jpmorgan-ai-empire"
+tldr:
+  summary: "Technology works; adoption fails. This phase converts working AI into AI that people actually use through focused change management."
+  points:
+    - "<strong>Throughline, not phase:</strong> Change management started in Phase 1. This phase harvests what earlier phases planted—training, communication, resistance response."
+    - "<strong>Adoption by Intent:</strong> Cost Center users resist workflow disruption. Revenue Center experts resist feeling replaced. Different challenges, different interventions."
+    - "<strong>Over-Reliance Paradox:</strong> Users trusting AI too much is as dangerous as not trusting it. Target 10-30% override rate—0% means no judgment, 50%+ means no value."
+    - "<strong>Planted hallucinations:</strong> Test override readiness by including scenarios where AI gives wrong answers. Users who catch them are ready for production."
+draft: false
+---
+
+Technology that nobody uses is expensive furniture. A $2M contract analysis platform sat unused for 14 months because the attorneys didn't trust it and nobody addressed their concerns. The technology worked. The change management didn't exist.
+
+Earlier phases planted change management seeds—stakeholder mapping in Phase 1, pain point documentation in Phase 2, co-design in Phase 3, accountability clarity in Phase 4. This phase harvests them through focused training, communication, and resistance response.
+
+**"How do we get people to actually use this?"**
+
+The answer requires understanding that adoption isn't about the technology. It's about the humans who have to change how they work.
+
+---
+
+## Framework Connections
+
+This phase shifts from technical governance to human governance.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | (Implicit—BSPF focuses on technical delivery) |
+| **Governance** | Human-in-the-loop protocols, training on limitations (NIST Govern 3.2, 4.1-4.2, 5.1) |
+| **Change Management** | Full deployment: champions, training, resistance, communication |
+
+Phase 4 established technical governance—failure modes, red teaming, monitoring. Phase 5 establishes human governance—ensuring users know not just how to use the AI, but when to trust it and when to override it.
+
+---
+
+## The Throughline
+
+Change management isn't Phase 5—it's the throughline across all phases.
+
+But this is where focused adoption work happens. Earlier phases laid groundwork: stakeholder mapping identified who matters, pain point documentation gave you ammunition for the why, co-design created ownership, accountability clarity removed ambiguity. Now you activate what you built.
+
+The question shifts from "How does it work?" to "Why should I use it?"
+
+---
+
+## Adoption by Intent
+
+The Intent Filter from Phase 3 shapes your adoption strategy. Different intents create different resistance patterns.
+
+| Intent | Adoption Focus | Key Challenge |
+|--------|---------------|---------------|
+| **Cost Center** (Internal Efficiency) | Overcoming workflow disruption; proving the tool reduces toil | Users see extra work before they see the benefit |
+| **Revenue Center** (External Growth) | Maintaining expertise; ensuring domain experts feel empowered, not replaced | Experts resist what feels like commoditizing their knowledge |
+
+Revenue Center adoption has a specific trap. Your domain experts built the Expertise Layer in Phase 3. If they feel the agent diminishes their value, they'll undermine adoption—sometimes actively, sometimes through passive non-use. Position the agent as amplifying their reach, not replacing their judgment. The AI handles volume; the expert handles complexity.
+
+---
+
+## Key Activities
+
+### Stakeholder Mapping
+
+Before any rollout, map who's who. The Stakeholder Assessment plots people across two dimensions: influence (can they block or accelerate?) and disposition (for, against, undecided).
+
+| Disposition | High Influence | Low Influence |
+|-------------|----------------|---------------|
+| **Champion** | Executive sponsor, visible early adopter | Enthusiastic user, informal advocate |
+| **Fence-sitter** | Key decision-maker watching outcomes | Majority of users waiting to see |
+| **Blocker** | Vocal opponent with organizational power | Skeptic who can poison team sentiment |
+
+This mapping changes strategy. A high-influence champion gets recruited for visible endorsement. A high-influence blocker gets one-on-one attention to surface real concerns. A low-influence fence-sitter just needs to see peers succeeding.
+
+Energy spent trying to convert a committed blocker is usually wasted. Focus on fence-sitters. Move enough of them and blockers become isolated.
+
+### Champion Networks
+
+Champions sell adoption better than any training program. A good champion has three characteristics: credibility (peers respect their judgment), willingness (they'll actually advocate, not just agree), and access (they interact with the people you're trying to reach).
+
+Target one champion per 10-15 users. They don't need to be experts—they need to be trusted voices who can say "I was skeptical too, but this actually helps."
+
+Recruit "Skeptic Champions" specifically—respected experts who rigorously test the AI and remain appropriately critical. Their endorsement carries more weight than enthusiastic early adopters. When the person known for high standards says the tool passes muster, fence-sitters pay attention.
+
+### Resistance Management
+
+Not all resistance is the same. The Resistance Response Playbook matches intervention to root cause.
+
+| Resistance Type | Root Cause | Intervention |
+|-----------------|------------|--------------|
+| **Job security fear** | "AI will replace me" | Reframe as augmentation; show the new role |
+| **Skill gap anxiety** | "I can't learn this" | Graduated training; peer support; quick wins |
+| **Workflow disruption** | "This slows me down" | Acknowledge transition cost; show long-term benefit |
+| **Trust deficit** | "I don't trust AI" | Transparency about limitations; human oversight |
+| **Loss of expertise** | "My judgment doesn't matter" | Position AI as tool for experts, not replacement |
+
+One legal ops team's resistance evaporated when they realized the AI handled the tedious clause extraction they hated, freeing them for the negotiation work they actually enjoyed. A 62-year-old paralegal who initially refused to touch the system became its biggest advocate after a patient 30-minute session showed her it was easier than software she already used. A manufacturing team didn't believe the predictive maintenance model until a senior operator they all respected said it caught a failure he would have missed.
+
+Resistance is data. Diagnose before prescribing.
+
+### Training for Retention
+
+Most corporate training fails. Studies show 90% forgetting within a week for one-time sessions. The 30/60/90 Training Plan designs for retention, not completion.
+
+**First 30 days** — Basic competency. Can they perform the core workflow? Measure task completion, not just attendance.
+
+**Days 30-60** — Fluency. Can they handle variations and exceptions? Measure speed and error rates.
+
+**Days 60-90** — Mastery. Can they troubleshoot problems and help others? Measure peer support and edge case handling.
+
+Train on limitations, not just capabilities. Users need to know what AI gets wrong—where it hallucinates, what patterns it misses, when confidence is misplaced. Training that only covers features creates users who trust outputs they shouldn't.
+
+### Communication Sequencing
+
+Poor communication sinks adoption. Too much overwhelms. Too little creates anxiety. Bad timing breeds rumors.
+
+**Awareness** (weeks before launch) — What's coming and why. Focus on the problem being solved, not the solution details. Address "why should I care" before "how does it work."
+
+**Understanding** (days before launch) — How it works and what changes. Specific enough to reduce anxiety, not so detailed it overwhelms.
+
+**Adoption** (launch and after) — Reinforcement and troubleshooting. Celebrate early wins visibly. Address problems quickly before they become narratives.
+
+The biggest communication mistake is going dark after launch. Early adopters need validation. Fence-sitters need evidence. Problems need acknowledgment. Silence tells everyone the project is abandoned.
+
+---
+
+## The Over-Reliance Paradox
+
+A unique challenge in AI adoption: users may trust AI too much. Automation bias—accepting outputs without verification—violates the human-in-the-loop oversight that governance requires.
+
+Signs of over-reliance:
+- Accepting AI outputs without verification
+- Override rate near 0%
+- Junior staff deferring completely to AI
+- No questions asked about limitations
+
+The mitigation isn't just training—it's culture. Create an environment where catching AI errors is celebrated, not seen as slowing things down. Random audits of AI-assisted work keep verification habits alive.
+
+**Planted hallucination tests** validate override readiness. During training, include scenarios where the AI gives wrong answers. Users who catch them demonstrate they're exercising judgment. Users who miss them need more work before handling production tasks.
+
+The baseline: If your override rate is 0%, users aren't exercising judgment. If it's 50%+, the tool isn't providing value. Target 10-30% as the healthy range where humans and AI are genuinely collaborating.
+
+---
+
+## Psychological Safety
+
+Low psychological safety kills adoption regardless of training quality. Users need to feel safe asking questions about AI limitations, flagging when outputs seem wrong, and making mistakes during the learning curve.
+
+Create what the source framework calls an "AI Safety Culture"—flagging a model failure is rewarded, not penalized. Appropriate skepticism is valued. Blind trust is the actual failure mode.
+
+Celebrate catches publicly. Position catching AI errors as a high-value expert contribution, not as evidence the tool doesn't work. The experts who find edge cases are making the system better.
+
+---
+
+## Phase Output
+
+The Adoption Scorecard quantifies human readiness with specific metrics.
+
+| Metric | What It Measures | Target |
+|--------|------------------|--------|
+| **Training Completion** | % of users validated on AI safety and limitations | 100% of eligible users |
+| **Sentiment Score** | Pre- vs. post-training disposition toward the tool | Positive shift |
+| **Override Readiness** | Users caught planted hallucination in testing | Pass/Fail per user |
+| **Champion Activation** | Active champions providing feedback and support | 1 per department/team |
+
+The test is whether you can deliver something like this to leadership:
+
+> "Training completion is at 94%, with a positive sentiment shift of +22 points. Override readiness testing shows 87% of users successfully caught planted hallucinations. We are ready to move to the Prove phase with confidence in human governance."
+
+That framing shows adoption isn't just "we trained everyone." It's "we validated that humans are ready to work alongside AI responsibly."
+
+---
+
+## Exit Criteria
+
+Before moving to **Prove**:
+
+- [ ] Champions identified, trained, and actively providing feedback
+- [ ] Resistance sources addressed with documented responses
+- [ ] Training completed for all user groups (including AI limitations)
+- [ ] Override readiness validated (planted hallucination test passed)
+- [ ] Communication campaign executed
+- [ ] Psychological safety assessed and addressed
+- [ ] Usage baseline established for measurement
+- [ ] Adoption Scorecard documented with baseline metrics
+
+If any of these are missing, you're deploying technology without adoption infrastructure. That's how $2M platforms become expensive furniture.
+
+---
+
+## Common Mistakes
+
+**Training without change.** Focus on "how to use" without addressing "why to use." Address motivation before mechanics. Feature training doesn't overcome resistance to adoption.
+
+**Ignoring middle management.** Attention goes to executives and end users. Middle managers can block adoption if they feel it threatens their team's value or their own expertise. They need different messaging than either group.
+
+**One-and-done training.** A single session feels efficient. It's actually waste. AI is too dynamic for one session—users encounter edge cases over time that initial training never covered. 30/60/90 reinforcement as they gain experience.
+
+**Dismissing resistance.** "They'll get used to it" isn't a strategy. Resistance is data about what's not working. Diagnose root causes and respond specifically. Ignored resistance goes underground and poisons adoption through passive non-compliance.
+
+**Celebrating only AI wins.** Wanting to show value, teams highlight AI successes exclusively. Also celebrate human catches—override readiness builds trust. Catching AI errors should be positioned as high-value expert contribution, not system failure.
+
+**Declaring victory at launch.** Deployment is not adoption. The work continues until usage metrics show the tool is embedded in workflows, not just available. A system that's live but unused is a failed adoption, regardless of how well the technology performs.

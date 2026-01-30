@@ -1,0 +1,178 @@
+---
+title: "Understand"
+description: "Define the business problem before touching technology. Map stakeholders, hypothesize drivers, establish success criteria, and discover Shadow AI patterns."
+phase: 1
+summary: "What's the actual problem we're solving? Before building anything, establish the business outcome, stakeholders, hypothesized causes, and why this matters now."
+tools:
+  - name: "Intake Document"
+    description: "Capture problem statement, scope, constraints, regulatory context, and timeline for new engagements."
+    type: template
+  - name: "Executive Interview Guide"
+    description: "Strategic conversation template covering priorities, pain points, and success metrics. Surfaces what leadership actually cares about."
+    type: template
+  - name: "Stakeholder Interview Guide"
+    description: "Structured interview differentiating decision makers, data/system experts, and impacted communities."
+    type: template
+  - name: "Shadow AI Assessment"
+    description: "Discover where employees already use consumer AI tools. Shadow AI usage reveals high-value automation candidates."
+    type: checklist
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Most AI projects fail because teams build what they assume is needed, not what's actually needed. This phase forces clarity before code."
+  points:
+    - "<strong>Business problem first:</strong> Articulate the problem in business terms, not technology terms. 'We need AI' isn't a problem statement."
+    - "<strong>Stakeholder mapping:</strong> Identify decision makers, data experts, and impacted communities. Resistance kills more projects than technical failure."
+    - "<strong>Driver hypotheses:</strong> What do you believe causes the problem? What data would validate or invalidate these beliefs?"
+    - "<strong>Shadow AI discovery:</strong> Where are employees already using ChatGPT or Claude? These 'desire paths' reveal automation demand."
+draft: false
+---
+
+Most AI projects fail before a single line of code gets written. Not from technical problems—from solving the wrong problem. I've watched teams spend six months building a solution that nobody asked for because they skipped this phase entirely.
+
+The Understand phase exists to prevent that failure mode. Before models, before vendors, before architecture discussions, one question needs a clear answer:
+
+**"What's the actual problem we're solving?"**
+
+If stakeholders can't articulate the problem without mentioning the solution ("We need AI to..."), they're not ready to build anything.
+
+---
+
+## Framework Connections
+
+This phase applies all three frameworks simultaneously—not sequentially.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | Steps 1-2: View the business as a machine, understand what's driving the problem |
+| **Governance** | Begin risk awareness early; identify intended use and potential impact (NIST Map 1.1, Govern 1.2) |
+| **Change Management** | Map stakeholders now; understand who will be affected before anyone feels threatened |
+
+The NIST references matter because they position governance as something you consider from day one—not an afterthought before deployment.
+
+---
+
+## Key Activities
+
+### Intake and Scoping
+
+Every engagement starts with structured intake. The goal isn't to fill out a form—it's to force clarity on things stakeholders assume everyone agrees on.
+
+- **Problem statement** — What outcome are we trying to achieve, in business terms?
+- **Constraints** — Timeline, budget, regulatory requirements, data restrictions
+- **Business sponsor** — Who owns this initiative and can make decisions?
+
+I've seen projects stall for months because nobody confirmed who had authority to approve changes. Get the sponsor identified and committed in week one.
+
+### Stakeholder Mapping
+
+Stakeholder resistance kills more projects than technical failure. Map them before anyone feels blindsided.
+
+Three categories matter:
+
+**Decision Makers** have budget authority and go/no-go power. They're obvious and usually easy to identify.
+
+**Data/System Experts** know the technical constraints—what data exists, what systems connect to what, what integrations will break. These people often get overlooked until implementation hits a wall.
+
+**Impacted Communities** are the end users, customers, or employees whose work changes because of this AI. They're the ones who will actually use (or refuse to use) whatever gets built. Skip them and watch adoption flatline at 15%.
+
+The distinction matters because each group needs different communication. Executives want business outcomes. Technical experts want architecture details. Impacted communities want to know their jobs aren't disappearing.
+
+### Driver Hypotheses
+
+Teams often skip this step because they're certain about the problem. Then they build solutions that don't address the actual cause.
+
+Before solutioning, document what you believe is causing the problem:
+
+- What process is breaking down, and why?
+- What data would confirm or contradict this belief?
+- What assumptions are you making about user behavior?
+
+A legal services firm asked me to build a contract analysis tool because "review takes too long." Three days of interviews revealed the bottleneck wasn't review time—it was waiting for client responses to clarification questions. The AI they wanted wouldn't have touched the actual problem.
+
+### Success Metrics Definition
+
+"Improve efficiency" isn't a success metric. Neither is "reduce errors" or "increase productivity."
+
+Measurable success has two components:
+
+**Business KPIs** — The outcomes leadership cares about. Contract review time drops from 4 hours to 1 hour. Error rate falls from 12% to 3%. Cost per transaction decreases by $47.
+
+**Trustworthiness criteria** — The guardrails that keep AI deployment responsible. What's the acceptable false positive rate? What decisions require human override? How do you know the model isn't drifting?
+
+Most teams only define business KPIs. They declare victory when speed improves, then discover six months later that the AI has been making biased decisions nobody measured.
+
+### Shadow AI Discovery
+
+This activity didn't exist three years ago. Now it's one of the highest-value parts of Phase 1.
+
+Shadow AI is what happens when employees use ChatGPT, Claude, Gemini, or Copilot for work tasks without IT approval. They're uploading contracts to public LLMs. They're pasting customer data into free tools. They're building unofficial workflows that nobody governs.
+
+The instinct is to treat Shadow AI as a risk to stamp out. That misses the signal.
+
+Shadow AI usage reveals where people are desperate enough for AI help that they'll work around official channels. A paralegal spending 20 minutes per day in ChatGPT summarizing depositions is telling you exactly what to automate. An analyst copying financial data into Claude for pattern analysis is pointing at a real need.
+
+I look for three things:
+- What tasks are people trying to accomplish with these tools?
+- What data are they putting into unsanctioned systems?
+- What does this usage pattern reveal about automation demand?
+
+The desire paths employees create often point directly to high-value use cases. JPMorgan Chase figured this out—their internal LLM Suite succeeded partly because it addressed the tasks employees were already trying to do with consumer tools.
+
+---
+
+## NIST AI RMF Mapping
+
+Connecting Phase 1 activities to NIST requirements builds credibility and ensures nothing gets missed.
+
+| Activity | NIST Mapping | Consulting Level-Up |
+|----------|--------------|---------------------|
+| **Intake & Scoping** | Map 1.1, 1.5 | Capture "intended use" and "potential for significant impact" early |
+| **Stakeholder Mapping** | Govern 5.1 | Include impacted communities, not just executives with budget |
+| **Driver Hypotheses** | Map 1.2, 2.1 | Document technical constraints and data requirements |
+| **Success Metrics** | Measure 1.1 | Include trustworthiness alongside business KPIs |
+
+The "Consulting Level-Up" column is what separates checkbox compliance from expert practice. Anyone can map stakeholders. Mapping impacted communities—the people whose jobs change—satisfies Govern 5.1 and prevents adoption failure later.
+
+---
+
+## Phase Output
+
+By the end of Phase 1, you should have four documented outputs:
+
+1. **Problem statement** — Articulated in business terms, not technology terms
+2. **Stakeholder map** — Including impacted communities, not just decision-makers
+3. **Driver hypotheses** — With data requirements for validation
+4. **Success metrics** — Both business KPIs and trustworthiness criteria
+
+The test is whether you can deliver something like this to leadership:
+
+> "We have a clear business problem: contract review is taking 4.2 hours on average, costing $340,000 annually in senior associate time. But our Govern 1.2 maturity is low—we haven't defined who is legally responsible if AI-assisted review misses a material clause. We need to address accountability in the Assess phase before moving to solution design."
+
+That framing positions you as someone who thinks about governance from day one. It's a differentiator from teams that build first and worry about responsibility later.
+
+---
+
+## Exit Criteria
+
+Before moving to **Assess**:
+
+- [ ] Problem statement articulated in business terms (not technology terms)
+- [ ] Business sponsor identified and committed
+- [ ] Key stakeholders mapped—including impacted communities
+- [ ] Hypothesized drivers documented with data requirements
+- [ ] Success metrics defined with both business KPIs and trustworthiness criteria
+- [ ] Shadow AI patterns discovered and documented
+
+If any of these are missing, you're not ready for the next phase. Pressure to move fast doesn't change that—it just means you'll repeat this work later when the project stalls.
+
+---
+
+## Common Mistakes
+
+**Starting with the solution.** Teams arrive with "we need AI for X" already decided. They want to skip straight to vendor selection or architecture design. Force articulation of the business problem first. If stakeholders can't explain what's wrong without mentioning AI, they're solving a technology problem, not a business problem.
+
+**Skipping stakeholder mapping.** It feels like overhead—meetings about meetings. But I've watched a $2M contract analysis platform sit unused for 14 months because nobody talked to the attorneys who were supposed to use it. They didn't trust it, and nobody addressed their concerns until adoption had already failed. Map stakeholders now or watch the project die at rollout.
+
+**Vague success criteria.** "Improve efficiency" gives you nothing to measure against. Push for specifics: reduce contract review time from 4 hours to 1 hour, decrease error rate from 12% to 3%, capture $200,000 in annual labor savings. Without quantified targets, you can't prove value in Phase 6—and you can't justify the next initiative.

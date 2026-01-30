@@ -118,59 +118,59 @@ const headings = [
     <p>This is the delivery mechanism—taking the diagnostic data and turning it into production reality. Each phase maps to specific NIST AI RMF subcategories, making this methodology defensible for enterprise governance requirements.</p>
 
     <div class="phase-list">
-      <div class="phase">
+      <a href="/playbook/phase-1-understand" class="phase">
         <div class="phase-number">1</div>
         <div class="phase-content">
           <h3>Understand</h3>
           <p><em>What's the actual problem?</em> Before touching technology, establish the business outcome, stakeholders, and driver hypotheses. Define context and intended use (NIST Map 1.1).</p>
           <span class="phase-output">Output: Context defined; accountability gaps identified</span>
         </div>
-      </div>
+      </a>
 
-      <div class="phase">
+      <a href="/playbook/phase-2-assess" class="phase">
         <div class="phase-number">2</div>
         <div class="phase-content">
           <h3>Assess</h3>
           <p><em>Where are we now?</em> Map current workflows, quantify the problem in dollars, and assess process readiness. The Mess-O-Meter determines if you're ready for AI or need to standardize first.</p>
           <span class="phase-output">Output: Prioritized Transformation Roadmap</span>
         </div>
-      </div>
+      </a>
 
-      <div class="phase">
+      <a href="/playbook/phase-3-design" class="phase">
         <div class="phase-number">3</div>
         <div class="phase-content">
           <h3>Design</h3>
           <p><em>What do we build?</em> Apply the Intent Filter, make build vs. buy decisions, and classify governance requirements. For GAI, address confabulation, information integrity, and content provenance.</p>
           <span class="phase-output">Output: System-level governance gaps identified</span>
         </div>
-      </div>
+      </a>
 
-      <div class="phase">
+      <a href="/playbook/phase-4-govern" class="phase">
         <div class="phase-number">4</div>
         <div class="phase-content">
           <h3>Govern</h3>
           <p><em>How do we do it right?</em> Assess failure modes, red team adversarially, establish RACI accountability, and configure KRI monitoring. Governance intensity scales with the Intent Filter.</p>
           <span class="phase-output">Output: Governance Attestation (implemented, not planned)</span>
         </div>
-      </div>
+      </a>
 
-      <div class="phase">
+      <a href="/playbook/phase-5-adopt" class="phase">
         <div class="phase-number">5</div>
         <div class="phase-content">
           <h3>Adopt</h3>
           <p><em>How do we get buy-in?</em> Activate champions, address resistance, execute training on AI limitations. Target 10-30% override rate—0% is a red flag for automation bias.</p>
           <span class="phase-output">Output: Adoption Scorecard (human readiness)</span>
         </div>
-      </div>
+      </a>
 
-      <div class="phase">
+      <a href="/playbook/phase-6-prove" class="phase">
         <div class="phase-number">6</div>
         <div class="phase-content">
           <h3>Prove</h3>
           <p><em>Did it work?</em> Validate actual vs. projected ROI, track trustworthiness KRIs, and make the Scale/Retool/Retire decision at 90 days.</p>
           <span class="phase-output">Output: 90-Day ROI Validation; Scale/Retool/Retire decision</span>
         </div>
-      </div>
+      </a>
     </div>
 
   </article>
@@ -273,6 +273,19 @@ const headings = [
     display: flex;
     gap: var(--space-lg);
     align-items: flex-start;
+    text-decoration: none;
+    padding: var(--space-md);
+    margin: calc(-1 * var(--space-md));
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+
+  a.phase:hover {
+    background: var(--color-bg-secondary);
+  }
+
+  a.phase:hover h3 {
+    color: var(--color-accent);
   }
 
   .phase-number {

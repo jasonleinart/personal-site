@@ -148,5 +148,19 @@ export default defineConfig({
       theme: 'github-dark',
       wrap: true
     }
+  },
+
+  /**
+   * Redirects
+   *
+   * Maps old 5-phase playbook URLs to new 6-phase structure.
+   * Ensures existing links and bookmarks continue to work.
+   */
+  redirects: {
+    '/playbook/phase-1-discovery': '/playbook/phase-1-understand',
+    '/playbook/phase-2-opportunity-assessment': '/playbook/phase-2-assess',
+    '/playbook/phase-3-architecture': '/playbook/phase-3-design',
+    '/playbook/phase-4-change-management': '/playbook/phase-5-adopt',
+    '/playbook/phase-5-measurement': '/playbook/phase-6-prove',
   }
 });

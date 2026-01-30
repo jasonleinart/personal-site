@@ -1,0 +1,197 @@
+---
+title: "Prove"
+description: "Close the loop with measurement. Track actual vs. projected ROI, monitor system performance, validate adoption, and build credibility for future initiatives."
+phase: 6
+summary: "Did it actually work? Validate ROI against projections, track adoption metrics, document lessons learned, and make the Scale/Retool/Retire decision."
+tools:
+  - name: "ROI Calculator"
+    description: "Core financial model with actuals tracking. Compare projected vs. actual benefits over time."
+    type: calculator
+  - name: "Post-Implementation Tracker"
+    description: "Validate projected benefits against actual results. Closes the loop on business cases."
+    type: template
+  - name: "Adoption Dashboard"
+    description: "Track usage rates, sentiment, productivity impact, and override rates. The single view of adoption health."
+    type: dashboard
+  - name: "Benefit Quantification Guide"
+    description: "How to measure soft benefits and translate metrics into business language leadership cares about."
+    type: template
+  - name: "Lessons Learned Template"
+    description: "Structured capture of what worked, what didn't, and what to do differently. Prevents repeating mistakes."
+    type: template
+relatedAnalysis:
+  - "jpmorgan-ai-empire"
+  - "ai-change-management"
+tldr:
+  summary: "Proof of Value, not Proof of Concept. This phase validates whether you achieved the projected impact and earns the right to do the next initiative."
+  points:
+    - "<strong>90-Day ROI Validation:</strong> Compare actual outcomes to Phase 2 projections. Variance analysis matters more than hitting targets."
+    - "<strong>Dual-track measurement:</strong> Business Value (did it save money?) plus Trustworthiness Attestation (is it safe to keep running?)."
+    - "<strong>Scale/Retool/Retire:</strong> Evidence-based decision. Scale if working, Retool if process issues persist, Retire if risk tolerances exceeded."
+    - "<strong>Credibility loop:</strong> Transparent measurement builds trust for future initiatives. Honest variance analysis improves future projections."
+draft: false
+---
+
+Deployment isn't success. I've watched organizations declare AI initiatives successful based on deployment dates, not business outcomes. Eighteen months later, nobody could say whether the $1.2M investment had paid back. The dashboards existed but nobody looked at them. The metrics were collected but never analyzed. The project was done but the value was never confirmed.
+
+This phase closes the loop between projections and reality. The baseline you established in Phase 2 finally gets validated. Without this loop, you're building demos, not transformations.
+
+**"Did it actually work?"**
+
+The answer requires measurement that continues long after launch. AI systems drift. Adoption curves plateau. Edge cases emerge. A single checkpoint at deployment captures a snapshot that immediately becomes stale.
+
+---
+
+## Framework Connections
+
+This phase fulfills the Measure and Manage functions of the NIST AI RMF.
+
+| Framework | Application in This Phase |
+|-----------|---------------------------|
+| **BSPF** | Steps 6-7: Measure results, report financial impact |
+| **Governance** | KRI tracking, continuous monitoring, attestation (NIST Measure 1.1-1.2, 3.1-3.2, 4.2-4.3) |
+| **Change Management** | Adoption metrics, user satisfaction, organizational learning |
+
+Phase 5 established human governance—training, psychological safety, override readiness. Phase 6 validates whether the whole system is working: technology, governance, and adoption combined.
+
+---
+
+## Outcome Validation Strategy
+
+This phase validates the driver hypotheses from Phase 1 against real-world data using dual-track measurement.
+
+**Business Value** tracks actual financial and operational gains against Phase 2 baselines. Hard savings from labor and error reduction. Soft savings from time redeployed to higher-value work. Revenue impact from deals enabled or protected. This is where you prove the business case was real.
+
+**Trustworthiness Attestation** confirms the system is operating within the safety and fairness thresholds defined in Phase 4. KRIs staying green. Incident counts acceptable. Override rates in the healthy 10-30% range. This proves it's safe to keep running.
+
+For Revenue Center agents, trustworthiness attestation is critical. You're not just proving ROI—you're proving the system hasn't drifted into behavior that damages brand trust. A profitable agent that starts producing biased outputs is a liability, not an asset.
+
+---
+
+## What to Measure
+
+Leadership doesn't care about minutes saved. They care about dollars. Translate metrics into business language: 38 minutes saved per task becomes $127,000 in annual labor cost reduction across the contract review team.
+
+| Metric | How to Measure | Target |
+|--------|----------------|--------|
+| **Cost reduction** | Labor savings, error reduction, rework avoided | Per business case |
+| **Process efficiency** | Time per transaction, throughput | Baseline + improvement |
+| **Adoption health** | Usage rate, satisfaction, override rate | >80% usage, 10-30% override |
+| **System reliability** | Uptime, response time, drift indicators | Per SLA and Model Gate |
+
+One client's deployment turned out to have flatlined at 12% adoption after the initial training push. Nobody noticed for five months because they only checked usage during quarterly reviews. Measure continuously or miss the trends that matter.
+
+---
+
+## ROI Validation
+
+The Post-Implementation Tracker compares actual results to Phase 2 projections. This isn't about blame—it's about learning.
+
+| Metric | Projected | Actual | Variance | Explanation |
+|--------|-----------|--------|----------|-------------|
+| Time saved per task | 45 min | 38 min | -16% | Edge cases take longer than modeled |
+| Error reduction | 60% | 71% | +18% | Model catches errors humans normalized |
+| Adoption rate (90 days) | 75% | 52% | -31% | Training gaps in regional offices |
+
+Variance analysis matters more than hitting targets. A projection that was 30% optimistic on adoption but 20% pessimistic on time savings tells you something about your modeling assumptions. Capture the learning or repeat the errors on the next initiative.
+
+Positive variance deserves investigation too. What drove over-performance? Is it replicable? Document it and apply the insight to future projects.
+
+---
+
+## Variance Diagnosis
+
+When actual doesn't match projected, diagnose the root cause before deciding on remediation.
+
+**Positive variance** means something worked better than expected. Find out what drove over-performance and whether it's replicable. Document and share so future projects can apply the same insight.
+
+**Negative variance** could stem from multiple sources: adoption issues, model issues, or wrong assumptions in the original business case. Resist the temptation to blame the technology first—often the root cause is process or training.
+
+**Timing variance** means benefits arrived faster or slower than projected. Adjust future projections based on what you learned about ramp-up curves.
+
+For Buy + Build Vertical implementations, validate the Expertise Layer specifically. When the agent underperforms expert benchmarks, ask:
+
+- Is the knowledge base complete and current? (Data problem—update RAG corpus)
+- Are prompts correctly surfacing expertise? (Architecture problem—refine retrieval)
+- Are users asking the right questions? (Adoption problem—training on effective prompting)
+- Has the base model changed behavior? (Drift problem—re-evaluate vendor)
+
+---
+
+## Continuous Monitoring
+
+Post-deployment monitoring never stops. Set thresholds that trigger alerts—don't wait for quarterly reviews to discover problems that have been compounding for months.
+
+1. **Daily:** System owner reviews system health and critical KRIs. Catch outages and spikes immediately.
+
+2. **Weekly:** Practice lead reviews usage trends and user feedback. Spot adoption problems before they become entrenched.
+
+3. **Monthly:** Governance review covers all KRIs, adoption metrics, and performance trends. Surface issues for escalation.
+
+4. **Quarterly:** Executive review assesses ROI progress against projections and strategic alignment. Make resource decisions.
+
+One manufacturing client set up continuous monitoring and caught a model drift issue within two weeks. The predictive maintenance system had started recommending unnecessary service calls as equipment age distributions shifted. Without monitoring, they'd have burned through maintenance budget for months before anyone noticed.
+
+---
+
+## Phase Output: 90-Day ROI Validation
+
+The 90-Day ROI Validation Document provides evidence for leadership to make the Scale/Retool/Retire decision.
+
+| Decision | Criteria | Next Action |
+|----------|----------|-------------|
+| **Scale** | Positive NPV, trustworthiness thresholds met | Apply pattern to next vertical |
+| **Retool** | Business value present but high override rates or process issues | Return to Phase 2 for standardization |
+| **Retire** | Exceeded risk tolerances or failed to deliver positive NPV | Sunset deployment; document lessons |
+
+The test is whether you can deliver something like this to leadership:
+
+> "The 90-day validation shows a 23% improvement in task completion time and $180K in recaptured focus-hours against a projected $150K. Override rates are at 18%, within the healthy range. Trustworthiness KRIs are green. Recommendation: Scale to the next department."
+
+That framing shows you're not just declaring victory. You're providing evidence for a decision.
+
+---
+
+## Building Credibility
+
+This phase is how you earn the right to do the next initiative:
+
+- **Transparent measurement** → Trust from leadership
+- **Honest variance analysis** → Credibility for future projections
+- **Documented lessons** → Faster, better next time
+- **Adoption success** → Organizational belief in AI value
+
+The organizations that measure rigorously are the ones that scale AI successfully. Those that declare victory at deployment build a portfolio of demos that never became transformations.
+
+---
+
+## Exit Criteria
+
+This phase doesn't really exit—it becomes ongoing operations. But key milestones mark readiness:
+
+- [ ] 30-day post-implementation review completed
+- [ ] 90-day ROI validation documented with actual vs. projected
+- [ ] Trustworthiness attestation confirmed (KRIs within thresholds)
+- [ ] Override rates validated (10-30% healthy range)
+- [ ] Expertise Layer fidelity validated (for Buy + Build Vertical)
+- [ ] Lessons learned captured and formalized
+- [ ] Ongoing monitoring transitioned to operations with clear ownership
+- [ ] Scale/Retool/Retire decision made and documented
+
+If monitoring hasn't been transitioned to someone with clear accountability, you've created an orphaned system. Orphaned systems break quietly and blame loudly.
+
+---
+
+## Common Mistakes
+
+**Declaring victory early.** The temptation to move on is strong. But AI systems can drift or reveal biases weeks after deployment. Commit to 90-day validation minimum. Measurement that stops at 30 days misses the adoption curves and operational issues that only emerge over time.
+
+**Measuring activity, not outcomes.** Processing 10,000 documents isn't success. Reducing contract review time by 40% is. Activity feels productive. Outcomes prove value. Logins are vanity metrics—focus on task completion time and recaptured hours.
+
+**Ignoring negative results.** Political pressure to declare success is real. But honest measurement builds credibility for future initiatives. A projection that was wrong is a learning opportunity, not a failure—unless you hide it and repeat the same error next time.
+
+**No learning loop.** Project ends, team disperses, lessons evaporate. Document what worked and what didn't before disbanding. Formalize into your governance profile so the organization learns, not just the individuals.
+
+**Treating 0% override as success.** Seems like the AI is perfect. It's a red flag for automation bias—users aren't exercising judgment. The healthy range is 10-30%. Below that, investigate whether users are blindly accepting outputs.
+
+**One-time measurement.** A single ROI calculation at launch captures a snapshot that immediately becomes stale. Value erodes. Adoption shifts. Models drift. Build continuous measurement or discover problems only after they've compounded for months.

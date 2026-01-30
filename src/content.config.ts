@@ -387,8 +387,8 @@ const playbookCollection = defineCollection({
     /** Phase description for SEO and previews */
     description: z.string(),
 
-    /** Phase number for ordering (1-5) */
-    phase: z.number(),
+    /** Phase number for ordering (1-6) */
+    phase: z.number().min(1).max(6),
 
     /** Brief summary shown in playbook overview */
     summary: z.string(),
