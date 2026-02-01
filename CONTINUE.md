@@ -134,46 +134,6 @@ Create subpages with tool showcases. Order by which signals matter most for targ
 
 ---
 
-## Framing Principles (Internalize These)
-
-### Scale Signal (Career Pattern)
-Multi-location operations is a career pattern, not one job. Use it.
-
-| Weak | Strong |
-|------|--------|
-| "$100M+ revenue portfolio" | "Multi-location operations across retail and hospitality" |
-| One job's metrics | Career pattern: 7 locations (hospitality) → 50 locations (retail) |
-| "CRM implementation" | "Marketing technology architecture for distributed operations" |
-
-The hospitality experience (7 bars/restaurants as Marketing Director) + retail (50 locations) = you understand distributed operations at multiple scales across industries.
-
-### Platform Signal
-De-emphasize SMB tools. Emphasize enterprise platforms.
-
-| De-emphasize | Emphasize |
-|--------------|-----------|
-| "Go High Level" | "Marketing automation architecture" |
-| Tool-specific details | Integration patterns, data architecture |
-| SMB scale | Enterprise complexity (locations, volume, compliance) |
-
-### Outcome Signal
-Lead with business outcomes, not technology.
-
-| Weak | Strong |
-|------|--------|
-| "I built an automation system" | "I reduced lead response time from 24 hours to 15 minutes" |
-| "I implemented personalization" | "I enabled location-specific campaigns that increased conversion by X%" |
-
-### Change Management Signal
-This is the throughline. Make it visible.
-
-| Missing | Present |
-|---------|---------|
-| "I built the system" | "I built the system and drove adoption across 50 locations" |
-| Technical description only | Technical + "how we got teams to use it" |
-
----
-
 ## Key Decisions
 
 | Decision | Rationale | Date |

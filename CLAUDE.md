@@ -228,7 +228,7 @@ Methodology phases with tool showcases. Each entry represents a phase of the AI 
 ```yaml
 title: "Phase Title"
 description: "Phase description for SEO"
-phase: 1  # Phase number (1-5) for ordering
+phase: 1  # Phase number (1-6) for ordering
 summary: "Brief summary shown in playbook overview"
 tools:  # optional
   - name: "Tool Name"
@@ -271,6 +271,7 @@ See `docs/positioning.md` for full strategy. Related docs:
 - `docs/content-architecture.md` - Content type relationships
 - `docs/content-strategy.md` - Content creation guidelines
 - `docs/target-audience.md` - Audience personas and signals
+- `docs/language-reframing.md` - SMB to Enterprise language mapping
 
 Key points:
 
