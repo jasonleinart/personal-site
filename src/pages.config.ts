@@ -89,6 +89,16 @@ export const pagesConfig = {
   },
 
   /**
+   * Speaking page (/speaking)
+   */
+  speaking: {
+    title: 'Speaking | AI Transformation Talks & Presentations',
+    description: 'Conference talks and presentations on AI transformation, change management, and bridging strategy with implementation. Available for speaking engagements.',
+    heading: 'Speaking',
+    intro: 'Presentations on AI transformation, operational systems, and bridging the gap between technical capability and organizational adoption.',
+  },
+
+  /**
    * Contact page (/contact)
    */
   contact: {

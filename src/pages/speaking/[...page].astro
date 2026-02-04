@@ -1,0 +1,186 @@
+---
+/**
+ * Speaking Index Page with Pagination
+ *
+ * Lists all speaking engagements sorted by date (most recent first) with pagination support.
+ * Displays talk cards with event information, type badges, and optional slides/video links.
+ *
+ * Features:
+ * - Sorts by date (descending - upcoming/recent first)
+ * - Groups by year for visual organization
+ * - Pagination with 10 talks per page
+ * - Dynamic page statistics showing current range
+ * - SEO optimization per page
+ * - Empty state handling
+ *
+ * Routes:
+ * - /speaking (page 1)
+ * - /speaking/2 (page 2)
+ * - etc.
+ *
+ * @page
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import Pagination from '../../components/Pagination.astro';
+import TalkCard from '../../components/TalkCard.astro';
+import PageStats from '../../components/PageStats.astro';
+import { getCollection } from 'astro:content';
+import { pagesConfig } from '../../pages.config';
+import type { GetStaticPaths } from 'astro';
+
+/**
+ * Generates static paths for all paginated pages
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const talksPerPage = 10;
+
+  const allTalks = await getCollection('speaking');
+
+  // Sort by date (descending - most recent first)
+  const sortedTalks = allTalks.sort((a, b) => {
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
+
+  const totalPages = Math.max(1, Math.ceil(sortedTalks.length / talksPerPage));
+
+  return Array.from({ length: totalPages }, (_, i) => {
+    const page = i + 1;
+    const start = i * talksPerPage;
+    const end = start + talksPerPage;
+
+    return {
+      params: { page: page === 1 ? undefined : String(page) },
+      props: {
+        talks: sortedTalks.slice(start, end),
+        currentPage: page,
+        totalPages,
+        totalTalks: sortedTalks.length,
+      },
+    };
+  });
+};
+
+interface Props {
+  talks: Awaited<ReturnType<typeof getCollection<'speaking'>>>;
+  currentPage: number;
+  totalPages: number;
+  totalTalks: number;
+}
+
+const { talks, currentPage, totalPages, totalTalks } = Astro.props as Props;
+const talksPerPage = 10;
+
+const pageTitle = currentPage === 1
+  ? pagesConfig.speaking.title
+  : `${pagesConfig.speaking.title} - Page ${currentPage}`;
+
+// Group talks by year for display
+type Talk = Props['talks'][number];
+const talksByYear = talks.reduce<Record<number, Talk[]>>((acc, talk) => {
+  const year = talk.data.date.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(talk);
+  return acc;
+}, {});
+
+const years = Object.keys(talksByYear).map(Number).sort((a, b) => b - a);
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={pageTitle}
+    description={pagesConfig.speaking.description}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{pagesConfig.speaking.heading}</h1>
+      <p class="page-intro">
+        {pagesConfig.speaking.intro}
+      </p>
+      <PageStats text={totalTalks > 0
+        ? (totalPages > 1
+          ? `Showing ${(currentPage - 1) * talksPerPage + 1}–${Math.min(currentPage * talksPerPage, totalTalks)} of ${totalTalks} talks`
+          : `${totalTalks} ${totalTalks === 1 ? 'talk' : 'talks'}`)
+        : '0 talks'
+      } />
+    </header>
+
+    {talks.length > 0 ? (
+      <div class="talks-by-year">
+        {years.map((year) => (
+          <section class="year-section">
+            <h2 class="year-heading">{year}</h2>
+            <div class="card-list">
+              {talksByYear[year].map((talk) => (
+                <TalkCard
+                  title={talk.data.title}
+                  description={talk.data.description}
+                  event={talk.data.event}
+                  eventUrl={talk.data.eventUrl}
+                  date={talk.data.date}
+                  location={talk.data.location}
+                  type={talk.data.type}
+                  slides={talk.data.slides}
+                  video={talk.data.video}
+                  duration={talk.data.duration}
+                  topics={talk.data.topics}
+                  featured={talk.data.featured}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">No speaking engagements listed yet.</p>
+    )}
+
+    {totalPages > 1 && (
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        baseUrl="/speaking"
+      />
+    )}
+  </main>
+</BaseLayout>
+
+<style>
+  .talks-by-year {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .year-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .year-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .empty-state {
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 2rem 0;
+    text-align: center;
+  }
+</style>
