@@ -7,9 +7,6 @@
 /uses/ /projects 301
 /decisions /projects 301
 /decisions/ /projects 301
-/speaking /contact 301
-/speaking/ /contact 301
-
 # Legacy URLs (pre-Astro migration - from Google Search Console 404s)
 /field-notes/ /notes/ 301
 /field-notes/* /notes/ 301
