@@ -22,5 +22,18 @@
 /now/ / 301
 /tag-* /analysis/ 301
 
+# Removed projects
+/projects/arxiv-mcp-server /projects 301
+/projects/arxiv-mcp-server/ /projects 301
+/projects/nexus-letter-ai-analyzer /projects 301
+/projects/nexus-letter-ai-analyzer/ /projects 301
+
+# Old pages
+/start-here /playbook 301
+/start-here/ /playbook 301
+/search/* / 301
+
 # Old asset paths
 /assets/Jason-Leinart-Resume.pdf https://linkedin.com/in/jason-leinart 301
+/assets/img/* / 301
+/assets/js/* / 301
