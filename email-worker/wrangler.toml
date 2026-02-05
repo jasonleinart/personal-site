@@ -1,0 +1,7 @@
+name = "jasonleinart-email-worker"
+main = "src/index.js"
+compatibility_date = "2024-05-15"
+account_id = "090ff2bbc69fa3773a65881f1decb269"
+
+[vars]
+ALLOWED_ORIGINS = "https://jasonleinart.com,https://www.jasonleinart.com"

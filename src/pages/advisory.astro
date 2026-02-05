@@ -13,7 +13,6 @@
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SEO from '../components/SEO.astro';
-import { siteConfig } from '../config';
 ---
 
 <BaseLayout>
@@ -97,8 +96,8 @@ import { siteConfig } from '../config';
         I partner with organizations navigating the gap between AI capability and operational readiness. If you're planning a transformation initiative or evaluating how AI fits into your distributed operations, let's start a conversation.
       </p>
       <div class="cta-buttons">
-        <a href={`mailto:${siteConfig.author.email}?subject=Strategic%20Briefing%20Request`} class="btn-primary">
-          Schedule a Strategic Briefing
+        <a href="/contact" class="btn-primary">
+          Get in Touch
         </a>
         <a href="/playbook" class="btn-secondary">
           Explore the AI Transformation Playbook

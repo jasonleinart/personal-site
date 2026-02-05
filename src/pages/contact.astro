@@ -1,23 +1,12 @@
 ---
 /**
  * Contact Page
- * 
- * Minimal, intentional contact page with clear visual hierarchy and zone-based layout.
- * Prioritizes email as the primary contact method while providing secondary social links.
- * 
- * Layout Structure:
- * - Zone 1 (Primary): Email address with context about response time
- * - Zone 2 (Secondary): Social media links (only shown if configured)
- * 
- * Features:
- * - Clean, distraction-free design
- * - Large, prominent email link
- * - Automatic filtering of configured social links
- * - Responsive layout
- * - Clear visual hierarchy
- * 
+ *
+ * Contact form with name, email, and message fields.
+ * Submits to Cloudflare Worker which sends via Resend.
+ *
  * Route: /contact
- * 
+ *
  * @page
  */
 
@@ -26,24 +15,20 @@ import SEO from '../components/SEO.astro';
 import { siteConfig } from '../config';
 import { pagesConfig } from '../pages.config';
 
-/**
- * Filters and formats social links from site configuration
- * 
- * Only includes platforms that have a URL configured (non-empty values).
- * Capitalizes platform names for display (e.g., "github" becomes "Github").
- * 
- * @returns Array of social link objects with platform name and URL
- */
 const socialLinks = Object.entries(siteConfig.social)
   .filter(([_, url]) => url)
   .map(([platform, url]) => ({
     platform: platform.charAt(0).toUpperCase() + platform.slice(1),
     url
   }));
+
+const WORKER_URL = import.meta.env.PROD
+  ? 'https://jasonleinart-email-worker.jason-090.workers.dev'
+  : 'http://localhost:8787';
 ---
 
 <BaseLayout>
-  <SEO 
+  <SEO
     slot="head"
     title={pagesConfig.contact.title}
     description={pagesConfig.contact.description}
@@ -51,18 +36,33 @@ const socialLinks = Object.entries(siteConfig.social)
   />
 
   <main class="contact-page">
-    <!-- Zone 1: Primary Intent -->
     <section class="primary-zone">
       <h1>{pagesConfig.contact.heading}</h1>
-      <a href={`mailto:${siteConfig.author.email}`} class="email-link">
-        Email me
-      </a>
-      <p class="context">
-        I read every email. Expect a reply within a few days.
-      </p>
+
+      <div class="form-card">
+        <form id="contact-form" class="contact-form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Send Message</button>
+
+          <div id="form-status" class="form-status"></div>
+        </form>
+      </div>
     </section>
 
-    <!-- Zone 2: Secondary (Social) -->
     {socialLinks.length > 0 && (
       <section class="secondary-zone">
         <h2>Elsewhere</h2>
@@ -92,32 +92,99 @@ const socialLinks = Object.entries(siteConfig.social)
     }
 
     .primary-zone h1 {
-      font-size: 1.125rem;
-      font-weight: 500;
-      color: var(--color-text-muted);
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.01em;
-    }
-
-    .email-link {
-      display: block;
-      font-size: clamp(1.75rem, 5vw, 2.5rem);
-      font-weight: 600;
-      color: var(--color-text);
-      text-decoration: none;
+      font-size: var(--font-size-5xl);
+      font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-      transition: color 0.2s ease;
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--space-xl);
     }
 
-    .email-link:hover {
+    .form-card {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 2rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
       color: var(--color-text-secondary);
     }
 
-    .context {
+    .form-group input,
+    .form-group textarea {
+      padding: 0.75rem 1rem;
       font-size: 1rem;
-      color: var(--color-text-muted);
-      line-height: 1.6;
+      font-family: inherit;
+      background: var(--color-bg-secondary, rgba(0, 0, 0, 0.2));
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-glow);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn-primary {
+      align-self: flex-start;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-bg);
+      background: var(--color-accent);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-status {
+      font-size: 0.9375rem;
+      min-height: 1.5rem;
+    }
+
+    .form-status.success {
+      color: #22c55e;
+    }
+
+    .form-status.error {
+      color: #ef4444;
     }
 
     .secondary-zone {
@@ -159,16 +226,67 @@ const socialLinks = Object.entries(siteConfig.social)
 
     @media (max-width: 640px) {
       .contact-page {
-        padding: 4rem 1rem 6rem;
-      }
-
-      .primary-zone {
-        margin-bottom: 4rem;
+        padding: 2rem 1rem 6rem;
       }
 
       .primary-zone h1 {
-        font-size: 1rem;
+        font-size: var(--font-size-4xl);
+      }
+
+      .form-card {
+        padding: 1.5rem;
+      }
+
+      .btn-primary {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
+
+  <script define:vars={{ WORKER_URL }}>
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      status.textContent = '';
+      status.className = 'form-status';
+
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+      };
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          status.textContent = 'Message sent. I\'ll get back to you soon.';
+          status.className = 'form-status success';
+          form.reset();
+        } else {
+          throw new Error(result.error || 'Failed to send');
+        }
+      } catch (error) {
+        status.textContent = 'Something went wrong. Please try again or email me directly.';
+        status.className = 'form-status error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      }
+    });
+  </script>
 </BaseLayout>
