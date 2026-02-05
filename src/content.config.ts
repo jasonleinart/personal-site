@@ -165,6 +165,9 @@ const decisionsCollection = defineCollection({
     
     /** Related decision slugs for cross-referencing */
     relatedDecisions: z.array(z.string()).optional(),
+
+    /** Whether the decision is a draft (hidden from production) */
+    draft: z.boolean().default(false),
   }),
 });
 

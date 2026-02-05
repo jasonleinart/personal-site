@@ -40,7 +40,7 @@ import type { GetStaticPaths } from 'astro';
  * @returns Array of path objects with params and props
  */
 export const getStaticPaths: GetStaticPaths = async () => {
-  const decisions = await getCollection('decisions');
+  const decisions = await getCollection('decisions', ({ data }) => !data.draft);
   return decisions.map((decision) => ({
     params: { slug: decision.id },
     props: { decision },
