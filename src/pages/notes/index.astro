@@ -1,0 +1,729 @@
+---
+/**
+ * Notes Index Page
+ *
+ * Full-width listing of all published notes with:
+ * - 1100px max-width (matching homepage)
+ * - Client-side tag filtering
+ * - Two view modes: Grid (3-col cards) and Timeline (grouped by month)
+ * - Related content indicators on each card
+ *
+ * Route: /notes
+ *
+ * @page
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { getReadingTime } from '../../utils/readingTime';
+
+// Get published notes only
+const allNotes = await getCollection('notes', ({ data }) => data.draft === false);
+const sortedNotes = allNotes.sort((a, b) => {
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+
+// Extract unique tags
+const allTags = [...new Set(sortedNotes.flatMap(n => n.data.tags || []))].sort();
+
+// Resolve related content titles
+const notesWithRelated = await Promise.all(
+  sortedNotes.map(async (note) => {
+    let relatedTitle: string | null = null;
+    let relatedType: string | null = null;
+    let relatedHref: string | null = null;
+    if (note.data.relatedProject) {
+      const project = await getEntry('projects', note.data.relatedProject);
+      relatedTitle = project?.data.title || null;
+      relatedType = 'project';
+      relatedHref = `/projects/${note.data.relatedProject}`;
+    } else if (note.data.relatedAnalysis) {
+      const analysis = await getEntry('analysis', note.data.relatedAnalysis);
+      relatedTitle = analysis?.data.title || null;
+      relatedType = 'analysis';
+      relatedHref = `/analysis/${note.data.relatedAnalysis}`;
+    }
+    return { ...note, relatedTitle, relatedType, relatedHref };
+  })
+);
+
+// Group notes by month for grouped view
+const notesByMonth = new Map<string, typeof notesWithRelated>();
+notesWithRelated.forEach(note => {
+  const key = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(note.data.date);
+  if (!notesByMonth.has(key)) notesByMonth.set(key, []);
+  notesByMonth.get(key)!.push(note);
+});
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+}
+
+function formatShortDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric'
+  }).format(date);
+}
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title="Notes"
+    description="Short-form insights and takeaways from strategic analysis. Quick reads that highlight key concepts."
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Notes</h1>
+        <p class="page-intro">
+          Short-form insights that highlight specific aspects of my analysis. Quick reads, focused takeaways.
+        </p>
+      </div>
+      <div class="header-meta">
+        <span class="note-count" id="note-count">{sortedNotes.length} notes</span>
+        <div class="view-toggle" role="group" aria-label="View mode">
+          <button class="view-btn active" data-view="grid" aria-pressed="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="1" y="1" width="4" height="4" rx="0.5"/>
+              <rect x="6" y="1" width="4" height="4" rx="0.5"/>
+              <rect x="11" y="1" width="4" height="4" rx="0.5"/>
+              <rect x="1" y="6" width="4" height="4" rx="0.5"/>
+              <rect x="6" y="6" width="4" height="4" rx="0.5"/>
+              <rect x="11" y="6" width="4" height="4" rx="0.5"/>
+            </svg>
+            Grid
+          </button>
+          <button class="view-btn" data-view="grouped" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="4" y1="3" x2="15" y2="3"/>
+              <line x1="4" y1="8" x2="15" y2="8"/>
+              <line x1="4" y1="13" x2="15" y2="13"/>
+              <circle cx="1.5" cy="3" r="1"/>
+              <circle cx="1.5" cy="8" r="1"/>
+              <circle cx="1.5" cy="13" r="1"/>
+            </svg>
+            Timeline
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tag Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-tag active" data-tag="all">All</button>
+      {allTags.map(tag => (
+        <button class="filter-tag" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+
+    <!-- Grid View (3-column cards) -->
+    <div class="notes-grid view-active" id="grid-view">
+      {notesWithRelated.map((note) => {
+        const tags = note.data.tags || [];
+        const readTime = getReadingTime(note.body || '');
+        return (
+          <a
+            href={`/notes/${note.id}`}
+            class="note-card"
+            data-tags={tags.join(',')}
+          >
+            <div class="note-card-upper">
+              <span class="note-meta">
+                {formatDate(note.data.date)} · {readTime}
+              </span>
+              <h2 class="note-title">{note.data.title}</h2>
+              {note.data.description && (
+                <p class="note-description">{note.data.description}</p>
+              )}
+            </div>
+            <div class="note-card-lower">
+              {note.relatedTitle && (
+                <span class="note-related">
+                  <span class="related-label">{note.relatedType === 'analysis' ? 'Analysis' : 'Project'}:</span> {note.relatedTitle}
+                </span>
+              )}
+              {tags.length > 0 && (
+                <div class="note-tags">
+                  {tags.map(tag => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- Grouped/Timeline View -->
+    <div class="notes-grouped" id="grouped-view">
+      {[...notesByMonth.entries()].map(([monthLabel, monthNotes]) => (
+        <div class="month-group" data-month={monthLabel}>
+          <h3 class="month-label">{monthLabel}</h3>
+          <div class="month-notes">
+            {monthNotes.map(note => {
+              const tags = note.data.tags || [];
+              const readTime = getReadingTime(note.body || '');
+              return (
+                <a
+                  href={`/notes/${note.id}`}
+                  class="timeline-note"
+                  data-tags={tags.join(',')}
+                >
+                  <div class="timeline-marker"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <span class="timeline-date">{formatShortDate(note.data.date)}</span>
+                      <span class="timeline-time">{readTime}</span>
+                    </div>
+                    <h3 class="timeline-title">{note.data.title}</h3>
+                    {note.data.description && (
+                      <p class="timeline-description">{note.data.description}</p>
+                    )}
+                    <div class="timeline-footer">
+                      {note.relatedTitle && (
+                        <span class="timeline-related">
+                          ↳ {note.relatedTitle}
+                        </span>
+                      )}
+                      {tags.length > 0 && (
+                        <div class="timeline-tags">
+                          {tags.map(tag => (
+                            <span class="tag-sm">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="empty-state" id="empty-state" style="display: none;">
+      No notes match the selected filter.
+    </p>
+  </main>
+</BaseLayout>
+
+<script>
+  // View Toggle
+  const gridView = document.getElementById('grid-view')!;
+  const groupedView = document.getElementById('grouped-view')!;
+  const viewBtns = document.querySelectorAll('.view-btn');
+
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.getAttribute('data-view');
+      viewBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      if (view === 'grid') {
+        gridView.classList.add('view-active');
+        groupedView.classList.remove('view-active');
+      } else {
+        gridView.classList.remove('view-active');
+        groupedView.classList.add('view-active');
+      }
+    });
+  });
+
+  // Tag Filtering
+  const filterBtns = document.querySelectorAll('.filter-tag');
+  const gridCards = gridView.querySelectorAll('.note-card');
+  const timelineNotes = groupedView.querySelectorAll('.timeline-note');
+  const monthGroups = groupedView.querySelectorAll('.month-group');
+  const noteCount = document.getElementById('note-count')!;
+  const emptyState = document.getElementById('empty-state')!;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.getAttribute('data-tag');
+
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      let gridVisible = 0;
+
+      // Filter grid cards
+      gridCards.forEach(card => {
+        const cardTags = (card.getAttribute('data-tags') || '').split(',');
+        const show = tag === 'all' || cardTags.includes(tag!);
+        (card as HTMLElement).style.display = show ? '' : 'none';
+        if (show) gridVisible++;
+      });
+
+      // Filter timeline notes + hide empty month groups
+      timelineNotes.forEach(note => {
+        const noteTags = (note.getAttribute('data-tags') || '').split(',');
+        const show = tag === 'all' || noteTags.includes(tag!);
+        (note as HTMLElement).style.display = show ? '' : 'none';
+      });
+
+      monthGroups.forEach(group => {
+        const visibleInGroup = group.querySelectorAll('.timeline-note:not([style*="display: none"])');
+        (group as HTMLElement).style.display = visibleInGroup.length > 0 ? '' : 'none';
+      });
+
+      noteCount.textContent = `${gridVisible} note${gridVisible !== 1 ? 's' : ''}`;
+      emptyState.style.display = gridVisible === 0 ? '' : 'none';
+    });
+  });
+</script>
+
+<style>
+  .page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    background-color: var(--color-bg);
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 2rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 500px;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    padding-top: 0.5rem;
+  }
+
+  .note-count {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  /* View Toggle */
+  .view-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .view-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+
+  .view-btn:not(:last-child) {
+    border-right: 1px solid var(--color-border);
+  }
+
+  .view-btn:hover {
+    color: var(--color-text);
+    background: var(--color-bg-secondary);
+  }
+
+  .view-btn.active {
+    color: var(--color-accent);
+    background: var(--color-accent-muted);
+  }
+
+  /* Filter Bar */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .filter-tag {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+
+  .filter-tag:hover {
+    border-color: var(--color-text-muted);
+    color: var(--color-text);
+  }
+
+  .filter-tag.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: var(--color-accent-muted);
+  }
+
+  /* Grid View (3 columns) */
+  .notes-grid {
+    display: none;
+  }
+
+  .notes-grid.view-active {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .note-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    overflow: hidden;
+    min-height: 180px;
+  }
+
+  .note-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-accent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .note-card:hover {
+    border-color: var(--color-text-muted);
+    background: var(--color-bg-elevated);
+    transform: translateY(-2px);
+  }
+
+  .note-card:hover::before {
+    opacity: 1;
+  }
+
+  .note-card-upper {
+    flex: 1;
+  }
+
+  .note-meta {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .note-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.375rem;
+    line-height: 1.35;
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  .note-card:hover .note-title {
+    color: var(--color-accent);
+  }
+
+  .note-description {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .note-card-lower {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .note-related {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.35;
+  }
+
+  .related-label {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .note-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .tag {
+    padding: 0.125rem 0.4375rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--color-accent-secondary);
+    border: 1px solid rgba(74, 153, 97, 0.25);
+    border-radius: 3px;
+    background: rgba(74, 153, 97, 0.08);
+  }
+
+  /* Grouped/Timeline View */
+  .notes-grouped {
+    display: none;
+  }
+
+  .notes-grouped.view-active {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .month-group {
+    position: relative;
+  }
+
+  .month-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .month-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .timeline-note {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0 1rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+
+  .timeline-note:not(:last-child) {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -1.5rem;
+    top: 1.35rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: 2px solid var(--color-bg);
+    transform: translateX(calc(-50% - 1px));
+    transition: background 0.15s ease;
+  }
+
+  .timeline-note:hover .timeline-marker {
+    background: var(--color-accent);
+  }
+
+  .timeline-note:hover {
+    background: var(--gradient-card);
+    margin-right: -1rem;
+    padding-right: 1rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .timeline-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.375rem;
+  }
+
+  .timeline-date {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .timeline-time {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .timeline-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  .timeline-note:hover .timeline-title {
+    color: var(--color-accent);
+  }
+
+  .timeline-description {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .timeline-related {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .tag-sm {
+    padding: 0.0625rem 0.375rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--color-accent-secondary);
+    border: 1px solid rgba(74, 153, 97, 0.2);
+    border-radius: 3px;
+  }
+
+  /* Empty State */
+  .empty-state {
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .notes-grid.view-active {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .page-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .header-meta {
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .filter-bar {
+      gap: 0.375rem;
+    }
+
+    .filter-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.625rem;
+    }
+
+    .notes-grid.view-active {
+      grid-template-columns: 1fr;
+    }
+
+    .note-card {
+      min-height: auto;
+    }
+
+    .month-notes {
+      padding-left: 1rem;
+    }
+
+    .timeline-note {
+      padding-left: 1rem;
+    }
+  }
+</style>

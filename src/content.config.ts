@@ -236,6 +236,9 @@ const analysisCollection = defineCollection({
     /** Whether the article is a draft (hidden from production) */
     draft: z.boolean().default(false),
 
+    /** Whether to feature this article at the top of the listing */
+    featured: z.boolean().default(false),
+
     /** Optional audio file path for listen feature */
     audioFile: z.string().optional(),
 
