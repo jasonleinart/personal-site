@@ -978,9 +978,13 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
 
     .domain-card-questions {
       margin-top: 0.75rem;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 0.5rem;
+    }
+
+    .domain-card-questions.is-visible {
+      display: flex;
     }
 
     .question-score-item {
@@ -2017,7 +2021,7 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
         let questionsHtml = '';
         if (domain.question_scores && domain.question_scores.length > 0) {
           questionsHtml = `
-            <div class="domain-card-questions" hidden>
+            <div class="domain-card-questions">
               ${domain.question_scores.map(qs => `
                 <div class="question-score-item">
                   <div class="question-score-header">
@@ -2049,10 +2053,10 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
         if (toggleBtn) {
           toggleBtn.addEventListener('click', () => {
             const questions = card.querySelector('.domain-card-questions');
-            const isHidden = questions.hidden;
-            questions.hidden = !isHidden;
-            toggleBtn.textContent = isHidden ? 'Hide question details' : 'Show question details';
-            toggleBtn.setAttribute('aria-expanded', isHidden);
+            const isVisible = questions.classList.contains('is-visible');
+            questions.classList.toggle('is-visible');
+            toggleBtn.textContent = isVisible ? 'Show question details' : 'Hide question details';
+            toggleBtn.setAttribute('aria-expanded', !isVisible);
           });
         }
 
