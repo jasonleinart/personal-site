@@ -1753,11 +1753,7 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
         const data = await res.json();
         hideTyping();
 
-        // Process response
-        if (data.domain_scored) {
-          addDomainScore(data.domain_scored);
-        }
-
+        // Process response — scores are shown only in the final report
         if (data.progress) updateProgress(data.progress);
 
         if (data.status === 'complete') {
