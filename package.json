@@ -29,6 +29,7 @@
     "@fontsource/dm-sans": "^5.2.8",
     "@fontsource/instrument-serif": "^5.2.8",
     "astro": "^5.16.7",
+    "jspdf": "^4.1.0",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
