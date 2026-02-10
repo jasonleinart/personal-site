@@ -1,0 +1,2189 @@
+---
+/**
+ * AI Governance Readiness Assessment Demo
+ *
+ * Chat-style interactive demo that walks users through a governance maturity
+ * assessment. Evaluates 6 domains (Strategic Oversight, Risk & Compliance,
+ * Data Governance, Change & Delivery, Operations & Service, Security Posture)
+ * with 2 questions each, then generates a readiness report.
+ *
+ * Route: /tools/governance-readiness
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+
+const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jasonleinart.com/governance';
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title="AI Governance Readiness Assessment"
+    description="Free AI-powered assessment of your organization's governance maturity. Evaluate 6 domains, get scored results, and receive a readiness report with actionable recommendations."
+  />
+
+  <div class="demo-page">
+    <!-- Landing Section -->
+    <section class="landing-section" id="landing-section">
+      <header class="demo-header">
+        <span class="demo-badge">Demo</span>
+        <h1>AI Governance Readiness</h1>
+        <p class="demo-description">
+          Assess your organization's readiness for AI adoption. This conversational
+          assessment evaluates 6 governance domains and generates a scored readiness
+          report with specific recommendations.
+        </p>
+        <p class="demo-tech">
+          Built with Azure OpenAI, LangGraph, and FastAPI
+        </p>
+      </header>
+
+      <div class="expect-box">
+        <h2>What to Expect</h2>
+        <div class="expect-grid">
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Conversational Interview</strong>
+              <p>Answer questions about your organization's governance practices across 6 domains</p>
+            </div>
+          </div>
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Scored Results</strong>
+              <p>Each domain is scored on a 1-5 maturity scale with evidence-based rationale</p>
+            </div>
+          </div>
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Readiness Report</strong>
+              <p>Executive summary with classification, blockers, strengths, and next steps</p>
+            </div>
+          </div>
+        </div>
+        <p class="expect-time">Takes about 5 minutes. Your responses are not stored after the assessment completes.</p>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn-primary" id="start-btn">Start Assessment</button>
+        <button class="btn-secondary" id="demo-btn">Run Demo with Sample Data</button>
+      </div>
+
+      <div class="landing-error" id="landing-error" hidden>
+        <p id="landing-error-msg"></p>
+        <button class="btn-small" id="landing-retry-btn">Try Again</button>
+      </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section" id="chat-section" hidden>
+      <div class="chat-progress">
+        <div class="progress-text">
+          <span id="progress-label">Starting assessment...</span>
+          <span id="progress-count"></span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="6" aria-label="Assessment progress"></div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+        <!-- Messages rendered by JS -->
+      </div>
+
+      <div class="typing-indicator" id="typing-indicator" hidden role="status" aria-label="Processing your response">
+        <div class="typing-bubble">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+
+      <div class="chat-input-area" id="chat-input-area">
+        <label for="user-input" class="input-label">Your response</label>
+        <div class="input-row">
+          <textarea
+            id="user-input"
+            rows="3"
+            placeholder="Describe your organization's practices..."
+            disabled
+          ></textarea>
+          <button class="send-btn" id="send-btn" disabled aria-label="Send your response">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </button>
+        </div>
+        <span class="input-hint">Press Ctrl+Enter to send</span>
+      </div>
+
+      <button class="btn-skip" id="skip-btn" hidden>Skip to Report</button>
+    </section>
+
+    <!-- Report Section -->
+    <section class="report-section" id="report-section" hidden>
+      <div class="report-header">
+        <h2>Assessment Report</h2>
+        <div class="report-score-ring">
+          <svg viewBox="0 0 120 120" class="score-ring-svg">
+            <circle class="score-ring-track" cx="60" cy="60" r="52" />
+            <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="52" />
+          </svg>
+          <div class="score-ring-value">
+            <span class="score-number" id="report-score">--</span>
+            <span class="score-outof">/5.0</span>
+          </div>
+        </div>
+        <div class="report-classification" id="report-classification"></div>
+        <div class="report-cost" id="report-cost" hidden></div>
+      </div>
+
+      <div class="report-summary" id="report-summary"></div>
+
+      <div class="report-domains">
+        <h3>Domain Results</h3>
+        <div class="domain-grid" id="domain-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <div class="report-blockers" id="report-blockers" hidden>
+        <h3>Blockers</h3>
+        <div class="blockers-list" id="blockers-list"></div>
+      </div>
+
+      <div class="report-strengths" id="report-strengths" hidden>
+        <h3>Strengths</h3>
+        <div class="strengths-list" id="strengths-list"></div>
+      </div>
+
+      <div class="report-recommendation" id="report-recommendation"></div>
+
+      <div class="report-actions">
+        <button class="btn-primary" id="new-assessment-btn">Start New Assessment</button>
+        <button class="btn-secondary" id="download-report-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:0.5rem;">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Download Report
+        </button>
+        <a href="/contact" class="btn-secondary">Book a Consultation</a>
+      </div>
+    </section>
+  </div>
+
+  <style is:global>
+    /* ======================================
+       Page Container
+       ====================================== */
+    .demo-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ======================================
+       Landing Section
+       ====================================== */
+    .demo-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .demo-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-accent-muted);
+      color: var(--color-accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .demo-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-description {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 0.75rem;
+      line-height: 1.6;
+    }
+
+    .demo-tech {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .expect-box {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .expect-box h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .expect-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .expect-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .expect-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent-muted);
+      border-radius: 8px;
+      color: var(--color-accent);
+    }
+
+    .expect-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .expect-item strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.9375rem;
+    }
+
+    .expect-item p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .expect-time {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    .start-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+      padding: 0.75rem 2rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 2rem;
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .btn-small:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .landing-error {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .landing-error p {
+      color: #ef4444;
+      margin-bottom: 0.75rem;
+      font-size: 0.9375rem;
+    }
+
+    /* ======================================
+       Chat Section
+       ====================================== */
+    .chat-section {
+      display: flex;
+      flex-direction: column;
+      height: calc(100dvh - 120px);
+      min-height: 500px;
+      max-height: 800px;
+    }
+
+    .chat-progress {
+      padding: 0.75rem 0 1rem;
+      flex-shrink: 0;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+
+    .progress-track {
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 400ms ease;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: 3px;
+    }
+
+    /* --- Chat Bubble: System (left) --- */
+    .msg-system {
+      max-width: 85%;
+      align-self: flex-start;
+    }
+
+    .msg-system .msg-domain-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: 0.375rem;
+    }
+
+    .msg-system .msg-bubble {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 2px 12px 12px 12px;
+      padding: 1rem 1.25rem;
+    }
+
+    .msg-system .msg-text {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+
+    .msg-system .msg-probes {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .msg-system .msg-probes-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.375rem;
+      font-weight: 500;
+    }
+
+    .msg-system .msg-probe {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--color-border);
+      margin-bottom: 0.25rem;
+      line-height: 1.4;
+    }
+
+    /* --- Chat Bubble: User (right) --- */
+    .msg-user {
+      max-width: 85%;
+      align-self: flex-end;
+    }
+
+    .msg-user .msg-bubble {
+      background: var(--color-accent-muted);
+      border-radius: 12px 2px 12px 12px;
+      padding: 1rem 1.25rem;
+    }
+
+    .msg-user .msg-text {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+
+    /* --- Domain Intro Card --- */
+    .msg-domain-intro {
+      width: 100%;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 2px 8px 8px 2px;
+      padding: 1rem 1.25rem;
+    }
+
+    .msg-domain-intro .domain-intro-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .msg-domain-intro .domain-intro-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* --- Domain Score Card --- */
+    .msg-domain-score {
+      width: 100%;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .domain-score-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      min-width: 3rem;
+      text-align: center;
+    }
+
+    .domain-score-details {
+      flex: 1;
+    }
+
+    .domain-score-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .domain-score-bar {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.375rem;
+    }
+
+    .domain-score-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 600ms ease;
+    }
+
+    .domain-score-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .domain-score-blocker {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .score-color-high { color: #4a9961; }
+    .score-bg-high { background: #4a9961; }
+
+    .score-color-mid { color: #d4a843; }
+    .score-bg-mid { background: #d4a843; }
+
+    .score-color-low { color: #c4654a; }
+    .score-bg-low { background: #c4654a; }
+
+    .badge-blocker {
+      background: rgba(196, 101, 74, 0.15);
+      color: #c4654a;
+    }
+
+    .badge-strength {
+      background: rgba(74, 153, 97, 0.15);
+      color: #4a9961;
+    }
+
+    /* --- Status Message --- */
+    .msg-status {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      padding: 0.5rem 0;
+    }
+
+    /* --- Typing Indicator --- */
+    .typing-indicator {
+      padding: 0.5rem 0;
+      flex-shrink: 0;
+    }
+
+    .typing-bubble {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 2px 12px 12px 12px;
+      padding: 0.75rem 1rem;
+    }
+
+    .typing-bubble .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-text-muted);
+      animation: typing-bounce 1.4s infinite;
+    }
+
+    .typing-bubble .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-bubble .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+
+    /* --- Chat Input --- */
+    .chat-input-area {
+      flex-shrink: 0;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      margin-bottom: 0.375rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .input-row textarea {
+      flex: 1;
+      resize: vertical;
+      min-height: 72px;
+      max-height: 160px;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      color: var(--color-text);
+      font-size: 0.9375rem;
+      font-family: inherit;
+      line-height: 1.5;
+      transition: border-color var(--transition-fast);
+    }
+
+    .input-row textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    .input-row textarea:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: var(--color-accent-hover);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .send-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .input-hint {
+      display: block;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      margin-top: 0.375rem;
+      text-align: right;
+    }
+
+    .btn-skip {
+      display: block;
+      margin: 0.75rem auto 0;
+      padding: 0.5rem 1.25rem;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text-secondary);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-skip:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    /* --- Chat Error (inline) --- */
+    .msg-error {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .msg-error p {
+      flex: 1;
+      font-size: 0.875rem;
+      color: #ef4444;
+    }
+
+    .msg-error button {
+      flex-shrink: 0;
+      padding: 0.375rem 0.75rem;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 6px;
+      color: #ef4444;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* ======================================
+       Report Section
+       ====================================== */
+    .report-section {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .report-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .report-score-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem;
+    }
+
+    .score-ring-svg {
+      width: 120px;
+      height: 120px;
+      transform: rotate(-90deg);
+    }
+
+    .score-ring-track {
+      fill: none;
+      stroke: var(--color-border);
+      stroke-width: 8;
+    }
+
+    .score-ring-fill {
+      fill: none;
+      stroke: var(--color-accent);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 326.73;
+      stroke-dashoffset: 326.73;
+      transition: stroke-dashoffset 1.2s ease, stroke 0.3s ease;
+    }
+
+    .score-ring-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .score-number {
+      display: block;
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .score-outof {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .report-classification {
+      display: inline-block;
+      padding: 0.375rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .classification-ready {
+      background: rgba(74, 153, 97, 0.15);
+      color: #4a9961;
+    }
+
+    .classification-partial {
+      background: rgba(212, 168, 67, 0.15);
+      color: #d4a843;
+    }
+
+    .classification-not-ready {
+      background: rgba(196, 101, 74, 0.15);
+      color: #c4654a;
+    }
+
+    .report-cost {
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+
+    .report-summary {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+    }
+
+    .report-domains {
+      margin-bottom: 2rem;
+    }
+
+    .report-domains h3,
+    .report-blockers h3,
+    .report-strengths h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .domain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .domain-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    .domain-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .domain-card-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .domain-card-score {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+
+    .domain-card-bar {
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .domain-card-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .domain-card-badges {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .domain-card-toggle {
+      display: block;
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.375rem 0;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .domain-card-toggle:hover {
+      color: var(--color-accent);
+    }
+
+    .domain-card-questions {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .question-score-item {
+      padding: 0.5rem 0.75rem;
+      background: var(--color-bg-elevated);
+      border-radius: 6px;
+      font-size: 0.8125rem;
+    }
+
+    .question-score-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+
+    .question-score-id {
+      font-weight: 600;
+    }
+
+    .question-score-val {
+      font-weight: 600;
+    }
+
+    .question-score-rationale {
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    .report-blockers {
+      margin-bottom: 2rem;
+    }
+
+    .blockers-list,
+    .strengths-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .blocker-item {
+      background: rgba(196, 101, 74, 0.06);
+      border: 1px solid rgba(196, 101, 74, 0.2);
+      border-left: 3px solid #c4654a;
+      border-radius: 2px 8px 8px 2px;
+      padding: 1rem 1.25rem;
+    }
+
+    .blocker-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.375rem;
+    }
+
+    .blocker-item-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .blocker-item-score {
+      font-weight: 700;
+      color: #c4654a;
+    }
+
+    .blocker-item-relevance {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .strength-item {
+      background: rgba(74, 153, 97, 0.06);
+      border: 1px solid rgba(74, 153, 97, 0.2);
+      border-left: 3px solid #4a9961;
+      border-radius: 2px 8px 8px 2px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .strength-item-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .strength-item-score {
+      font-weight: 700;
+      color: #4a9961;
+    }
+
+    .report-recommendation {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+    }
+
+    .report-strengths {
+      margin-bottom: 2rem;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      padding-top: 1rem;
+    }
+
+    /* ======================================
+       Responsive
+       ====================================== */
+    @media (max-width: 768px) {
+      .demo-page {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .demo-header h1 {
+        font-size: 2rem;
+      }
+
+      .expect-box {
+        padding: 1.25rem;
+      }
+
+      .start-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .msg-system,
+      .msg-user {
+        max-width: 92%;
+      }
+
+      .domain-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .report-actions .btn-secondary {
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .input-row {
+        flex-direction: column;
+      }
+
+      .send-btn {
+        width: 100%;
+        height: 40px;
+      }
+
+      .progress-text #progress-label {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .typing-bubble .dot {
+        animation: none;
+      }
+
+      .chat-messages {
+        scroll-behavior: auto;
+      }
+
+      .score-ring-fill {
+        transition: none;
+      }
+
+      .progress-fill {
+        transition: none;
+      }
+    }
+  </style>
+
+  <script>
+    // @ts-nocheck - jsPDF types don't support spread on color tuples
+    import { jsPDF } from 'jspdf';
+
+    window.generateReportPDF = function(r, classificationLabel) {
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const pw = doc.internal.pageSize.getWidth();
+      const ph = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentW = pw - margin * 2;
+      let y = margin;
+
+      const accent = [196, 101, 74];
+      const green = [74, 153, 97];
+      const amber = [212, 168, 67];
+      const textDark = [30, 30, 28];
+      const textMid = [100, 98, 92];
+      const borderColor = [210, 207, 200];
+
+      function colorForScore(s) {
+        if (s >= 3.5) return green;
+        if (s >= 2.5) return amber;
+        return accent;
+      }
+
+      function stripMarkdown(text) {
+        return text.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#+\s*/gm, '');
+      }
+
+      function checkPage(needed) {
+        if (y + needed > ph - 20) {
+          doc.addPage();
+          y = margin;
+        }
+      }
+
+      function drawHr() {
+        doc.setDrawColor(...borderColor);
+        doc.setLineWidth(0.3);
+        doc.line(margin, y, pw - margin, y);
+        y += 4;
+      }
+
+      // Title block
+      doc.setFillColor(...accent);
+      doc.rect(0, 0, pw, 40, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('AI Governance Readiness Assessment', margin, 18);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), margin, 28);
+      doc.text('jasonleinart.com', pw - margin, 28, { align: 'right' });
+      y = 52;
+
+      // Score + classification
+      const sc = colorForScore(r.overall_score);
+      doc.setFontSize(36);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...sc);
+      doc.text(r.overall_score.toFixed(1), margin, y);
+      doc.setFontSize(14);
+      doc.setTextColor(...textMid);
+      doc.text('/ 5.0', margin + 30, y);
+
+      const clsLabel = r.readiness_label || classificationLabel(r.readiness_classification);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...sc);
+      doc.text(clsLabel, margin + 52, y);
+      y += 10;
+      drawHr();
+
+      // Executive summary
+      doc.setFontSize(13);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...textDark);
+      doc.text('Executive Summary', margin, y);
+      y += 7;
+
+      doc.setFontSize(9.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textMid);
+      const summaryLines = doc.splitTextToSize(stripMarkdown(r.executive_summary), contentW);
+      for (const line of summaryLines) {
+        checkPage(5);
+        doc.text(line, margin, y);
+        y += 4.2;
+      }
+      y += 6;
+      drawHr();
+
+      // Domain results
+      doc.setFontSize(13);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...textDark);
+      doc.text('Domain Results', margin, y);
+      y += 8;
+
+      const domainOrder = [
+        'strategic_oversight', 'risk_compliance', 'data_governance',
+        'change_delivery', 'operations_service', 'security_posture'
+      ];
+
+      for (const key of domainOrder) {
+        const d = r.domain_results[key];
+        if (!d) continue;
+        checkPage(30);
+        const dc = colorForScore(d.score);
+
+        // Name + score
+        doc.setFontSize(10.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...textDark);
+        doc.text(d.domain_name, margin, y);
+        doc.setTextColor(...dc);
+        doc.text(d.score.toFixed(1) + ' / 5.0', pw - margin, y, { align: 'right' });
+
+        // Badge
+        const nameW = doc.getTextWidth(d.domain_name);
+        if (d.is_blocker) {
+          doc.setFontSize(7);
+          doc.setTextColor(...accent);
+          doc.text('BLOCKER', margin + nameW + 4, y);
+        } else if (d.score >= 3.0) {
+          doc.setFontSize(7);
+          doc.setTextColor(...green);
+          doc.text('STRENGTH', margin + nameW + 4, y);
+        }
+        y += 3;
+
+        // Score bar
+        doc.setFillColor(230, 228, 224);
+        doc.roundedRect(margin, y, contentW, 2.5, 1, 1, 'F');
+        doc.setFillColor(...dc);
+        doc.roundedRect(margin, y, Math.max(1, (d.score / 5) * contentW), 2.5, 1, 1, 'F');
+        y += 6;
+
+        // Question scores
+        if (d.question_scores) {
+          for (const qs of d.question_scores) {
+            checkPage(14);
+            doc.setFontSize(8.5);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...textMid);
+            doc.text(qs.question_id + ':', margin + 3, y);
+            doc.setTextColor(...colorForScore(qs.score));
+            doc.text(qs.score.toFixed(1), margin + 16, y);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...textMid);
+            const ratLines = doc.splitTextToSize(qs.rationale, contentW - 22);
+            doc.text(ratLines[0], margin + 24, y);
+            y += 4;
+            for (let i = 1; i < ratLines.length; i++) {
+              checkPage(4);
+              doc.text(ratLines[i], margin + 24, y);
+              y += 4;
+            }
+            y += 1;
+          }
+        }
+        y += 4;
+      }
+
+      // Blockers
+      if (r.blockers && r.blockers.length > 0) {
+        checkPage(25);
+        drawHr();
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...accent);
+        doc.text('Blockers', margin, y);
+        y += 7;
+
+        for (const b of r.blockers) {
+          checkPage(18);
+          doc.setFillColor(252, 245, 243);
+          doc.roundedRect(margin, y - 3, contentW, 4, 1, 1, 'F');
+          doc.setDrawColor(...accent);
+          doc.setLineWidth(0.6);
+          doc.line(margin, y - 3, margin, y + 1);
+
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...textDark);
+          doc.text(b.domain_name, margin + 3, y);
+          doc.setTextColor(...accent);
+          doc.text(b.score.toFixed(1) + ' / 5.0', pw - margin, y, { align: 'right' });
+          y += 5;
+
+          doc.setFontSize(8.5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(...textMid);
+          const relLines = doc.splitTextToSize(b.ai_relevance, contentW - 6);
+          for (const line of relLines) {
+            checkPage(4);
+            doc.text(line, margin + 3, y);
+            y += 4;
+          }
+          y += 4;
+        }
+      }
+
+      // Strengths
+      if (r.strengths && r.strengths.length > 0) {
+        checkPage(20);
+        drawHr();
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...green);
+        doc.text('Strengths', margin, y);
+        y += 7;
+
+        for (const s of r.strengths) {
+          checkPage(8);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...textDark);
+          doc.text(s.domain_name, margin + 3, y);
+          doc.setTextColor(...green);
+          doc.text(s.score.toFixed(1) + ' / 5.0', pw - margin, y, { align: 'right' });
+          y += 6;
+        }
+        y += 2;
+      }
+
+      // Recommendation
+      if (r.recommendation) {
+        checkPage(20);
+        drawHr();
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...textDark);
+        doc.text('Recommendation', margin, y);
+        y += 7;
+
+        doc.setFontSize(9.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...textMid);
+        const recLines = doc.splitTextToSize(stripMarkdown(r.recommendation), contentW);
+        for (const line of recLines) {
+          checkPage(5);
+          doc.text(line, margin, y);
+          y += 4.2;
+        }
+      }
+
+      // Footer on every page
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(7.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...textMid);
+        doc.text('Generated by AI Governance Readiness Assessment', margin, ph - 10);
+        doc.text('jasonleinart.com  |  Page ' + i + ' of ' + totalPages, pw - margin, ph - 10, { align: 'right' });
+      }
+
+      doc.save('governance-readiness-report-' + new Date().toISOString().slice(0, 10) + '.pdf');
+    };
+  </script>
+  <script define:vars={{ API_URL }}>
+    // ============================================================
+    // State
+    // ============================================================
+    let assessmentId = null;
+    let currentState = 'idle'; // idle, starting, chatting, sending, generating_report, complete, error
+    let isDemoMode = false;
+    let demoAborted = false;
+    let lastResponseText = '';
+    let pollTimer = null;
+
+    // Demo responses (developing org profile - produces "partially ready")
+    const DEMO_RESPONSES = {
+      intake: "We're a 300-person manufacturing company with about 15 IT staff. We've been talking about using AI for predictive maintenance on our production lines but haven't started yet. Our IT director reports to the CFO and makes most technology decisions, though big purchases need CFO approval.",
+      domain_responses: [
+        "For big purchases, the CFO has final say. Day-to-day IT decisions are made by our IT director. We don't really have a formal committee\u2014it's more like the IT director proposes something and the CFO approves or denies it. Sometimes department heads weigh in if it affects their area.",
+        "We have a loose IT roadmap that the IT director maintains, but it's not formally tied to business strategy. The CFO asked us to prioritize cost savings this year, so we've been focused on that. We don't do formal alignment reviews\u2014it's more of an ongoing conversation.",
+        "We track some risks in a spreadsheet that the IT director maintains. It gets reviewed maybe twice a year. We know we need to do better here\u2014we had a ransomware scare last year that exposed some gaps. We're planning to formalize our risk management, but it's not done yet.",
+        "We follow basic compliance requirements for our industry. We have a cybersecurity insurance policy that required some baseline controls. For AI, we haven't really thought about compliance yet\u2014we're still in the exploratory phase. We know what we need to comply with but monitoring is mostly manual and done before audits.",
+        "Our data is spread across various systems\u2014ERP, some Access databases, lots of spreadsheets. We know who manages the ERP data, but the spreadsheet data is a mess. We've been talking about a data governance program but haven't started formally. The IT team does some data quality checks when we notice problems.",
+        "We have basic access controls through Active Directory. Sensitive files are on restricted shares. We don't have formal data classification yet\u2014people kind of know what's sensitive based on experience. We're looking at DLP tools but haven't purchased anything.",
+        "We use a ticketing system for change requests. Critical changes need IT director approval. We don't have a formal CAB\u2014changes are reviewed in our weekly IT team meeting. Our change process is documented but we admit it's not always followed, especially for urgent requests.",
+        "We have a basic CI/CD pipeline for our web applications. ERP changes go through the vendor's process. Testing is mostly manual\u2014we have some automated tests but coverage is low. We track incidents but not formal metrics like change failure rate.",
+        "We use a basic ticketing system and have informal SLAs with the business. Our IT team handles support during business hours; after hours it's on-call by phone. We monitor critical systems with basic alerts but don't have a formal NOC. Response times vary\u2014we try to hit 4 hours for critical issues.",
+        "We have some monitoring on critical servers and network equipment. We use Nagios for basic up/down alerts. We get a lot of false positives and the sysadmin has kind of learned to ignore some of them. Application monitoring is limited\u2014we mostly find out about slow performance from users.",
+        "We use Active Directory with MFA for remote access. Local network access is password-only. We don't have a formal identity governance program. Admin access is managed but not regularly reviewed\u2014the last access review was about a year ago. Everyone has individual accounts at least.",
+        "We try to patch monthly but sometimes fall behind. We did one vulnerability scan last year through a consultant. We know we have some systems that are behind on patches\u2014especially some legacy manufacturing systems. We're working on a more structured approach."
+      ]
+    };
+
+    let demoResponseIndex = 0;
+
+    // ============================================================
+    // DOM Elements
+    // ============================================================
+    const landingSection = document.getElementById('landing-section');
+    const chatSection = document.getElementById('chat-section');
+    const reportSection = document.getElementById('report-section');
+    const startBtn = document.getElementById('start-btn');
+    const demoBtn = document.getElementById('demo-btn');
+    const landingError = document.getElementById('landing-error');
+    const landingErrorMsg = document.getElementById('landing-error-msg');
+    const landingRetryBtn = document.getElementById('landing-retry-btn');
+    const chatMessages = document.getElementById('chat-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const skipBtn = document.getElementById('skip-btn');
+    const chatInputArea = document.getElementById('chat-input-area');
+    const progressLabel = document.getElementById('progress-label');
+    const progressCount = document.getElementById('progress-count');
+    const progressFill = document.getElementById('progress-fill');
+    const newAssessmentBtn = document.getElementById('new-assessment-btn');
+
+    // ============================================================
+    // Utility Functions
+    // ============================================================
+    function scoreColor(score) {
+      if (score >= 3.5) return 'high';
+      if (score >= 2.5) return 'mid';
+      return 'low';
+    }
+
+    function scoreLabel(score) {
+      if (score >= 3.5) return 'Strong';
+      if (score >= 2.5) return 'Developing';
+      return 'Needs Attention';
+    }
+
+    function classificationClass(cls) {
+      if (cls === 'ready') return 'classification-ready';
+      if (cls === 'partially_ready') return 'classification-partial';
+      return 'classification-not-ready';
+    }
+
+    function classificationLabel(cls) {
+      if (cls === 'ready') return 'Ready for AI Adoption';
+      if (cls === 'partially_ready') return 'Partially Ready';
+      return 'Not Ready';
+    }
+
+    function isNearBottom() {
+      return chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 100;
+    }
+
+    function scrollToBottom() {
+      if (isNearBottom()) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ============================================================
+    // Message Rendering
+    // ============================================================
+    function addSystemMessage(question) {
+      const el = document.createElement('div');
+      el.className = 'msg-system';
+
+      let probesHtml = '';
+      if (question.probes && question.probes.length > 0) {
+        probesHtml = `
+          <div class="msg-probes">
+            <div class="msg-probes-label">Consider mentioning:</div>
+            ${question.probes.map(p => `<div class="msg-probe">${escapeHtml(p)}</div>`).join('')}
+          </div>
+        `;
+      }
+
+      el.innerHTML = `
+        <div class="msg-domain-label">${escapeHtml(question.domain_name)} &mdash; ${escapeHtml(question.focus)}</div>
+        <div class="msg-bubble">
+          <div class="msg-text">${escapeHtml(question.text)}</div>
+          ${probesHtml}
+        </div>
+      `;
+
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addUserMessage(text) {
+      const el = document.createElement('div');
+      el.className = 'msg-user';
+      el.innerHTML = `
+        <div class="msg-bubble">
+          <div class="msg-text">${escapeHtml(text)}</div>
+        </div>
+      `;
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addDomainIntro(question) {
+      if (!question.domain_intro) return;
+      const el = document.createElement('div');
+      el.className = 'msg-domain-intro';
+      el.innerHTML = `
+        <div class="domain-intro-name">${escapeHtml(question.domain_name)}</div>
+        <div class="domain-intro-desc">${escapeHtml(question.domain_intro)}</div>
+      `;
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addDomainScore(domainResult) {
+      const color = scoreColor(domainResult.score);
+      const label = scoreLabel(domainResult.score);
+      const pct = (domainResult.score / 5) * 100;
+
+      const el = document.createElement('div');
+      el.className = 'msg-domain-score';
+
+      let blockerBadge = '';
+      if (domainResult.is_blocker) {
+        blockerBadge = '<span class="domain-score-blocker badge-blocker">Blocker</span>';
+      }
+
+      el.innerHTML = `
+        <div class="domain-score-value score-color-${color}">${domainResult.score.toFixed(1)}</div>
+        <div class="domain-score-details">
+          <div class="domain-score-name">${escapeHtml(domainResult.domain_name)}${blockerBadge}</div>
+          <div class="domain-score-bar">
+            <div class="domain-score-bar-fill score-bg-${color}" style="width: ${pct}%"></div>
+          </div>
+          <div class="domain-score-label score-color-${color}">${label}</div>
+        </div>
+      `;
+
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addStatusMessage(text) {
+      const el = document.createElement('div');
+      el.className = 'msg-status';
+      el.textContent = text;
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addErrorMessage(text, retryFn) {
+      const el = document.createElement('div');
+      el.className = 'msg-error';
+      el.innerHTML = `
+        <p>${escapeHtml(text)}</p>
+        <button>Retry</button>
+      `;
+      el.querySelector('button').addEventListener('click', () => {
+        el.remove();
+        if (retryFn) retryFn();
+      });
+      chatMessages.appendChild(el);
+      scrollToBottom();
+    }
+
+    function showTyping() {
+      typingIndicator.hidden = false;
+      scrollToBottom();
+    }
+
+    function hideTyping() {
+      typingIndicator.hidden = true;
+    }
+
+    // ============================================================
+    // Progress
+    // ============================================================
+    function updateProgress(progress) {
+      if (!progress) return;
+      const { total_domains, completed, current_domain_name } = progress;
+
+      progressCount.textContent = `${completed}/${total_domains}`;
+      progressFill.style.width = `${(completed / total_domains) * 100}%`;
+      progressFill.setAttribute('aria-valuenow', completed);
+
+      if (current_domain_name) {
+        progressLabel.textContent = current_domain_name;
+      } else if (completed === total_domains) {
+        progressLabel.textContent = 'All domains complete';
+      }
+    }
+
+    // ============================================================
+    // Section Toggling
+    // ============================================================
+    function showSection(name) {
+      landingSection.hidden = name !== 'landing';
+      chatSection.hidden = name !== 'chat';
+      reportSection.hidden = name !== 'report';
+    }
+
+    // ============================================================
+    // API Calls
+    // ============================================================
+    async function startAssessment() {
+      currentState = 'starting';
+      startBtn.disabled = true;
+      demoBtn.disabled = true;
+      landingError.hidden = true;
+
+      try {
+        const res = await fetch(`${API_URL}/api/v1/assessment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || err.error || `Server error (${res.status})`);
+        }
+
+        const data = await res.json();
+        assessmentId = data.assessment_id;
+
+        // Persist for recovery
+        try { sessionStorage.setItem('gov_assessment_id', assessmentId); } catch (e) {}
+
+        showSection('chat');
+        currentState = 'chatting';
+
+        if (data.question) {
+          addDomainIntro(data.question);
+          addSystemMessage(data.question);
+        }
+
+        if (data.progress) updateProgress(data.progress);
+
+        enableInput();
+        return data;
+
+      } catch (err) {
+        currentState = 'idle';
+        startBtn.disabled = false;
+        demoBtn.disabled = false;
+        landingErrorMsg.textContent = err.message || 'Failed to start assessment. Please try again.';
+        landingError.hidden = false;
+        return null;
+      }
+    }
+
+    async function submitResponse(text) {
+      currentState = 'sending';
+      disableInput();
+      lastResponseText = text;
+
+      addUserMessage(text);
+      showTyping();
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
+
+        const res = await fetch(`${API_URL}/api/v1/assessment/${assessmentId}/respond`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ response: text }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          if (res.status === 429) {
+            throw new Error('Rate limit reached. Please wait a moment before continuing.');
+          }
+          throw new Error(err.detail || err.error || `Server error (${res.status})`);
+        }
+
+        const data = await res.json();
+        hideTyping();
+
+        // Process response
+        if (data.domain_scored) {
+          addDomainScore(data.domain_scored);
+        }
+
+        if (data.progress) updateProgress(data.progress);
+
+        if (data.status === 'complete') {
+          addStatusMessage('Assessment complete. Loading report...');
+          await fetchReport();
+          return;
+        }
+
+        if (data.status === 'generating_report') {
+          addStatusMessage('Generating your assessment report...');
+          currentState = 'generating_report';
+          startPolling();
+          return;
+        }
+
+        if (data.question) {
+          addDomainIntro(data.question);
+          addSystemMessage(data.question);
+        }
+
+        if (data.message && !data.question && data.status !== 'interviewing') {
+          addStatusMessage(data.message);
+        }
+
+        currentState = 'chatting';
+        enableInput();
+        userInput.value = '';
+        userInput.focus();
+
+      } catch (err) {
+        hideTyping();
+        currentState = 'chatting';
+
+        if (err.name === 'AbortError') {
+          addErrorMessage('Request timed out. The server may be generating your report.', () => {
+            addStatusMessage('Checking assessment status...');
+            startPolling();
+          });
+        } else {
+          addErrorMessage(err.message || 'Failed to send response.', () => {
+            submitResponse(lastResponseText);
+          });
+        }
+        enableInput();
+      }
+    }
+
+    async function fetchReport() {
+      try {
+        const res = await fetch(`${API_URL}/api/v1/assessment/${assessmentId}/report`);
+        if (!res.ok) {
+          throw new Error('Failed to load report');
+        }
+        const data = await res.json();
+        currentState = 'complete';
+        renderReport(data.report, data.estimated_cost_usd);
+        showSection('report');
+        try { sessionStorage.removeItem('gov_assessment_id'); } catch (e) {}
+      } catch (err) {
+        addErrorMessage('Failed to load report. ' + (err.message || ''), () => fetchReport());
+      }
+    }
+
+    function startPolling() {
+      let attempts = 0;
+      const maxAttempts = 20;
+
+      pollTimer = setInterval(async () => {
+        attempts++;
+        if (attempts > maxAttempts) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+          addErrorMessage(
+            `Report is taking longer than expected. Your assessment ID is ${assessmentId}.`,
+            () => startPolling()
+          );
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_URL}/api/v1/assessment/${assessmentId}`);
+          if (!res.ok) return;
+          const data = await res.json();
+
+          if (data.status === 'complete') {
+            clearInterval(pollTimer);
+            pollTimer = null;
+            await fetchReport();
+          }
+        } catch (e) {
+          // Silently retry on next interval
+        }
+      }, 2000);
+    }
+
+    // ============================================================
+    // Input Controls
+    // ============================================================
+    function enableInput() {
+      userInput.disabled = false;
+      sendBtn.disabled = false;
+    }
+
+    function disableInput() {
+      userInput.disabled = true;
+      sendBtn.disabled = true;
+    }
+
+    function handleSend() {
+      const text = userInput.value.trim();
+      if (!text || currentState !== 'chatting') return;
+      submitResponse(text);
+    }
+
+    // ============================================================
+    // Demo Mode
+    // ============================================================
+    async function runDemo() {
+      isDemoMode = true;
+      demoAborted = false;
+      demoResponseIndex = 0;
+
+      disableInput();
+      chatInputArea.hidden = true;
+      skipBtn.hidden = false;
+
+      const data = await startAssessment();
+      if (!data) {
+        isDemoMode = false;
+        chatInputArea.hidden = false;
+        skipBtn.hidden = true;
+        return;
+      }
+
+      // Send intake
+      await demoDelay(1200);
+      if (demoAborted) return;
+      await submitResponse(DEMO_RESPONSES.intake);
+
+      // Send domain responses
+      for (let i = 0; i < DEMO_RESPONSES.domain_responses.length; i++) {
+        if (demoAborted) return;
+        if (currentState === 'complete' || currentState === 'generating_report') break;
+
+        await demoDelay(1500);
+        if (demoAborted) return;
+        if (currentState === 'chatting') {
+          await submitResponse(DEMO_RESPONSES.domain_responses[i]);
+        }
+      }
+
+      // Wait for completion if still generating
+      if (currentState === 'generating_report') {
+        // Polling is already running, just wait
+      }
+    }
+
+    function demoDelay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function skipToReport() {
+      demoAborted = true;
+      skipBtn.hidden = true;
+
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+
+      // If we have an assessment, try to get current status
+      if (assessmentId) {
+        addStatusMessage('Skipping ahead...');
+        hideTyping();
+
+        // Wait briefly for any in-flight request to complete
+        await demoDelay(500);
+
+        try {
+          const res = await fetch(`${API_URL}/api/v1/assessment/${assessmentId}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'complete') {
+              await fetchReport();
+              return;
+            }
+          }
+        } catch (e) {}
+
+        // If not complete, poll for it
+        addStatusMessage('Assessment still in progress. Waiting for completion...');
+        startPolling();
+      }
+    }
+
+    // ============================================================
+    // Report Rendering
+    // ============================================================
+    function renderReport(report, costUsd) {
+      cachedReport = report;
+
+      // Show assessment cost if available
+      const costEl = document.getElementById('report-cost');
+      if (costEl && costUsd) {
+        costEl.textContent = `Assessment cost: $${costUsd.toFixed(4)}`;
+        costEl.hidden = false;
+      }
+
+      // Score ring
+      const scoreNum = document.getElementById('report-score');
+      scoreNum.textContent = report.overall_score.toFixed(1);
+
+      const ringFill = document.getElementById('score-ring-fill');
+      const circumference = 2 * Math.PI * 52; // r=52
+      const offset = circumference - (report.overall_score / 5) * circumference;
+      ringFill.style.strokeDashoffset = offset;
+
+      const color = scoreColor(report.overall_score);
+      const colorMap = { high: '#4a9961', mid: '#d4a843', low: '#c4654a' };
+      ringFill.style.stroke = colorMap[color];
+      scoreNum.className = `score-number score-color-${color}`;
+
+      // Classification badge
+      const clsEl = document.getElementById('report-classification');
+      clsEl.textContent = report.readiness_label || classificationLabel(report.readiness_classification);
+      clsEl.className = `report-classification ${classificationClass(report.readiness_classification)}`;
+
+      // Executive summary
+      const summaryEl = document.getElementById('report-summary');
+      summaryEl.innerHTML = escapeHtml(report.executive_summary).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+      if (!summaryEl.innerHTML.startsWith('<p>')) {
+        summaryEl.innerHTML = '<p>' + summaryEl.innerHTML + '</p>';
+      }
+
+      // Domain results grid
+      const grid = document.getElementById('domain-grid');
+      grid.innerHTML = '';
+
+      const domainOrder = [
+        'strategic_oversight', 'risk_compliance', 'data_governance',
+        'change_delivery', 'operations_service', 'security_posture'
+      ];
+
+      for (const key of domainOrder) {
+        const domain = report.domain_results[key];
+        if (!domain) continue;
+
+        const dColor = scoreColor(domain.score);
+        const pct = (domain.score / 5) * 100;
+        const card = document.createElement('div');
+        card.className = 'domain-card';
+
+        let badgesHtml = '';
+        if (domain.is_blocker) {
+          badgesHtml += '<span class="domain-score-blocker badge-blocker">Blocker</span>';
+        }
+        if (domain.score >= 3.0) {
+          badgesHtml += '<span class="domain-score-blocker badge-strength">Strength</span>';
+        }
+
+        let questionsHtml = '';
+        if (domain.question_scores && domain.question_scores.length > 0) {
+          questionsHtml = `
+            <div class="domain-card-questions" hidden>
+              ${domain.question_scores.map(qs => `
+                <div class="question-score-item">
+                  <div class="question-score-header">
+                    <span class="question-score-id">${escapeHtml(qs.question_id)}</span>
+                    <span class="question-score-val score-color-${scoreColor(qs.score)}">${qs.score.toFixed(1)}</span>
+                  </div>
+                  <div class="question-score-rationale">${escapeHtml(qs.rationale)}</div>
+                </div>
+              `).join('')}
+            </div>
+            <button class="domain-card-toggle" aria-expanded="false">Show question details</button>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="domain-card-header">
+            <span class="domain-card-name">${escapeHtml(domain.domain_name)}</span>
+            <span class="domain-card-score score-color-${dColor}">${domain.score.toFixed(1)}</span>
+          </div>
+          <div class="domain-card-bar">
+            <div class="domain-card-bar-fill score-bg-${dColor}" style="width: ${pct}%"></div>
+          </div>
+          <div class="domain-card-badges">${badgesHtml}</div>
+          ${questionsHtml}
+        `;
+
+        // Toggle handler
+        const toggleBtn = card.querySelector('.domain-card-toggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const questions = card.querySelector('.domain-card-questions');
+            const isHidden = questions.hidden;
+            questions.hidden = !isHidden;
+            toggleBtn.textContent = isHidden ? 'Hide question details' : 'Show question details';
+            toggleBtn.setAttribute('aria-expanded', isHidden);
+          });
+        }
+
+        grid.appendChild(card);
+      }
+
+      // Blockers
+      const blockersSection = document.getElementById('report-blockers');
+      const blockersList = document.getElementById('blockers-list');
+      if (report.blockers && report.blockers.length > 0) {
+        blockersSection.hidden = false;
+        blockersList.innerHTML = report.blockers.map(b => `
+          <div class="blocker-item">
+            <div class="blocker-item-header">
+              <span class="blocker-item-name">${escapeHtml(b.domain_name)}</span>
+              <span class="blocker-item-score">${b.score.toFixed(1)} / 5.0</span>
+            </div>
+            <div class="blocker-item-relevance">${escapeHtml(b.ai_relevance)}</div>
+          </div>
+        `).join('');
+      } else {
+        blockersSection.hidden = true;
+      }
+
+      // Strengths
+      const strengthsSection = document.getElementById('report-strengths');
+      const strengthsList = document.getElementById('strengths-list');
+      if (report.strengths && report.strengths.length > 0) {
+        strengthsSection.hidden = false;
+        strengthsList.innerHTML = report.strengths.map(s => `
+          <div class="strength-item">
+            <span class="strength-item-name">${escapeHtml(s.domain_name)}</span>
+            <span class="strength-item-score">${s.score.toFixed(1)} / 5.0</span>
+          </div>
+        `).join('');
+      } else {
+        strengthsSection.hidden = true;
+      }
+
+      // Recommendation
+      const recEl = document.getElementById('report-recommendation');
+      if (report.recommendation) {
+        recEl.innerHTML = '<h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">Recommendation</h3>' +
+          '<p>' + escapeHtml(report.recommendation).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+      }
+    }
+
+    // ============================================================
+    // Event Listeners
+    // ============================================================
+    startBtn.addEventListener('click', () => {
+      startAssessment();
+    });
+
+    demoBtn.addEventListener('click', () => {
+      runDemo();
+    });
+
+    sendBtn.addEventListener('click', handleSend);
+
+    userInput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+
+    skipBtn.addEventListener('click', skipToReport);
+
+    landingRetryBtn.addEventListener('click', () => {
+      landingError.hidden = true;
+      startAssessment();
+    });
+
+    // Download report
+    let cachedReport = null;
+
+    document.getElementById('download-report-btn').addEventListener('click', () => {
+      if (!cachedReport) return;
+      try {
+        window.generateReportPDF(cachedReport, classificationLabel);
+      } catch (err) {
+        console.error('PDF generation failed:', err);
+        alert('PDF generation failed: ' + err.message);
+      }
+    });
+
+    newAssessmentBtn.addEventListener('click', () => {
+      // Reset everything
+      assessmentId = null;
+      currentState = 'idle';
+      isDemoMode = false;
+      demoAborted = false;
+      demoResponseIndex = 0;
+      lastResponseText = '';
+      cachedReport = null;
+
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+
+      chatMessages.innerHTML = '';
+      userInput.value = '';
+      progressFill.style.width = '0%';
+      progressLabel.textContent = 'Starting assessment...';
+      progressCount.textContent = '';
+      startBtn.disabled = false;
+      demoBtn.disabled = false;
+      chatInputArea.hidden = false;
+      skipBtn.hidden = true;
+      landingError.hidden = true;
+
+      document.getElementById('report-blockers').hidden = true;
+      document.getElementById('report-strengths').hidden = true;
+
+      showSection('landing');
+    });
+
+    // Check for resumable assessment
+    try {
+      const savedId = sessionStorage.getItem('gov_assessment_id');
+      if (savedId) {
+        // Could add a "Resume previous assessment?" prompt here
+        // For now, just clear it to start fresh
+        sessionStorage.removeItem('gov_assessment_id');
+      }
+    } catch (e) {}
+  </script>
+</BaseLayout>
