@@ -1,0 +1,57 @@
+---
+title: "When Consistency Beats Intelligence"
+description: "A 70,000-person field experiment proved AI doesn't need to be smarter than humans to outperform them. It just needs to be more consistent. Better inputs, not better decisions."
+date: 2026-02-12
+tags:
+  - "ai-strategy"
+  - "change-management"
+  - "adoption"
+draft: false
+---
+
+> **Key insight:** AI doesn't need to make better decisions than humans. It needs to collect better information *for* human decisions. A 70,000-person RCT found that standardizing the input — not automating the judgment — produced 12% more hires and 18% better retention.
+
+Everyone assumes AI outperforms humans by being smarter. A January 2026 field experiment from the University of Chicago suggests the real advantage is much more boring than that.
+
+Researchers partnered with PSG Global Solutions (a Teleperformance subsidiary) to randomly assign 70,000 job applicants to either a human recruiter or an AI voice agent for their interview. Here's the key design choice: humans still made every hiring decision. The AI only collected information. Recruiters reviewed transcripts, audio, and test scores the same way regardless of who conducted the interview.
+
+AI-interviewed applicants received **12% more job offers**. They were **18% more likely to start the job**. They stayed **18% longer**. On-the-job performance? **Statistically identical** to workers hired through human interviews.
+
+The AI wasn't better at judging candidates. It was better at running the same interview consistently.
+
+## What "Controlled Variance" Actually Means
+
+The researchers coined the term to describe what happened inside the transcripts. Both human recruiters and the AI agent followed structured interview guidelines covering 14 topics. But humans drifted.
+
+| Measure | AI Agent | Human Recruiter |
+|---------|----------|-----------------|
+| Guideline topics covered | 45% | 38% |
+| Topic order correlation | 0.53 | 0.33 |
+| Question similarity to guidelines | 0.59 | 0.43 |
+| Vocabulary richness | 7.64 | 6.66 |
+
+The AI didn't read from a fixed script. It adapted questions and follow-ups to each applicant. But it adapted *within* the structured framework rather than *away from* it. Human recruiters, given the same guidelines, varied widely. Some covered 60% of topics. Others covered less than 40%. The AI held a tighter band while still personalizing each conversation.
+
+Recruiters received richer, more comparable information as a result. When evaluating AI-conducted interviews, they wrote more positive justifications and assigned higher scores. The structured interviews surfaced more of the linguistic signals (sustained exchanges, vocabulary richness, syntactic complexity) that predict successful hires, and fewer of the noise signals (backchannel cues, applicant-posed questions) that don't.
+
+## Why This Matters for AI Adoption
+
+I keep seeing organizations frame AI deployment as "automate the task." This paper reframes it as "standardize the input." Those are very different plays.
+
+The hiring decision stayed with humans. What changed was the quality and consistency of information those humans received. You don't need to convince recruiters that AI judges candidates better than they do. You need to show them that AI gives them better material to work with. That's a much easier conversation to have inside an organization resisting change.
+
+This maps to what George Westerman describes as [Level 2 on the risk slope](/notes/westerman-risk-slope): AI handles a specific task with human-in-the-loop oversight. I think it's one of the cleanest examples of that level working at production scale.
+
+The broader pattern applies anywhere humans collect information using guidelines but with discretion. Customer discovery calls. Insurance claims intake. Patient triage. Clinical assessments. User research interviews. Wherever variance in the collection process introduces noise into the decision process, controlled variance is the play.
+
+## Key Takeaways
+
+- AI doesn't need to make better decisions than humans. It needs to collect better information *for* human decisions.
+- "Controlled variance" means standardizing the collection process while preserving adaptability within each interaction. Structure without rigidity.
+- The biggest gains from AI may come not from automation but from noise reduction in human workflows.
+- Any process where multiple humans collect information using guidelines but with discretion is a candidate for this approach.
+
+---
+
+**Sources**
+- [Jabarian & Henkel (2026), "Voice AI in Firms: A Natural Field Experiment on Automated Job Interviews"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5395709)

@@ -13,7 +13,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SEO from '../../components/SEO.astro';
 import BackLink from '../../components/BackLink.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
 import { getCollection, getEntry, render } from 'astro:content';
+import { siteConfig } from '../../config';
 import { getReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
@@ -36,6 +38,7 @@ const { Content } = await render(note);
 const { title, date, relatedAnalysis, relatedProject, tags } = note.data;
 
 const readingTime = getReadingTime(note.body || '');
+const pageUrl = `${siteConfig.url}/notes/${slug}`;
 
 // Get related content if specified
 let relatedArticle = null;
@@ -87,6 +90,8 @@ function formatDate(date: Date): string {
     <article class="note-content prose-content">
       <Content />
     </article>
+
+    <ShareButtons title={title} url={pageUrl} />
 
     {relatedProjectEntry && (
       <div class="related-article">
