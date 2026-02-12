@@ -1,0 +1,41 @@
+---
+title: "The 60-Point Drop: How Structure Recovers What Chat Loses in Medical AI"
+description: "Medical AI identifies conditions 94.9% of the time. Give people access to that same AI, and accuracy drops to 34.5%. Worse than Googling it. The bottleneck isn't the model."
+date: 2026-02-12
+relatedAnalysis: "healthcare-ai-deployment-gap"
+tags:
+  - "healthcare"
+  - "ai-strategy"
+  - "adoption"
+draft: false
+---
+
+> **Key insight:** Medical AI identifies conditions 94.9% of the time. Give real people access to that AI for self-diagnosis, and accuracy drops to 34.5%, worse than Googling it. The bottleneck isn't model capability. It's the unstructured interaction between the model and the person using it.
+
+A Nature Medicine study gave 1,298 people access to three leading LLMs for health self-assessment. The models, working alone, identified the correct condition 94.9% of the time.
+
+Users with that same AI access? 34.5%. A control group using Google and NHS websites scored 44.2%.
+
+Having access to a medical AI made people *worse* at self-diagnosis than a basic web search.
+
+## Three Failure Modes
+
+Bean et al. traced the collapse to specific interaction breakdowns:
+
+1. **Incomplete input.** Users provided insufficient symptom information in over half of sampled interactions. They didn't know what was clinically relevant, so the AI worked with noise.
+2. **Model capitulation.** LLMs changed correct answers after user pushback. The model had the right diagnosis, then abandoned it when the user disagreed.
+3. **Signal blindness.** Only 34% of conditions the LLM correctly mentioned appeared in users' final answers. The right information was in the conversation. Users couldn't distinguish it from the wrong information.
+
+The common thread: the model had the knowledge. The unstructured chat interface couldn't transfer it. Users didn't know what to ask, couldn't evaluate what they got back, and the AI folded under social pressure.
+
+## Why This Isn't a Model Problem
+
+The instinct is to build a better model. But the model was already at 94.9%. The gap is in the interaction design. Every successful clinical AI system in the [broader evidence](/analysis/healthcare-ai-deployment-gap) uses structured interaction where the AI leads the conversation, collects information systematically, and constrains the output through defined protocols.
+
+Google's AMIE hit 59.1% diagnostic accuracy by leading the dialogue. Therabot reduced depression 51% by following structured CBT protocols. The Healthcare Agent scored 58% higher on proactivity by constraining through specialized modules. Same pattern: structure the interaction, and the knowledge transfers. Leave it unstructured, and 94.9% capability becomes 34.5% reality.
+
+The bottleneck is never the model. It's the workflow between the model and the person using it.
+
+---
+
+**Source:** [Bean et al. (2026), "Reliability of LLMs as medical assistants for the general public," *Nature Medicine*](https://doi.org/10.1038/s41591-025-04074-y)

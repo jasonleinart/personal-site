@@ -1,0 +1,261 @@
+---
+title: "The Deployment Gap: What Peer-Reviewed Research Reveals About Healthcare AI's Readiness Problem"
+subtitle: "Why Models Work and Organizations Don't"
+description: "A systematic analysis of peer-reviewed healthcare AI papers reveals that deployment failures are organizational readiness problems, not technology problems. Evidence-based framework for healthcare AI leaders."
+publishDate: 2026-02-12
+tags:
+  - "healthcare"
+  - "ai-strategy"
+  - "change-management"
+  - "governance"
+audioFile: "/audio/healthcare-ai-deployment-gap.m4a"
+draft: false
+featured: false
+tldr:
+  summary: "Peer-reviewed papers across clinical effectiveness, safety, architecture, deployment, and governance tell the same story: healthcare AI's bottleneck isn't model capability — it's organizational readiness. This analysis maps the evidence to a practical adoption framework."
+  points:
+    - "<strong>Models have the knowledge. Interactions don't transfer it.</strong> LLMs identify conditions 94.9% of the time. Users with LLM access: 34.5%. The gap is interaction design, not capability."
+    - "<strong>Architecture matters more than model selection.</strong> Structured pipelines improve accuracy 34-62 points over the same models with basic prompting. Constrained agents outperform flexible ones in every comparison."
+    - "<strong>Infrastructure predicts adoption, not clinical need.</strong> The #1 predictor of whether a US hospital adopts AI is interoperability capability. Mental health shortage areas are 60% less likely to have AI."
+    - "<strong>85% of actual usage is email.</strong> When healthcare workers get AI access, they write emails. The clinical transformation narrative is aspirational. Administrative efficiency is the current reality."
+    - "<strong>Governance maturity gates deployment capability.</strong> Half of hospitals with AI don't track whether it works. The first credible governance roadmap (HAIRA) just arrived — untested."
+---
+
+## The Capability Illusion
+
+Google's diagnostic AI, [AMIE](https://doi.org/10.1038/s41586-025-08866-7), outperformed primary care physicians on 30 of 32 specialist evaluation axes in a double-blind randomized controlled trial published in Nature. It hit 59.1% top-10 diagnostic accuracy compared to 33.6% for the physicians. On 25 of 26 patient experience axes, the AI scored higher too.
+
+Then a different team tested what happens when real people actually use medical AI.
+
+[Bean et al.](https://doi.org/10.1038/s41591-025-04074-y) gave 1,298 UK participants access to three leading LLMs for health self-assessment and published the results in Nature Medicine. The models, working alone, identified the correct condition 94.9% of the time. Users with LLM access? Less than 34.5%. The control group using Google and NHS websites scored 44.2%. Having access to a medical AI made people *worse* at self-diagnosis than a basic web search.
+
+The models have the medical knowledge. The interaction doesn't transfer it.
+
+Three failure modes drove the collapse:
+
+1. **Incomplete input.** Users provided insufficient symptom information in over half of sampled interactions.
+2. **Model capitulation.** LLMs changed correct answers after user pushback.
+3. **Signal blindness.** Users couldn't distinguish good suggestions from bad ones — only 34% of conditions the LLM correctly mentioned appeared in users' final answers.
+
+This isn't a healthcare-specific problem. It's the same pattern across every domain where AI meets organizational reality. The technology works in controlled settings. It fails in practice. The difference between those two outcomes is adoption infrastructure: workflow design, governance, training, and change management. That's what this analysis examines across peer-reviewed healthcare AI papers spanning clinical effectiveness, safety, technical architecture, deployment, and governance.
+
+The finding is consistent across all five dimensions: healthcare AI's bottleneck isn't model capability. It's organizational readiness.
+
+---
+
+## What the Evidence Shows
+
+I organized the papers into five research pillars based on the questions they answer about AI in healthcare. Each pillar has a finding that matters more than the rest.
+
+### Clinical Effectiveness: Structured Beats Unstructured
+
+The strongest deployment evidence comes from [PRAIM](https://doi.org/10.1038/s41591-024-03408-6), the largest prospective healthcare AI study to date. Published in Nature Medicine: 463,094 women screened across 12 German sites, 119 radiologists, AI embedded in the national breast cancer screening program.
+
+| Metric | AI Group | Control Group | Difference |
+|--------|----------|---------------|------------|
+| Cancer detection per 1,000 | 6.7 | 5.7 | +17.6% |
+| Recall rate per 1,000 | 37.4 | 38.3 | Noninferior |
+| PPV of recall | 17.9% | 14.9% | +3.0 pp |
+| PPV of biopsy | 64.5% | 59.2% | +5.3 pp |
+
+The AI safety net caught 204 breast cancers that both human readers initially missed. Radiologists spent 43% less time on AI-tagged normal examinations. But notice what PRAIM is *not*: it's not a chatbot. It's not an oracle answering questions. It's a structured decision referral system. AI triages, flags disagreements, and radiologists retain clinical authority. The workflow is structured by design, and that's why it works.
+
+Every clinical success story in the evidence follows the same pattern. [Therabot](https://doi.org/10.1056/AIoa2400802) (the only RCT with real patients measuring therapy outcomes) reduced depression symptoms 51% over 8 weeks using structured CBT/DBT protocols, not free-form chat. The [Healthcare Agent](https://doi.org/10.1038/s44387-025-00021-x)'s constrained multi-module architecture scored 3.96/5 on proactivity versus 2.50/5 for vanilla GPT-4. Structure beats open-ended conversation in every comparison.
+
+### Safety & Trust: The Invisible Failure Mode
+
+[MedR-Bench](https://doi.org/10.1038/s41467-025-64769-1) tested seven reasoning-enhanced models on 1,453 real clinical cases (Nature Communications). The gap between what models get right and what they leave out is the defining safety pattern:
+
+| Dimension | Score Range | What It Means |
+|-----------|-----------|---------------|
+| Factuality | 84-99% | What the model says is usually correct |
+| Completeness | 50-88% | What the model skips can change the decision |
+| Treatment planning | &lt;31% | The highest-stakes task is the worst performance |
+| Safety (harm avoidance) | 0.85-0.99 | Models protect by staying silent |
+| Comprehensiveness | 0.20-0.85 | Silence means patients don't get what they need |
+
+The completeness gap is the most dangerous finding in the evidence. A reasoning chain that's 95% factual but 70% complete looks trustworthy while missing steps that could change the clinical decision. A wrong answer is catchable. A missing reasoning step is invisible to anyone reviewing the output.
+
+### Technical Architecture: The Workflow Is the Differentiator
+
+Five papers independently confirmed that general-purpose models outperform medical fine-tunes. CodeLlama scored 0% on biomedical tasks. OpenBioLLM couldn't format JSON. Llama3 Med42 was the worst performer on [personalized health recommendations](https://doi.org/10.1038/s41746-025-01996-2). Domain fine-tuning [degrades instruction-following and multi-step reasoning](https://doi.org/10.1093/jamia/ocaf045).
+
+The systems that work use architecture, not specialized models:
+
+| System | Baseline | With Architecture | Improvement |
+|--------|----------|-------------------|-------------|
+| [PHIA](https://doi.org/10.1038/s41467-025-67922-y) (wearable analysis) | 22% (text reasoning) | 84% (ReAct agent) | +62 points |
+| [DSWizard](https://doi.org/10.1038/s41551-025-01587-2) (biomedical research) | &lt;40% (vanilla prompting) | 74% (plan-driven agent) | +34 points |
+| Healthcare Agent (consultation) | 2.50 proactivity (vanilla GPT-4) | 3.96 proactivity (constrained agent) | +58% |
+| [Clinical Trial Matcher](https://doi.org/10.1038/s43856-025-01256-0) | 72% (prior approaches) | 87% (pipeline with reasoning model) | +15 points |
+
+Same models, different architectures. The architecture is the variable that matters. Constrained pipelines, code execution for numerical verification, model-agnostic design patterns. Don't buy "medical AI." Buy the best general model and build the clinical workflow around it.
+
+### Deployment & Scale: The Plumbing Determines Everything
+
+[Hwang et al.](https://doi.org/10.1038/s44360-025-00016-7) mapped AI adoption across 3,560 US hospitals (Nature Health). The strongest predictor of whether a hospital adopts AI: interoperability capability. Not clinical need. Not budget. Not patient acuity. Data exchange infrastructure.
+
+Mental health shortage areas are 60% less likely to have AI. Primary care shortage areas: 25% less likely. Medically underserved areas: 15% less likely. AI adoption follows existing resource advantages, widening gaps.
+
+[Black et al.](https://doi.org/10.1038/s44401-025-00063-y) analyzed 30,503 LLM conversation threads from Stanford Medicine Children's Hospital over 11 months (npj Health Systems). What people actually do with healthcare AI:
+
+| Category | % of Usage |
+|----------|-----------|
+| Email and document writing | 53.9% |
+| Text manipulation | 9.1% |
+| Brainstorming | 6.7% |
+| Clinical decision support | 5.9% |
+| Everything else | 24.4% |
+
+85% of usage is administrative. The clinical transformation narrative doesn't match how people use these tools when given open access. The 5.9% clinical query tail, coming from non-clinicians asking things like "What is the differential diagnosis?", represents the risk — unverified clinical queries from people without clinical training.
+
+### Governance & Equity: The Foundation That Doesn't Exist
+
+Among US hospitals with deployed AI: 47.4% don't report model accuracy. 51.4% don't evaluate model bias. Stanford discovered the non-clinician clinical query pattern 11 months after deployment, through research analysis of logs, not real-time monitoring. Nobody was watching.
+
+[HAIRA](https://doi.org/10.1038/s41746-026-02418-7) (npj Digital Medicine) provides the first resource-tiered governance framework: 5 maturity levels across 7 governance domains, with a weakest-link scoring rule that prevents organizations from claiming high maturity while ignoring entire domains. It's the most actionable governance roadmap in the evidence. It also hasn't been tested. Of 35 governance frameworks reviewed, only one (at Duke, governing 52 models) has been deployed at scale.
+
+---
+
+## Six Patterns That Explain the Gap
+
+The pillar-level findings become sharper when you look for recurring structural patterns across the evidence. Six keep showing up.
+
+### 1. Build Intake and Routing Before Synthesis
+
+The Bean et al. finding (94.9% model accuracy, 34.5% user accuracy) is a structural mismatch. Users approach with an unstructured need (self-diagnosis) and hit a complex synthesis tool directly. There's no intake, no routing, no structured triage.
+
+Every successful system in the evidence builds an intake stage before the synthesis stage. AMIE leads the diagnostic conversation, structuring what information gets collected before synthesizing a diagnosis. The Healthcare Agent's Planner module routes tasks before the Inquiry module gathers information and the Doctor module synthesizes. The Clinical Trial Matcher filters for relevance before running criterion assessment.
+
+"Structured interaction beats unstructured chat" is the most consistent finding across the evidence. More specifically: build intake and routing before synthesis. Organize the input first. Process it second. Skip the intake step, and the synthesis engine gets overwhelmed by noise. And someone has to design these workflows, train clinicians on the new interaction pattern, and monitor whether the structured process is actually being followed. Those are adoption problems, not engineering problems.
+
+### 2. Architecture Over Models
+
+Five papers independently confirmed general-purpose models outperform medical fine-tunes. The systems hitting 84% accuracy use the same base models as the systems hitting 22%. The difference: decomposed pipelines, constrained agent architectures, code execution for numerical verification, and model-agnostic design.
+
+This inverts the procurement conversation. Organizations shopping for "the best medical AI model" are optimizing the wrong variable. Vendor evaluation committees need to assess workflow architecture (structured conversation patterns, safety modules, physician review loops) over benchmark scores. Bean et al. proved benchmarks don't predict real-world performance. Four papers proved medical fine-tuning underperforms general models.
+
+### 3. Match the Tool to the Work
+
+Stanford deployed an undifferentiated GPT-4o chat interface — a synthesis tool — and 85% of usage turned out to be email writing and text formatting. High volume, low complexity, needing templates and batch processing. People found the administrative use case on their own because that's what they actually needed.
+
+The 5.9% clinical query tail from non-clinicians is what happens without routing. Everyone hits the same interface regardless of task complexity or role authorization. No triage. No matching between the complexity of the request and the capability of the tool.
+
+The implication: match tools to work patterns.
+
+- **Administrative tasks** need volume infrastructure: templates, batch processing, routing logic
+- **Clinical synthesis** needs depth infrastructure: structured interaction, knowledge grounding, safety layers
+
+One undifferentiated tool for both guarantees underperformance on both.
+
+### 4. Infrastructure Before Algorithms
+
+Interoperability predicts AI adoption more strongly than any clinical need indicator across 3,560 US hospitals. Hospitals that can exchange data adopt AI. Hospitals that can't, don't. You can't have distributed AI intelligence without data flow between nodes.
+
+PRAIM succeeded across 12 sites and 5 mammography hardware vendors because it embedded into existing screening infrastructure. The infrastructure was the prerequisite. The algorithm was the easy part.
+
+[Klang et al.](https://doi.org/10.1038/s41746-024-01315-1) at Mount Sinai (npj Digital Medicine) showed what cost engineering looks like at health-system scale: 40.7 million clinical notes, batch concatenation strategy achieving 17x cost reduction with a 50-task ceiling. This is infrastructure work — batch processing pipelines, JSON parsing, retry logic — not model work.
+
+### 5. Governance as Foundation, Not Layer
+
+Healthcare is a regulated industry. That means governance comes first: build the compliance and safety infrastructure, then enable capabilities within it. Not "add compliance later."
+
+PRAIM confirms this. It succeeded as a CE-certified medical device embedded in an existing regulated screening process. The governance was the foundation the AI ran on, not a layer added after the technology worked. It operated at HAIRA Level 3+: standardized processes across 12 sites, real-time monitoring, structured change management for radiologist onboarding, prospective evaluation design.
+
+Most US hospitals operate at HAIRA Level 1: reactive, relying on vendor safety claims, no formal governance structure. They're deploying AI in a regulated industry without the safety infrastructure that regulated industry requires as its foundation.
+
+47% don't track whether AI works. 51% don't evaluate bias. Stanford discovered governance failures through research, not monitoring. The governance gap isn't a future concern. It's a present failure.
+
+### 6. No Feedback Loops
+
+Across every paper in this analysis, not a single system implements outcome tracking that feeds back into parameter adjustment for continuous improvement. PRAIM has vendor-driven model updates (10 versions during the study), but no outcome-based tuning of the deployment workflow itself. [MedEduChat](https://doi.org/10.1038/s41746-025-02166-0) measures health confidence scores but doesn't feed them back. The Healthcare Agent tracks proactivity metrics but doesn't self-optimize.
+
+Healthcare AI is stuck at "deploy and hope." Without feedback loops, organizations can't answer "is this getting better?" The monitoring gap (47% don't track accuracy) is the missing infrastructure. No outcome tracking means no adjustment means no improvement.
+
+This is the gap between a deployed system and a learning system. Every mature operational system eventually needs feedback loops. Healthcare AI hasn't built them yet. Part of the problem is ownership: clinical teams generate the outcomes, IT owns the infrastructure, and vendor contracts control the model. Without clear accountability across all three, outcome tracking stays on nobody's roadmap.
+
+---
+
+## A Practical Adoption Sequence
+
+The evidence points to a specific sequencing pattern. Each phase introduces more operational complexity, builds on the organizational capabilities proven in the previous phase, and maps to increasing governance requirements.
+
+| Phase | What Gets Deployed | Governance Required |
+|-------|-------------------|-------------------|
+| 1. Administrative | Email, documentation, batch extraction | Usage monitoring, compute budgets, role-based access |
+| 2. Content & Education | Patient education, training scenarios | Content review, reading-level controls, clinician escalation |
+| 3. Clinical Support | Diagnostic support, trial matching, data analysis | Safety architecture, completeness checking, adversarial testing |
+| 4. Autonomous Clinical | AI-led screening, diagnostic dialogue | HAIRA Level 3+, continuous monitoring, prospective validation |
+
+Phase 1 proves the infrastructure works. Black et al.'s Stanford data shows administrative AI delivers real value (53.9% of usage is email), and Klang et al.'s batch extraction proves system-scale processing is economically viable.
+
+Phase 2 adds structured clinical content within safety layers. MedEduChat at Mayo Clinic improved patient health confidence from 9.9 to 13.9 with clinician-rated correctness of 2.9/3.0. The [simulation platform](https://doi.org/10.1186/s41077-025-00357-z) achieved 70-80% development time reduction for training scenarios. Both operate within defined safety architectures with escalation pathways.
+
+Phase 3 combines multiple operational patterns and introduces friction between them. The Healthcare Agent's multi-module architecture (intake triage, clinical synthesis, safety verification) shows this is technically achievable. The Clinical Trial Matcher demonstrates multi-site deployment without EHR integration. But governance requirements jump: adversarial testing ([Yang et al.](https://doi.org/10.1038/s41467-025-64062-1) showed poisoned models pass standard benchmarks), completeness verification (MedR-Bench's framework), and role-based access controls.
+
+Phase 4 remains largely aspirational. PRAIM is the only system operating at this level, and it required CE-certified medical device status, multi-vendor hardware compatibility, and embedding into an existing national screening program. AMIE's diagnostic capability exceeds physician performance but has only been tested with trained actors, not real patients. Treatment planning accuracy is below 31% for every model tested.
+
+The research independently arrives at this same structure: understand the domain, assess organizational readiness, design the architecture, govern the deployment, drive adoption through sequenced rollout, prove the value through monitoring.
+
+---
+
+## What This Means for Health Systems Now
+
+Three recommendations grounded in the evidence.
+
+**Invest in the plumbing, not the model.** Interoperability capability is the strongest predictor of whether a hospital adopts AI. Batch processing infrastructure (Klang et al.'s 50-task concatenation pattern) makes system-scale extraction economically viable. General-purpose models outperform medical fine-tunes in 5 of 8 systems tested. The algorithm is never the bottleneck. The data plumbing, the integration architecture, and the processing pipelines determine what AI is possible.
+
+**Start with email, not diagnosis.** When Stanford gave healthcare workers LLM access, 85% of usage was administrative. That's not a failure — it's a signal about where value actually lives right now. Administrative AI:
+
+- Delivers measurable efficiency gains
+- Builds organizational comfort with AI tools
+- Reveals governance gaps in a low-risk context
+- Creates the operational infrastructure for clinical use later
+
+The organizations that start with Phase 1 and sequence deliberately will reach Phase 4 faster than the ones that try to skip ahead.
+
+**Build governance before you need it.** Half of hospitals deploying AI can't verify whether their systems work. HAIRA provides the first structured self-assessment framework — 5 levels, 7 domains, weakest-link scoring. Use it. But don't wait for the perfect governance model. Start monitoring usage patterns now (Black et al.'s methodology). Run adversarial tests against any model before deployment (Yang et al.'s framework is publicly available). Define what override rate you expect and what deviations trigger review. Treat every deployment as a time-bounded experiment with specific criteria for expansion and rollback.
+
+Healthcare AI's deployment gap is a change management problem wearing a technology costume. The models have the medical knowledge. The architectures that work are documented. The governance frameworks exist, even if they're untested. What's missing is organizational readiness: the willingness to invest in infrastructure before algorithms, to sequence adoption deliberately rather than skipping to the headline use case, and to build governance as a foundation rather than an afterthought.
+
+The health systems that close this gap will be the ones that invest in adoption infrastructure — workflows, governance, monitoring, training — not the ones that buy the most advanced model.
+
+---
+
+## References
+
+1. Tu, T., Schaekermann, M., Palepu, A., et al. (2025). Towards conversational diagnostic artificial intelligence. *Nature*, 642, 442-450. [doi:10.1038/s41586-025-08866-7](https://doi.org/10.1038/s41586-025-08866-7)
+
+2. Bean, A.M., Payne, R.E., Parsons, G., et al. (2026). Reliability of LLMs as medical assistants for the general public: a randomized preregistered study. *Nature Medicine*. [doi:10.1038/s41591-025-04074-y](https://doi.org/10.1038/s41591-025-04074-y)
+
+3. Eisemann, N., Bunk, S., Mukama, T., et al. (2025). Nationwide real-world implementation of AI for cancer detection in population-based mammography screening. *Nature Medicine*, 31, 917-924. [doi:10.1038/s41591-024-03408-6](https://doi.org/10.1038/s41591-024-03408-6)
+
+4. Heinz, M.V., Mackin, D.M., Trudeau, B.M., et al. (2025). Randomized trial of a generative AI chatbot for mental health treatment. *NEJM AI*, 2(4). [doi:10.1056/AIoa2400802](https://doi.org/10.1056/AIoa2400802)
+
+5. Ren, Z., Zhan, Y., Yu, B., et al. (2025). Healthcare agent: eliciting the power of large language models for medical consultation. *npj Artificial Intelligence*, 1, 24. [doi:10.1038/s44387-025-00021-x](https://doi.org/10.1038/s44387-025-00021-x)
+
+6. Qiu, P., Wu, C., Liu, S., et al. (2025). Quantifying the reasoning abilities of LLMs on clinical cases. *Nature Communications*, 16, 9799. [doi:10.1038/s41467-025-64769-1](https://doi.org/10.1038/s41467-025-64769-1)
+
+7. Merrill, M.A., Paruchuri, A., et al. (2026). Transforming wearable data into personal health insights using large language model agents. *Nature Communications*. [doi:10.1038/s41467-025-67922-y](https://doi.org/10.1038/s41467-025-67922-y)
+
+8. Wang, Z., Danek, B., Yang, Z., Chen, Z., & Sun, J. (2026). Making large language models reliable data science programming copilots for biomedical research. *Nature Biomedical Engineering*. [doi:10.1038/s41551-025-01587-2](https://doi.org/10.1038/s41551-025-01587-2)
+
+9. Callies, A., Bodinier, Q., Ravaud, P., & Davarpanah, K. (2025). Real-world validation of a multimodal LLM-powered pipeline for high-accuracy clinical trial patient matching. *Communications Medicine*, 5, 536. [doi:10.1038/s43856-025-01256-0](https://doi.org/10.1038/s43856-025-01256-0)
+
+10. Hwang, Y.M., Ng, M.Y., Pillai, M., Sahai, M.P., & Hernandez-Boussard, T. (2025). The landscape of AI implementation in US hospitals. *Nature Health*. [doi:10.1038/s44360-025-00016-7](https://doi.org/10.1038/s44360-025-00016-7)
+
+11. Black, K.C., Haberkorn, W.J., Ma, S.P., Chen, J.H., Shah, N.H., & Morse, K. (2025). Uses of generative AI by non-clinician staff at an academic medical center. *npj Health Systems*. [doi:10.1038/s44401-025-00063-y](https://doi.org/10.1038/s44401-025-00063-y)
+
+12. Hussein, R., Zink, A., Ramadan, B., et al. (2026). Advancing healthcare AI governance through a comprehensive maturity model based on systematic review. *npj Digital Medicine*. [doi:10.1038/s41746-026-02418-7](https://doi.org/10.1038/s41746-026-02418-7)
+
+13. Klang, E., Apakama, D., Abbott, E.E., et al. (2024). A strategy for cost-effective large language model use at health system-scale. *npj Digital Medicine*, 7, 320. [doi:10.1038/s41746-024-01315-1](https://doi.org/10.1038/s41746-024-01315-1)
+
+14. Mayo Clinic Research Team. (2025). Personalizing prostate cancer education for patients using an EHR-integrated LLM agent. *npj Digital Medicine*. [doi:10.1038/s41746-025-02166-0](https://doi.org/10.1038/s41746-025-02166-0)
+
+15. Yang, Y., Jin, Q., Huang, F., & Lu, Z. (2025). Adversarial prompt and fine-tuning attacks threaten medical large language models. *Nature Communications*, 16, 9011. [doi:10.1038/s41467-025-64062-1](https://doi.org/10.1038/s41467-025-64062-1)
+
+16. Barra, F.L., Rodella, G., Costa, A., et al. (2025). From prompt to platform: an agentic AI workflow for healthcare simulation scenario design. *Advances in Simulation*, 10, 29. [doi:10.1186/s41077-025-00357-z](https://doi.org/10.1186/s41077-025-00357-z)
+
+17. Dorfner, F.J., Dada, A., Busch, F., et al. (2025). Evaluating the effectiveness of biomedical fine-tuning for large language models on clinical tasks. *JAMIA*, 32(6), 1015+. [doi:10.1093/jamia/ocaf045](https://doi.org/10.1093/jamia/ocaf045)
+
+18. Jarchow, H., Bobrowski, C., Falk, S., et al. (2025). Benchmarking large language models for personalized, biomarker-based health intervention recommendations. *npj Digital Medicine*, 8, 631. [doi:10.1038/s41746-025-01996-2](https://doi.org/10.1038/s41746-025-01996-2)
