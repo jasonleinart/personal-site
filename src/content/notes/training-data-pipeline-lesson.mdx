@@ -1,0 +1,62 @@
+---
+title: "What 510 Contracts Taught Me About Training Data"
+description: "My first ML model predicted the same 9 labels for every input. The fix wasn't a better model — it was a better data pipeline. The difference between 510 training examples and 15,700."
+date: 2026-02-13
+tags:
+  - "machine-learning"
+  - "data-pipelines"
+  - "build-in-public"
+draft: false
+---
+
+> **Key insight:** The model wasn't broken. The data pipeline was. One transformation — splitting long documents into overlapping token windows — turned 510 useless training examples into 15,700 useful ones. That fix mattered more than any architecture or hyperparameter decision.
+
+I built a contract clause classifier using PyTorch and Hugging Face Transformers. The goal: take a block of legal text and predict which of 41 clause types it contains (non-compete, IP assignment, liability cap, termination rights, etc.). Multi-label classification, meaning a single passage can belong to multiple categories at once.
+
+The base model was Legal-BERT, a 110M-parameter transformer pretrained on legal corpora. I fine-tuned it on the CUAD dataset — 510 real contracts pulled from SEC filings, annotated by law students at the University of Pennsylvania. Standard supervised learning setup: labeled data in, trained model out.
+
+The first training run looked fine. Loss went down. Validation metrics moved in the right direction. Then I tested it on real clauses and got the same 9 labels for every single input. Didn't matter what the text said.
+
+## What Went Wrong
+
+Three problems, all in the data pipeline. None in the model.
+
+**Problem 1: No chunking.** CUAD stores each contract as a single block of text. The average contract was 8,045 words long. Legal-BERT's context window is 512 tokens, roughly 380 words. The tokenizer silently truncated everything past that limit. So the model only ever saw contract preambles — parties, effective dates, governing law. The actual clause-specific language in sections 4 through 47? Invisible during training.
+
+**Problem 2: No negative examples.** Every contract in CUAD has at least some positive labels. With one example per contract, 100% of training data was positive. The model learned the rational strategy: predict everything as present, because that was always correct.
+
+**Problem 3: Wrong label names.** Three entries in my label mapping file didn't match CUAD's actual category names. Those three labels had zero training data. The model couldn't learn what it never saw.
+
+## The Fix
+
+One script. Split each contract into overlapping 400-token windows with 50-token overlap at the boundaries. Map CUAD's answer spans to chunks using character offsets. Chunks that contain an answer span get the corresponding labels. Chunks with no spans become negative examples.
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Total examples | 510 | 15,700 |
+| Positive examples | 510 (100%) | 4,571 (42%) |
+| Negative examples | 0 (0%) | 6,232 (58%) |
+| Labels with training data | 38/41 | 41/41 |
+| Avg words per example | 8,045 (truncated to ~380) | 290 (fits in context window) |
+
+Same model. Same hyperparameters. Same training notebook on the same Colab T4 GPU. The only change was the data going in. Test F1 went from garbage to 0.70 — respectable for 41-class multi-label classification on legal text.
+
+## Why This Isn't Just a Beginner Mistake
+
+The truncation problem is the default failure mode for transformer-based classification on long documents. BERT-family models have hard context limits. If your documents are longer than that limit, the tokenizer truncates silently. No error, no warning. Your training loop runs, your loss curves look plausible, and your model learns to classify preambles.
+
+This happens everywhere long documents meet short context windows. Medical records where the diagnosis is on page 3 but the model only sees the intake form. Support tickets where the resolution is in the last reply but training truncates after the first. Insurance claims where the relevant details are buried in attachments.
+
+The fix is always some variant of the same idea: split the document into pieces the model can actually see, preserve context at the boundaries, and make sure your label mapping survives the split. It's a data engineering problem, not a machine learning problem. But it determines whether the machine learning works.
+
+## The Broader Point
+
+I see teams spend weeks tuning hyperparameters, swapping architectures, and adding regularization when the real issue is upstream. The model trains on what it receives. If the pipeline feeds it truncated, mislabeled, or unbalanced data, no amount of architecture work compensates.
+
+For this project, the entire fix was a 200-line Python script that ran locally in under a minute. No GPU needed. The retraining on Colab took another 30 minutes. Total time from "why does this predict the same thing every time" to a working classifier: about four hours. Three of those were spent figuring out what was wrong. The actual code change was trivial.
+
+You can see the fine-tuned model run against a prompt-based LLM approach (GPT-4o-mini) on real contract clauses at [/tools/clause-classifier](/tools/clause-classifier). The comparison shows what a small, domain-trained model can do at 5ms and $0 per request versus what a general-purpose LLM does at 800ms and $0.0002.
+
+---
+
+**Stack:** PyTorch, Hugging Face Transformers, Legal-BERT (`nlpaueb/legal-bert-base-uncased`), CUAD dataset, Google Colab (T4 GPU), FastAPI
