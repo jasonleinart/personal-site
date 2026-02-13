@@ -1,0 +1,1219 @@
+---
+/**
+ * Clause Classifier Demo
+ *
+ * Side-by-side comparison of ML (Legal-BERT) vs LLM (gpt-4o-mini) contract
+ * clause classification. Uses 6 pre-selected CUAD dataset excerpts as demos.
+ * Each classification makes a live API call to show real-time performance.
+ *
+ * Route: /tools/clause-classifier
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+
+const API_URL = 'https://api.jasonleinart.com/classifier';
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title="Clause Classifier - ML vs LLM Comparison"
+    description="Compare Legal-BERT fine-tuned classification against GPT-4o-mini prompt-based classification on real contract clauses from the CUAD dataset."
+  />
+
+  <div class="demo-page">
+    <!-- Landing Section -->
+    <section class="landing-section" id="landing-section">
+      <header class="demo-header">
+        <span class="demo-badge">Demo</span>
+        <h1>Clause Classifier</h1>
+        <p class="demo-description">
+          Why fine-tune a small model when you could just prompt a large one? This demo runs the same
+          classification task through both approaches so you can see the tradeoffs firsthand.
+        </p>
+        <div class="tech-badges">
+          <span class="tech-badge">PyTorch</span>
+          <span class="tech-badge">Hugging Face Transformers</span>
+          <span class="tech-badge">Legal-BERT</span>
+          <span class="tech-badge">gpt-4o-mini</span>
+          <span class="tech-badge">FastAPI</span>
+          <span class="tech-badge">CUAD Dataset</span>
+        </div>
+      </header>
+
+      <div class="expect-box">
+        <h2>How It Works</h2>
+        <div class="expect-grid">
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Legal-BERT (Fine-tuned)</strong>
+              <p>A 110M-parameter transformer built with PyTorch and Hugging Face, fine-tuned on 15,700 labeled examples from 510 real SEC filings (the CUAD dataset). Multi-label classification head with sigmoid outputs. Runs on CPU in about 5ms. Cost per request: $0.</p>
+            </div>
+          </div>
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>GPT-4o-mini (Prompt-based)</strong>
+              <p>A general-purpose LLM given a structured prompt listing all 41 CUAD clause types. No contract-specific training. Runs via API in about 800ms at roughly $0.0002 per request.</p>
+            </div>
+          </div>
+          <div class="expect-item">
+            <span class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </span>
+            <div>
+              <strong>What to Compare</strong>
+              <p>Speed and cost at scale. Which labels each model catches and which it misses. Where they agree, and what disagreement tells you about both approaches.</p>
+            </div>
+          </div>
+        </div>
+        <p class="expect-time">Each classification takes 1-3 seconds. No data is stored.</p>
+      </div>
+
+      <div class="context-box">
+        <h2>Why This Matters</h2>
+        <p>Every organization that handles contracts faces the same question: how do you review thousands of pages of legal text without missing something that costs you money?</p>
+        <p>Contract clause classification is one of the most practical applications of machine learning in legal and compliance work. A trained model can scan an entire contract in seconds, flagging non-compete restrictions, IP assignment terms, liability caps, termination conditions, and dozens of other clause types that a human reviewer might spend hours finding manually.</p>
+        <p>This demo shows two real paths to building that system. The fine-tuned approach (training your own model with PyTorch on domain-specific data) gives you speed, zero marginal cost, and full control over the model. The prompt-based approach (sending text to an LLM API) gets you up and running faster but costs money per request and depends on an external service. Most production systems end up using some combination of both.</p>
+        <p>The tradeoff isn't academic. A legal team processing 500 contracts per month, a procurement department onboarding new vendors, an M&A due diligence team reviewing a target's obligations — they all need this kind of automated classification to work at scale.</p>
+      </div>
+
+      <p class="clause-grid-prompt">Pick a contract clause to classify:</p>
+
+      <div class="clause-grid" id="clause-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Classifying State -->
+    <section class="classifying-section" id="classifying-section" hidden>
+      <div class="loading-spinner"></div>
+      <h2>Classifying Clause</h2>
+      <p class="classifying-note">Running both models in parallel...</p>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results-section" hidden>
+      <button class="back-btn" id="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Try Another Clause
+      </button>
+
+      <div class="results-clause-info" id="results-clause-info">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="comparison-grid">
+        <!-- BERT Column -->
+        <div class="model-column" id="bert-column">
+          <div class="model-header">
+            <div class="model-name-row">
+              <h3>Legal-BERT</h3>
+              <span class="model-badge fine-tuned">Fine-tuned</span>
+            </div>
+            <div class="model-meta">
+              <span class="meta-badge latency-fast" id="bert-latency">--</span>
+              <span class="meta-badge cost-free" id="bert-cost">$0.00</span>
+            </div>
+          </div>
+          <div class="labels-list" id="bert-labels">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- LLM Column -->
+        <div class="model-column" id="llm-column">
+          <div class="model-header">
+            <div class="model-name-row">
+              <h3>gpt-4o-mini</h3>
+              <span class="model-badge prompt-based">Prompt-based</span>
+            </div>
+            <div class="model-meta">
+              <span class="meta-badge latency-slow" id="llm-latency">--</span>
+              <span class="meta-badge" id="llm-cost">--</span>
+              <span class="meta-badge tokens-badge" id="llm-tokens" hidden>--</span>
+            </div>
+          </div>
+          <div class="labels-list" id="llm-labels">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Agreement + Expected Labels -->
+      <div class="agreement-section" id="agreement-section">
+        <div class="agreement-score" id="agreement-score">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="expected-labels" id="expected-labels">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Dynamic Interpretation -->
+      <div class="interpretation-section" id="interpretation-section" hidden>
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- Error Section -->
+    <section class="error-section" id="error-section" hidden>
+      <div class="error-content">
+        <span class="error-icon">!</span>
+        <h2 id="error-title">Classification Failed</h2>
+        <p id="error-message"></p>
+        <button class="retry-btn" id="retry-btn">Try Again</button>
+      </div>
+    </section>
+  </div>
+
+  <style is:global>
+    .demo-page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .demo-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-accent-muted);
+      color: var(--color-accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .demo-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-description {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+      max-width: 640px;
+      margin: 0 auto 1.25rem;
+      line-height: 1.6;
+    }
+
+    .tech-badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .tech-badge {
+      padding: 0.25rem 0.625rem;
+      background: rgba(74, 153, 97, 0.1);
+      border: 1px solid rgba(74, 153, 97, 0.3);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--color-accent-secondary);
+      font-weight: 500;
+    }
+
+    /* Expect Box */
+    .expect-box {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .expect-box h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .expect-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .expect-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .expect-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent-muted);
+      border-radius: 8px;
+      color: var(--color-accent);
+    }
+
+    .expect-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .expect-item strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.9375rem;
+    }
+
+    .expect-item p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .expect-time {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    .context-box {
+      margin-bottom: 2rem;
+    }
+
+    .context-box h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .context-box p {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .context-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .clause-grid-prompt {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    /* Clause Grid */
+    .clause-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .clause-card {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .clause-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .clause-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .clause-card-meta {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .clause-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .clause-card-preview {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Classifying */
+    .classifying-section {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--color-border);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .classifying-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .classifying-note {
+      color: var(--color-text-secondary);
+    }
+
+    /* Results */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .results-clause-info {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .results-clause-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .results-clause-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      max-height: 120px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) transparent;
+    }
+
+    /* Comparison Grid */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .model-column {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .model-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .model-name-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .model-name-row h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .model-badge {
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .model-badge.fine-tuned {
+      background: rgba(74, 153, 97, 0.15);
+      color: #4a9961;
+    }
+
+    .model-badge.prompt-based {
+      background: rgba(96, 165, 250, 0.15);
+      color: #60a5fa;
+    }
+
+    .model-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: var(--color-bg-secondary);
+      color: var(--color-text-muted);
+    }
+
+    .meta-badge.latency-fast {
+      background: rgba(74, 153, 97, 0.1);
+      color: #4a9961;
+    }
+
+    .meta-badge.latency-slow {
+      background: rgba(234, 179, 8, 0.1);
+      color: #d4a843;
+    }
+
+    .meta-badge.cost-free {
+      background: rgba(74, 153, 97, 0.1);
+      color: #4a9961;
+    }
+
+    .labels-list {
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .label-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .label-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label-name {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .label-confidence {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    .confidence-bar {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .confidence-fill.high { background: #4a9961; }
+    .confidence-fill.mid { background: #d4a843; }
+    .confidence-fill.low { background: var(--color-text-muted); }
+
+    .no-labels {
+      padding: 1rem 0;
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Agreement Section */
+    .agreement-section {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .agreement-score {
+      text-align: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .agreement-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .agreement-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .agreement-bar {
+      max-width: 200px;
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 0.5rem auto 0;
+    }
+
+    .agreement-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .expected-labels h4 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+
+    .expected-label-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.375rem 0;
+      font-size: 0.875rem;
+    }
+
+    .expected-label-name {
+      flex: 1;
+      color: var(--color-text);
+    }
+
+    .model-indicator {
+      width: 20px;
+      text-align: center;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .model-indicator.found { color: #4a9961; }
+    .model-indicator.missed { color: #c4654a; }
+
+    .model-col-header {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Error Section */
+    .error-section {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .error-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid #ef4444;
+      border-radius: 50%;
+      font-size: 2rem;
+      color: #ef4444;
+      font-weight: 700;
+    }
+
+    .error-content h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .error-content p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .retry-btn {
+      padding: 0.75rem 2rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .retry-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* Interpretation Section */
+    .interpretation-section {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .interpretation-section h4 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-accent);
+      margin-bottom: 1rem;
+    }
+
+    .interpretation-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .interpretation-list li {
+      font-size: 0.875rem;
+      color: var(--color-text);
+      line-height: 1.6;
+      padding-left: 1rem;
+      border-left: 2px solid var(--color-border);
+    }
+
+    .interpretation-note {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+      line-height: 1.5;
+    }
+
+    /* Agreement Explanation */
+    .agreement-explain {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-top: 0.75rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    /* Coverage Legend */
+    .coverage-legend {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      padding: 0.375rem 0 0.5rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Confidence Legend */
+    .confidence-legend {
+      display: flex;
+      gap: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 0.25rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    .legend-dot.high { background: #4a9961; }
+    .legend-dot.mid { background: #d4a843; }
+    .legend-dot.low { background: var(--color-text-muted); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .demo-page {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .demo-header h1 {
+        font-size: 2rem;
+      }
+
+      .clause-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script define:vars={{ API_URL }}>
+    // ============================================================
+    // Demo Clause Data
+    // ============================================================
+    const DEMO_CLAUSES = [
+      {
+        id: 'demo_1',
+        title: 'Transportation Agreement',
+        text: "NOW, THEREFORE, in consideration of the mutual promises herein contained, the parties agree as follows:\n\n     1.   Shipper shall tender commodities to Carrier for transportation by Carrier in a specialized service designed to meet the distinct needs of Shipper in  interstate or foreign commerce between points in the United States.\n\n     2.   Shipper shall tender to Carrier and Carrier shall transport in a series of shipments not less than 10,000 pounds of Commodities per year.\n\n     3.   As compensation for the services provided by Carrier under this contract, Shipper shall pay Carrier in accordance with 1) Rate Appendices making reference to this contract which shall from time to time be agreed to between the parties and 2) Carrier's Contract Carriage Rules and Regulations attached as Exhibit A, which are incorporated in this contract by this reference for all purposes (collectively, the \"Schedule\").\n\n     4.   This contract shall be for a term of one year commencing on the date first above written; thereafter, it shall automatically continue until terminated by either party upon not less than thirty (30) days prior written notice to the other party.\n\nTHIS CONTRACT IS SUBJECT TO THE TERMS AND CONDITIONS ON THE REVERSE SIDE.\n\nENTERPRISE PRODUCTS OPERATING L.P.  ENTERPRISE TRANSPORTATION COMPANY By Enterprise Products GP, LLC, its general partner (Shipper)\n\nBy: /s/ A.W. Bell                 By: /s/ Gary Miller    ----------------------------      -------------------------------------- Title: Executive Vice President    Title: Executive Vice President       -------------------------          ----------------------------------\n\n                                TERMS AND CONDITIONS\n\n     1. For each shipment under this contract, Shipper shall designate the points of origin and destination and any point or points where stopoffs shall be made for partial loading or unloading.",
+        expected_labels: ['Effective Date', 'Expiration Date', 'Minimum Commitment', 'Notice Period To Terminate Renewal', 'Parties', 'Renewal Term', 'Termination For Convenience'],
+        word_count: 264
+      },
+      {
+        id: 'demo_2',
+        title: 'Endorsement Agreement',
+        text: "CONSULTANT'S \"ENDORSEMENT\" means the right to use the CONSULTANT'S name, fame, nickname, autograph, voice, facsimile, signature, photograph, likeness, and image in connection with the marketing, advertising, promotion and sale of ADAMS GOLF'S PRODUCT.\n\nB.\"PRODUCT\" shall mean all golf clubs including, but not limited to, metal woods,  drivers, fairway woods, irons, iron- woods, utility clubs, wedges, and putters, bags, and headwear.   C.\"MANDATORY PRODUCTS\" shall mean the following ADAMS GOLF PRODUCTS  that CONSULTANT must exclusively play/use in all Champions/Senior Professional Golf Association (SPGA) and Professional Golf Association (PGA) events at all times:\n\n[***** ]  Confidential Material redacted and filed separately with the Commission.   2\n\n\n\n\n\n  1.[*****] 2.Sufficient [*****] to maintain total minimum of [*****] ADAMS GOLF  [*****] (includes [*****])[*****] at all times 3.[*****] 4.[*****] (CONSULTANT may continue to place the [*****] logo on the [*****] consistent with historical practice.)\n\nD. \"CONTRACT TERRITORY\" shall mean the entire world.\n\nCONSULTANT'S OBLIGATIONS\n\n3.   CONSULTANT'S ENDORSEMENT\n\nCONSULTANT hereby gives and grants to ADAMS GOLF the exclusive right and license to use CONSULTANT'S ENDORSEMENT in connection with the manufacture, sale, distribution, advertising and promotion of PRODUCT in the CONTRACT TERRITORY.   4. EXCLUSIVITY OF ENDORSEMENT   During the term of this Agreement, unless otherwise authorized at the sole discretion of ADAMS GOLF in writing, CONSULTANT shall not:   A.give the right to use or permit the use of CONSULTANT'S name, facsimile signature, nickname, voice or likeness to any other manufacturer or seller of PRODUCT;\n\nB.sponsor or endorse PRODUCT made or sold by any other manufacturer or seller; or\n\nC.serve as a CONSULTANT or advisor of any other manufacturer or seller of PRODUCT.\n\nD.Notwithstanding paragraphs 4A, 4B and 4C above, CONSULTANT shall be entitled to endorse and play the [*****].",
+        expected_labels: ['Competitive Restriction Exception', 'Exclusivity', 'License Grant', 'Minimum Commitment', 'Parties'],
+        word_count: 278
+      },
+      {
+        id: 'demo_3',
+        title: 'Sponsorship Agreement',
+        text: "om shall include a Tickets Portal on the \"Music\" page and the \"Pop,\" \"Rock\" and \"Alternative\" genre pages on the Website. A \"Portal\" is defined as a web graphic with the dimensions not to exceed 125 x 125 pixels and 20Kb in size. The content of the Portal shall be supplied by Tickets and shall conform with reasonable technical and content specifications supplied by MP3.com.\n\n2. Impressions. MP3.com agrees to deliver a guaranteed minimum of 3,000,000 Impressions per month for the term of this Agreement. An \"Impression\" is defined as the display of the Tickets Portal to a user on one of the above referenced pages.\n\n3. Sponsor Fees. Tickets agrees to pay MP3.com, during the term of this Agreement, as follows: (i) $[***] payable on the Effective Date; (ii) $[***] payable on or before one month subsequent to the Effective Date; (iii) $[***] payable on or before two months subsequent to the Effective Date; (iv) $[***] payable on or before three months subsequent to the Effective Date; (v) $[***] payable on or before four months subsequent to the Effective Date; (vi) $[***] payable on or before five months subsequent to the Effective Date. Any late payments under this Agreement will be assessed a service fee of one and one-half percent (1.5%) per month, to the extent allowed by law.\n\n4. Term and Termination. This Agreement shall commence on the Effective Date and shall remain in full force and effect until one (1) year subsequent to the Effective Date, provided however, that Tickets may terminate this Agreement for any reason upon thirty (30) days' notice to MP3. com at any time prior to the expiration of sixty (60) days subsequent to the Effective Date. Furthermore, for a thirty (30) day period, beginning thirty (30) days prior to the first anniversary of this Agreement, Tickets shall have the right to renew the Agreement for another year with Sponsor Fees that do not exceed a [***] percent increase over the existing Sponsor Fees.",
+        expected_labels: ['Effective Date', 'Expiration Date', 'Minimum Commitment', 'Parties', 'Price Restrictions', 'Renewal Term', 'Termination For Convenience'],
+        word_count: 331
+      },
+      {
+        id: 'demo_4',
+        title: 'Distribution Agreement',
+        text: "OW, THEREFORE, in consideration of the several and mutual promises, agreements, covenants, understandings, undertakings, representations and warranties hereinafter set forth the receipt and sufficiency of which is hereby acknowledged, the parties to this Agreement agree that the aforementioned recitals are true and correct and by this reference incorporated herein as if fully set forth and the parties further covenant and agree as follows:\n\n1. TERM\n\nAs provided for in this Section 1, the term of this Agreement shall be for a period of five (5) years, beginning on the Effective Date (the \"Initial Term\"); provided, however, the Initial Term shall be subject to automatic successive renewal terms of three (3) years each (the \"Renewal Terms\" and together with the Initial Term, the \"Term\").\n\n1.1. Termination. This Agreement may be terminated subject to the following clauses:\n\n  1.1.1. By either Vendor or Distributor, upon written notice of termination of this Agreement no later than ninety (90) calendar days prior to the expiration of the relevant Term, then in effect;\n\n  1.1.2. By Vendor and Distributor, at any time, upon the mutual written agreement of Vendor and Distributor;\n\n  1.1.3. By either Vendor or Distributor, following a material or continuing breach of this Agreement (in the case of a breach which is capable of remedy) by the other party and the breaching party's failure to cure such breach within ninety (90) days of receiving written notice of such breach, where a breach shall be considered capable of remedy if the party in breach can comply with the provision in question in all respects other than as to the time of the performance (provided that the time of performance is not of the essence); or\n\n\n\n\n\n  1.1.4. Subject to Section 1.6, by Vendor (or successor to Vendor), upon written notice to Distributor of a change of control of Vendor and the election by Vendor (or successor to Vendor) to terminate this Agreement, where a \"change of control\" shall mean a change in ownership of the Vendor such that an unaffiliated third party acquires a majority of the voting power of Vendor;",
+        expected_labels: ['Change Of Control', 'Effective Date', 'Expiration Date', 'Notice Period To Terminate Renewal', 'Parties', 'Renewal Term', 'Termination For Convenience'],
+        word_count: 344
+      },
+      {
+        id: 'demo_5',
+        title: 'Development License',
+        text: "NOW, THEREFORE, for good and valuable consideration, the receipt and sufficiency of which is hereby acknowledged, the parties hereto agree as follows:   Capitalized terms contained herein shall have the meanings ascribed to them herein, or in Schedule 1 which is annexed hereto and made a part of this Agreement.   1. Development License and Fees.   1.1. Development License. Subject to the terms and conditions set forth herein, DSS hereby grants to Developer, and Developer accepts from DSS, for the Term, a non-exclusive, limited, and non-transferable license to install and use the Technology for the sole purpose of developing the Improvements (as defined hereunder) thereto for the benefit of DSS (the \"Technology Development Services License\").   1.2. Development Fees. As payment for Developer's satisfactory performance of the services set forth in Schedule 1 hereto (the \"Technology Development Services\"), DSS shall pay Developer the sum of US $23,000 per month, for the duration of the Term hereof, with payments to commence on March 1, 2018.   2.  Term and Termination.   2.1. Term. The initial term of this Agreement shall commence on the Effective Date, and shall continue thereafter for a period of twelve (12) months (the \"Initial Term\"). The Initial Term shall automatically renew for one-month periods thereafter unless either party provides 30- days advance notice of termination, unless earlier terminated pursuant to Section 2.2 hereof. For purposes hereof, the Initial Term, together with any extension or renewal terms, shall hereinafter be collectively referred to as the \"Term\".   2.2. Early Termination.   2.2.1. Either party may terminate this Agreement prior to expiration of the Term: (i) upon thirty (30) days prior written notice, or (ii) immediately upon written notice to the other party if: (a) the other party declares or a petition is filed in any court for insolvency or bankruptcy and such petition is not dismissed in thirty (30) days; (b) the other party reorganizes under the relevant bankruptcy act or any similar statute in such party's jurisdiction of incorporation; (c) the other party consents to the appointment of a trustee in bankruptcy or a receiver or similar entity; or (d) the Developer breaches DSS's Technology or Intellectual Property rights contained herein.",
+        expected_labels: ['Effective Date', 'Expiration Date', 'License Grant', 'Non-Transferable License', 'Notice Period To Terminate Renewal', 'Parties', 'Renewal Term', 'Termination For Convenience'],
+        word_count: 357
+      },
+      {
+        id: 'demo_6',
+        title: 'Brand Endorsement',
+        text: "t-shirts intended to be worn as innerwear and not intended specifically for athletic purposes), non-athletic lounge apparel (bottoms and tops), sleepwear (including pajama bottoms and tops), and robes (as may be expanded to include other mutually agreed upon innerwear and lounge apparel) which may now or hereafter during the Term be manufactured, distributed, marketed and/or sold by Naked (collectively, the \"Naked Products\"), and Wade hereby accepts such engagement. The Parties agree that the territory of such engagement shall be worldwide (the \"Territory\").\n\n2. Term of Agreement. The initial term of this Agreement shall be for a period of four (4) years, commencing on the Effective Date, which term may be extended for up to three (3) years by written agreement of both Parties prior to the expiration date of the initial term or any extension thereof (collectively, the \"Term\"). Each twelve-month period beginning on the Effective Date shall be known as a \"Contract Year.\" In the event that either Wade or Naked wishes to extend the Term of the Agreement as contemplated above, it shall provide the other Party with written notice at least ninety (90) days prior to the expiration of the Term. The other Party will then have a period of fourteen (14) days from the date of the notice to indicate whether it also desires to extend the Term, on the terms and conditions set forth herein and if no such indication is made, the other Party will be deemed to have declined the offer to extend. Notwithstanding the foregoing, Wade agrees that for a period of ninety (90) days prior to the expiration of the Term (unless the Agreement is terminated by Wade as permitted hereunder), Naked shall have the exclusive right to negotiate for continued endorsement by Athlete of the Naked Products. For a period of six (6) months at the end of the Term (the \"Sell-off Period\"); provided that the Agreement was not terminated by Wade as permitted herein, Naked will have the right to continue to sell the Wade Products (defined below) for which orders have already been placed at the end of the Term on the terms and conditions herein.",
+        expected_labels: ['Effective Date', 'Exclusivity', 'Expiration Date', 'Parties', 'Post-Termination Services', 'Renewal Term', 'Rofr/Rofo/Rofn'],
+        word_count: 358
+      }
+    ];
+
+    // ============================================================
+    // State
+    // ============================================================
+    let currentClause = null;
+    let lastError = null;
+
+    // ============================================================
+    // DOM Elements
+    // ============================================================
+    const landingSection = document.getElementById('landing-section');
+    const classifyingSection = document.getElementById('classifying-section');
+    const resultsSection = document.getElementById('results-section');
+    const errorSection = document.getElementById('error-section');
+
+    // ============================================================
+    // Section Toggling
+    // ============================================================
+    function showSection(name) {
+      landingSection.hidden = name !== 'landing';
+      classifyingSection.hidden = name !== 'classifying';
+      resultsSection.hidden = name !== 'results';
+      errorSection.hidden = name !== 'error';
+    }
+
+    // ============================================================
+    // Render Clause Cards
+    // ============================================================
+    function renderClauseGrid() {
+      const grid = document.getElementById('clause-grid');
+      grid.innerHTML = DEMO_CLAUSES.map(clause => `
+        <div class="clause-card" data-clause-id="${clause.id}">
+          <div class="clause-card-title">${clause.title}</div>
+          <div class="clause-card-meta">
+            <span class="clause-meta-badge">${clause.word_count} words</span>
+            <span class="clause-meta-badge">${clause.expected_labels.length} labels</span>
+          </div>
+          <div class="clause-card-preview">${clause.text.substring(0, 180)}...</div>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.clause-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.clauseId;
+          const clause = DEMO_CLAUSES.find(c => c.id === id);
+          if (clause) classifyClause(clause);
+        });
+      });
+    }
+
+    // ============================================================
+    // Classify
+    // ============================================================
+    async function classifyClause(clause) {
+      currentClause = clause;
+      showSection('classifying');
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+        const res = await fetch(`${API_URL}/api/v1/classify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: clause.text }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          if (res.status === 429) {
+            throw new Error('Rate limit reached. Please wait a moment before trying again.');
+          }
+          throw new Error(err.detail || err.error || `Server error (${res.status})`);
+        }
+
+        const data = await res.json();
+        renderResults(clause, data);
+        showSection('results');
+
+      } catch (err) {
+        lastError = err;
+        const isTimeout = err.name === 'AbortError';
+        document.getElementById('error-title').textContent = isTimeout ? 'Request Timed Out' : 'Classification Failed';
+        document.getElementById('error-message').textContent = isTimeout
+          ? 'The API took too long to respond. Please try again.'
+          : (err.message || 'Something went wrong.');
+        showSection('error');
+      }
+    }
+
+    // ============================================================
+    // Render Results
+    // ============================================================
+    function renderResults(clause, data) {
+      // Clause info
+      const infoEl = document.getElementById('results-clause-info');
+      infoEl.innerHTML = `
+        <div class="results-clause-title">${clause.title}</div>
+        <div class="results-clause-text">${escapeHtml(clause.text)}</div>
+      `;
+
+      // BERT column
+      const bert = data.model_result || {};
+      document.getElementById('bert-latency').textContent = bert.latency_ms != null ? `${Math.round(bert.latency_ms)}ms` : '--';
+      document.getElementById('bert-cost').textContent = '$0.00';
+      renderLabels('bert-labels', bert.labels || []);
+
+      // LLM column
+      const llm = data.llm_result || {};
+      document.getElementById('llm-latency').textContent = llm.latency_ms != null ? `${Math.round(llm.latency_ms)}ms` : '--';
+      document.getElementById('llm-cost').textContent = data.estimated_cost_usd != null ? `$${data.estimated_cost_usd.toFixed(4)}` : (llm.estimated_cost_usd != null ? `$${llm.estimated_cost_usd.toFixed(4)}` : '--');
+
+      const tokensEl = document.getElementById('llm-tokens');
+      const tokenUsage = llm.token_usage || {};
+      if (tokenUsage.prompt_tokens || tokenUsage.completion_tokens) {
+        tokensEl.textContent = `${(tokenUsage.prompt_tokens || 0) + (tokenUsage.completion_tokens || 0)} tokens`;
+        tokensEl.hidden = false;
+      } else {
+        tokensEl.hidden = true;
+      }
+      renderLabels('llm-labels', llm.labels || []);
+
+      // Latency badge colors
+      const bertLatencyEl = document.getElementById('bert-latency');
+      const llmLatencyEl = document.getElementById('llm-latency');
+      bertLatencyEl.className = 'meta-badge latency-fast';
+      llmLatencyEl.className = 'meta-badge latency-slow';
+
+      // Agreement
+      renderAgreement(clause, data);
+
+      // Interpretation
+      renderInterpretation(clause, data);
+    }
+
+    function renderLabels(containerId, labels) {
+      const container = document.getElementById(containerId);
+
+      if (!labels || labels.length === 0) {
+        container.innerHTML = '<div class="no-labels">No labels predicted</div>';
+        return;
+      }
+
+      // Sort by confidence descending
+      const sorted = [...labels].sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+
+      container.innerHTML = sorted.map(label => {
+        const conf = Math.round((label.confidence || 0) * 100);
+        const tier = conf >= 70 ? 'high' : conf >= 40 ? 'mid' : 'low';
+        return `
+          <div class="label-item">
+            <div class="label-name-row">
+              <span class="label-name">${escapeHtml(label.name || label.label)}</span>
+              <span class="label-confidence">${conf}%</span>
+            </div>
+            <div class="confidence-bar">
+              <div class="confidence-fill ${tier}" style="width: ${conf}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML += `
+        <div class="confidence-legend">
+          <span class="legend-item"><span class="legend-dot high"></span> 70%+</span>
+          <span class="legend-item"><span class="legend-dot mid"></span> 40-69%</span>
+          <span class="legend-item"><span class="legend-dot low"></span> &lt;40%</span>
+        </div>
+      `;
+    }
+
+    function renderAgreement(clause, data) {
+      const agreementEl = document.getElementById('agreement-score');
+      const expectedEl = document.getElementById('expected-labels');
+
+      // Calculate Jaccard
+      const bertSet = new Set(((data.model_result || {}).labels || []).map(l => l.name || l.label));
+      const llmSet = new Set(((data.llm_result || {}).labels || []).map(l => l.name || l.label));
+      const union = new Set([...bertSet, ...llmSet]);
+      const intersection = new Set([...bertSet].filter(x => llmSet.has(x)));
+      const jaccard = union.size > 0 ? intersection.size / union.size : 0;
+      const jaccardPct = Math.round(jaccard * 100);
+
+      const jColor = jaccardPct >= 60 ? '#4a9961' : jaccardPct >= 30 ? '#d4a843' : '#c4654a';
+
+      agreementEl.innerHTML = `
+        <div class="agreement-label">Model Agreement (Jaccard)</div>
+        <div class="agreement-value" style="color: ${jColor}">${jaccardPct}%</div>
+        <div class="agreement-bar">
+          <div class="agreement-bar-fill" style="width: ${jaccardPct}%; background: ${jColor}"></div>
+        </div>
+        <p class="agreement-explain">${getAgreementExplanation(jaccardPct)}</p>
+      `;
+
+      // Expected labels comparison
+      const allLabels = new Set([
+        ...clause.expected_labels,
+        ...bertSet,
+        ...llmSet
+      ]);
+      const sortedLabels = [...allLabels].sort();
+
+      expectedEl.innerHTML = `
+        <h4>Label Coverage</h4>
+        <div class="expected-label-row" style="border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; margin-bottom: 0.25rem;">
+          <span class="expected-label-name" style="font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted);">Label</span>
+          <span class="model-col-header">E</span>
+          <span class="model-col-header">B</span>
+          <span class="model-col-header">L</span>
+        </div>
+        <div class="coverage-legend">E = Expected (CUAD ground truth) · B = BERT · L = LLM (GPT-4o-mini)</div>
+        ${sortedLabels.map(label => {
+          const isExpected = clause.expected_labels.includes(label);
+          const bertFound = bertSet.has(label);
+          const llmFound = llmSet.has(label);
+          return `
+            <div class="expected-label-row">
+              <span class="expected-label-name">${escapeHtml(label)}</span>
+              <span class="model-indicator ${isExpected ? 'found' : 'missed'}">${isExpected ? '\u2713' : ''}</span>
+              <span class="model-indicator ${bertFound ? 'found' : 'missed'}">${bertFound ? '\u2713' : '\u2717'}</span>
+              <span class="model-indicator ${llmFound ? 'found' : 'missed'}">${llmFound ? '\u2713' : '\u2717'}</span>
+            </div>
+          `;
+        }).join('')}
+      `;
+    }
+
+    function getAgreementExplanation(pct) {
+      if (pct >= 80) return 'Both models identified nearly the same labels. High agreement like this is typical for straightforward clauses with clear contractual language.';
+      if (pct >= 50) return 'The models agree on the core labels but each caught things the other missed. Common with multi-label classification on dense legal text.';
+      if (pct >= 20) return 'Significant disagreement. The models are reading this clause differently, which often means the text contains overlapping legal concepts that map to multiple categories.';
+      return 'The models almost completely disagree on what this clause contains. This can happen when the clause is ambiguous or when neither model has high confidence.';
+    }
+
+    function renderInterpretation(clause, data) {
+      const section = document.getElementById('interpretation-section');
+      section.hidden = false;
+
+      const bert = data.model_result || {};
+      const llm = data.llm_result || {};
+      const bertLabels = (bert.labels || []).map(l => l.name || l.label);
+      const llmLabels = (llm.labels || []).map(l => l.name || l.label);
+      const expectedLabels = clause.expected_labels || [];
+
+      const bertLatency = bert.latency_ms ? Math.round(bert.latency_ms) : null;
+      const llmLatency = llm.latency_ms ? Math.round(llm.latency_ms) : null;
+
+      const speedRatio = (bertLatency && llmLatency && bertLatency > 0)
+        ? Math.round(llmLatency / bertLatency)
+        : null;
+
+      const bertOnly = bertLabels.filter(l => !llmLabels.includes(l));
+      const llmOnly = llmLabels.filter(l => !bertLabels.includes(l));
+      const bertHits = expectedLabels.filter(l => bertLabels.includes(l));
+      const llmHits = expectedLabels.filter(l => llmLabels.includes(l));
+
+      const insights = [];
+
+      // Speed insight
+      if (speedRatio && speedRatio > 1) {
+        const llmMinutes = Math.round(llmLatency * 10000 / 1000 / 60);
+        insights.push(`BERT returned results ${speedRatio}x faster (${bertLatency}ms vs ${llmLatency}ms). At 10,000 requests per day, that gap becomes ${Math.round(bertLatency * 10000 / 1000)} seconds of compute vs ${llmMinutes} minute${llmMinutes !== 1 ? 's' : ''}.`);
+      }
+
+      // Coverage comparison
+      if (bertHits.length !== llmHits.length) {
+        const better = bertHits.length > llmHits.length ? 'BERT' : 'GPT-4o-mini';
+        const worse = better === 'BERT' ? 'GPT-4o-mini' : 'BERT';
+        const diff = Math.abs(bertHits.length - llmHits.length);
+        const betterCount = better === 'BERT' ? bertHits.length : llmHits.length;
+        const worseCount = better === 'BERT' ? llmHits.length : bertHits.length;
+        insights.push(`${better} matched ${diff} more expected label${diff > 1 ? 's' : ''} than ${worse} on this clause (${betterCount} vs ${worseCount} out of ${expectedLabels.length}).`);
+      } else if (expectedLabels.length > 0) {
+        insights.push(`Both models matched ${bertHits.length} of ${expectedLabels.length} expected labels. Equal coverage, different confidence levels.`);
+      }
+
+      // Exclusive labels insight
+      if (bertOnly.length > 0 || llmOnly.length > 0) {
+        const parts = [];
+        if (bertOnly.length > 0) parts.push(`BERT alone found: ${bertOnly.join(', ')}`);
+        if (llmOnly.length > 0) parts.push(`GPT-4o-mini alone found: ${llmOnly.join(', ')}`);
+        insights.push(parts.join('. ') + '. Labels unique to one model often indicate where domain training and general reasoning diverge.');
+      }
+
+      // Cost insight
+      const cost = llm.estimated_cost_usd || data.estimated_cost_usd || 0;
+      if (cost > 0) {
+        const scaledCost = Math.round(cost * 100000);
+        insights.push(`This request cost $${cost.toFixed(4)} for the LLM path. BERT cost nothing. At 100,000 requests, that adds up to $${scaledCost} for prompting vs $0 for the fine-tuned model.`);
+      }
+
+      section.innerHTML = `
+        <h4>What This Tells You</h4>
+        <ul class="interpretation-list">
+          ${insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('')}
+        </ul>
+        <p class="interpretation-note">These are real contract excerpts from SEC filings (CUAD dataset), not simplified examples. The fine-tuned model achieves ~70% F1 on multi-label classification, which in practice means it catches most clause types reliably enough to use as a first-pass filter before human review. In a production contract review pipeline, this saves legal teams from reading every page of every document.</p>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ============================================================
+    // Event Listeners
+    // ============================================================
+    document.getElementById('back-btn').addEventListener('click', () => {
+      showSection('landing');
+    });
+
+    document.getElementById('retry-btn').addEventListener('click', () => {
+      if (currentClause) {
+        classifyClause(currentClause);
+      } else {
+        showSection('landing');
+      }
+    });
+
+    // Initialize
+    renderClauseGrid();
+  </script>
+</BaseLayout>

@@ -49,6 +49,9 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
       <p class="privacy-note">
         Your document is processed securely and not stored after analysis completes.
       </p>
+      <div class="start-actions">
+        <button class="btn-secondary" id="demo-btn">Run Demo with Sample Contract</button>
+      </div>
     </section>
 
     <!-- Progress Section -->
@@ -61,6 +64,11 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
 
     <!-- Results Section -->
     <section class="results-section" id="results-section" hidden>
+      <!-- Demo Banner -->
+      <div class="demo-banner" id="demo-banner" hidden>
+        Viewing demo results for a sample Consultant Agreement (10 pages, 4,776 words)
+      </div>
+
       <!-- Summary Card -->
       <div class="summary-card" id="summary-card">
         <div class="risk-score">
@@ -182,6 +190,43 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
     .demo-tech {
       font-size: 0.875rem;
       color: var(--color-text-muted);
+    }
+
+    /* Start Actions */
+    .start-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 2rem;
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    /* Demo Banner */
+    .demo-banner {
+      padding: 0.75rem 1.25rem;
+      background: rgba(96, 165, 250, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 8px;
+      color: #60a5fa;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
 
     /* Upload Section */
@@ -1189,6 +1234,10 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
     // State
     let analysisId = null;
     let pollInterval = null;
+    let isDemoMode = false;
+
+    // Pre-computed demo result from a real API analysis of a sample consultant agreement
+    const DEMO_RESULT = {"analysis_id":"demo","status":"complete","progress":{"extraction":"complete","pii_scan":"pending","clause_analysis":"complete","risk_assessment":"complete","compliance_check":"pending"},"risk_lane":"red","overall_score":21,"recommendation":"REJECT","requires_human_review":true,"review_status":{"requires_review":true,"review_level":"senior","reason":"High risk - senior review required"},"summary":{"overall_score":21,"recommendation":"REJECT","clause_count":11,"high_risk_clauses":3,"missing_clauses":3},"clauses":[{"id":"clause-30940c3b","type":"other","text":"CONSULTANT agrees to exercise special skill to accomplish the following results in a manner reasonably satisfactory to COMMISSION: as specified in Exhibit A: Scope of Services, which by this reference is incorporated herein.","location":{"page":1,"paragraph":1},"summary":"Defines the duties and expectations of the CONSULTANT."},{"id":"clause-835d0e67","type":"payment_terms","text":"Total payment is not to exceed $ for time and materials at the rates and conditions set forth in Exhibit B: Fee Schedule, which by this reference is incorporated herein.","location":{"page":1,"paragraph":2},"summary":"Establishes the maximum payment amount for the CONSULTANT's services."},{"id":"clause-7e69b504","type":"payment_terms","text":"Progress payments will be made no less than monthly in arrears based on satisfactory services provided and actual allowable incurred costs.","location":{"page":1,"paragraph":2},"summary":"Details the schedule and conditions for progress payments to the CONSULTANT."},{"id":"clause-9cc55394","type":"termination","text":"COMMISSION may terminate this Agreement for its convenience any time, in whole or part, by giving CONSULTANT thirty-day (30-day) written notice thereof.","location":{"page":2,"paragraph":1},"summary":"Allows the COMMISSION to terminate the agreement for convenience with prior notice."},{"id":"clause-c2fb332b","type":"termination","text":"COMMISSION may terminate this Agreement for CONSULTANT's default if a federal or state proceeding for the relief of debtors is undertaken by or against CONSULTANT.","location":{"page":2,"paragraph":2},"summary":"Outlines conditions under which the COMMISSION can terminate the agreement due to CONSULTANT's default."},{"id":"clause-3c94ce52","type":"indemnification","text":"CONSULTANT shall exonerate, indemnify, defend, and hold harmless the COMMISSION from and against any and all claims, demands, losses, damages, defense costs, or liability of any kind or nature which COMMISSION may sustain or incur.","location":{"page":2,"paragraph":3},"summary":"Requires the CONSULTANT to indemnify the COMMISSION against various claims and liabilities."},{"id":"clause-4eae63fe","type":"insurance","text":"CONSULTANT, at its sole cost and expense, for the full term of this Agreement, and any extensions thereof, shall obtain and maintain at minimum compliance with all of the following insurance coverage(s) and requirements.","location":{"page":3,"paragraph":1},"summary":"Mandates the CONSULTANT to maintain specified insurance coverage throughout the contract term."},{"id":"clause-32243711","type":"confidentiality","text":"All information derived from these deliverables is deemed confidential and may not be disclosed to any other party without the express prior written consent of COMMISSION.","location":{"page":7,"paragraph":1},"summary":"Establishes confidentiality obligations regarding information derived from the deliverables."},{"id":"clause-eee0bcd9","type":"data_protection","text":"The CONSULTANT shall comply with OSHA regulations applicable to CONSULTANT regarding necessary safety equipment or procedures.","location":{"page":7,"paragraph":1},"summary":"Requires the CONSULTANT to adhere to safety regulations to protect personnel and the public."},{"id":"clause-e791cf23","type":"non_compete","text":"The CONSULTANT shall not assign the Agreement without the prior written consent of the COMMISSION.","location":{"page":8,"paragraph":1},"summary":"Prohibits the CONSULTANT from assigning the contract without consent."},{"id":"clause-0e504fcb","type":"other","text":"This Agreement constitutes the entire Agreement which is made and concluded in duplicate between the two parties.","location":{"page":9,"paragraph":1},"summary":"Confirms that the contract is the complete and exclusive statement of the agreement between the parties."}],"scored_clauses":[{"id":"clause-30940c3b","type":"other","text":"CONSULTANT agrees to exercise special skill to accomplish the following results in a manner reasonably satisfactory to COMMISSION: as specified in Exhibit A: Scope of Services, which by this reference is incorporated herein.","location":{"page":1,"paragraph":1},"summary":"Defines the duties and expectations of the CONSULTANT.","score":75,"risk_level":"medium","position":"acceptable","reasoning":"The clause outlines the expectations for the CONSULTANT's performance and incorporates a specific scope of services, which is generally favorable. However, the phrase 'reasonably satisfactory' is subjective and could lead to disputes regarding performance standards.","recommendation":"Consider adding specific performance metrics or criteria to define what constitutes 'reasonably satisfactory' to mitigate potential disputes."},{"id":"clause-835d0e67","type":"payment_terms","text":"Total payment is not to exceed $ for time and materials at the rates and conditions set forth in Exhibit B: Fee Schedule, which by this reference is incorporated herein.","location":{"page":1,"paragraph":2},"summary":"Establishes the maximum payment amount for the CONSULTANT's services.","score":70,"risk_level":"medium","position":"acceptable","reasoning":"The clause establishes a maximum payment amount, which is a positive aspect as it provides budgetary control. However, the lack of specificity regarding the actual dollar amount and the reference to an external exhibit introduces some uncertainty.","recommendation":"Request clarification on the specific dollar amount and ensure that Exhibit B is clearly defined and agreed upon before finalizing the contract."},{"id":"clause-7e69b504","type":"payment_terms","text":"Progress payments will be made no less than monthly in arrears based on satisfactory services provided and actual allowable incurred costs.","location":{"page":1,"paragraph":2},"summary":"Details the schedule and conditions for progress payments to the CONSULTANT.","score":70,"risk_level":"medium","position":"acceptable","reasoning":"The clause specifies progress payments on a monthly basis, which is a reasonable timeframe. However, 'satisfactory services provided' and 'actual allowable incurred costs' introduces ambiguity that could lead to disputes.","recommendation":"Clarify the definitions of 'satisfactory services' and 'allowable incurred costs' to minimize ambiguity and potential disputes."},{"id":"clause-9cc55394","type":"termination","text":"COMMISSION may terminate this Agreement for its convenience any time, in whole or part, by giving CONSULTANT thirty-day (30-day) written notice thereof.","location":{"page":2,"paragraph":1},"summary":"Allows the COMMISSION to terminate the agreement for convenience with prior notice.","score":60,"risk_level":"medium","position":"acceptable","reasoning":"The clause allows the COMMISSION to terminate for convenience with a 30-day notice, which is reasonable. However, the unilateral nature favors the COMMISSION, creating asymmetric risk.","recommendation":"Negotiate for mutual termination rights for convenience to balance the termination powers between both parties."},{"id":"clause-c2fb332b","type":"termination","text":"COMMISSION may terminate this Agreement for CONSULTANT's default if a federal or state proceeding for the relief of debtors is undertaken by or against CONSULTANT.","location":{"page":2,"paragraph":2},"summary":"Outlines conditions under which the COMMISSION can terminate the agreement due to CONSULTANT's default.","score":40,"risk_level":"medium","position":"caution","reasoning":"The clause allows unilateral termination upon CONSULTANT's default related to debt relief proceedings. The lack of a cure period increases risk, as it does not provide the CONSULTANT an opportunity to remedy the situation.","recommendation":"Negotiate for a mutual termination clause with a defined cure period to allow the CONSULTANT to address any defaults before termination."},{"id":"clause-3c94ce52","type":"indemnification","text":"CONSULTANT shall exonerate, indemnify, defend, and hold harmless the COMMISSION from and against any and all claims, demands, losses, damages, defense costs, or liability of any kind or nature which COMMISSION may sustain or incur.","location":{"page":2,"paragraph":3},"summary":"Requires the CONSULTANT to indemnify the COMMISSION against various claims and liabilities.","score":20,"risk_level":"high","position":"red_flag","reasoning":"The clause requires the CONSULTANT to indemnify the COMMISSION without any specified caps or limitations, exposing the CONSULTANT to potentially unlimited liability. This is a red flag due to the lack of caps and the broad nature of the indemnification.","recommendation":"Negotiate to include reasonable caps on indemnification tied to contract value and exclude consequential damages."},{"id":"clause-4eae63fe","type":"insurance","text":"CONSULTANT, at its sole cost and expense, for the full term of this Agreement, and any extensions thereof, shall obtain and maintain at minimum compliance with all of the following insurance coverage(s) and requirements.","location":{"page":3,"paragraph":1},"summary":"Mandates the CONSULTANT to maintain specified insurance coverage throughout the contract term.","score":75,"risk_level":"medium","position":"acceptable","reasoning":"The clause mandates the CONSULTANT to maintain specified insurance coverage, which is standard practice to mitigate risk. However, negotiation may be needed to clarify types and limits of insurance required.","recommendation":"Consider negotiating to specify the types of insurance required and any minimum coverage limits to ensure they align with industry standards."},{"id":"clause-32243711","type":"confidentiality","text":"All information derived from these deliverables is deemed confidential and may not be disclosed to any other party without the express prior written consent of COMMISSION.","location":{"page":7,"paragraph":1},"summary":"Establishes confidentiality obligations regarding information derived from the deliverables.","score":40,"risk_level":"high","position":"caution","reasoning":"The clause establishes confidentiality obligations but lacks mutuality and does not include standard exclusions. This one-way confidentiality could expose the company to risks. No mention of a survival period is a significant omission.","recommendation":"Negotiate for mutual confidentiality obligations with standard exclusions and a defined survival period of at least five years."},{"id":"clause-eee0bcd9","type":"data_protection","text":"The CONSULTANT shall comply with OSHA regulations applicable to CONSULTANT regarding necessary safety equipment or procedures.","location":{"page":7,"paragraph":1},"summary":"Requires the CONSULTANT to adhere to safety regulations to protect personnel and the public.","score":40,"risk_level":"high","position":"caution","reasoning":"The clause focuses on OSHA compliance but does not address data protection or privacy concerns critical under GDPR and CCPA. The lack of explicit data protection language raises compliance concerns.","recommendation":"Negotiate to include specific data protection commitments, ensuring compliance with GDPR/CCPA and outlining clear responsibilities for data handling."},{"id":"clause-e791cf23","type":"non_compete","text":"The CONSULTANT shall not assign the Agreement without the prior written consent of the COMMISSION.","location":{"page":8,"paragraph":1},"summary":"Prohibits the CONSULTANT from assigning the contract without consent.","score":70,"risk_level":"medium","position":"acceptable","reasoning":"The clause restricts assignment without prior written consent, which is common practice. However, it may limit flexibility in case of business changes such as mergers or acquisitions.","recommendation":"Consider negotiating for a provision that allows assignment under certain conditions, such as with notice or in the event of a merger or acquisition."},{"id":"clause-0e504fcb","type":"other","text":"This Agreement constitutes the entire Agreement which is made and concluded in duplicate between the two parties.","location":{"page":9,"paragraph":1},"summary":"Confirms that the contract is the complete and exclusive statement of the agreement between the parties.","score":85,"risk_level":"low","position":"preferred","reasoning":"The clause clearly establishes that the agreement is the complete and exclusive statement between the parties, helping prevent misunderstandings and disputes. This is standard and favorable.","recommendation":"No action needed"}],"compliance_issues":[{"id":"hipaa-8b6a8533","type":"hipaa","severity":"medium","description":"Detected HIPAA trigger: 'PHI'","clause_id":null,"action_required":"Require BAA and verify HIPAA compliance certification"}],"missing_clauses":[{"type":"liability","required":true,"description":"Mutual limitation of liability with cap at 12-month fees, consequential damages waiver","impact":"Without liability limitations, the company faces unlimited exposure for damages, including consequential and punitive damages.","penalty_points":10},{"type":"jurisdiction","required":true,"description":"Delaware, New York, or our home state with state/federal courts","impact":"Without jurisdiction provisions, disputes may be litigated in unfavorable forums or under unfavorable laws.","penalty_points":10},{"type":"ip_assignment","required":false,"description":"Clear ownership split - we own custom deliverables, vendor keeps background IP","impact":"Without IP assignment clauses, ownership of work product and intellectual property may be unclear or contested.","penalty_points":3}],"pii_detected":[],"metadata":{"analysis_id":"demo","created_at":"2026-02-13T17:19:54.013822","completed_at":"2026-02-13T17:21:18.019325","processing_mode":"azure","document_pages":10,"document_words":4776,"duration_seconds":84.01,"cost":{"total_cost_usd":0.013185,"total_input_tokens":11989,"total_output_tokens":2309,"total_tokens":14298},"reproducibility":{"content_hash":"5c970b36c96f043f2be2ffe4f0274607","versions":{"model_id":"gpt-4o-mini","model_api_version":"2024-02-01","playbook_hash":"90933dff3f5f1643","library_hash":"4e60f6727be78622","pipeline_version":"1.0.0","embedding_model":"text-embedding-ada-002","fingerprint":"c3ef980341dfcfc4"},"cache_hits":{"clauses":false,"scoring":false,"scoring_ratio":"0/11","compliance":false,"missing":false},"deterministic":false}}};
 
     // DOM Elements
     const uploadSection = document.getElementById('upload-section');
@@ -1709,17 +1758,33 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api.jas
       });
     });
 
+    // Demo mode
+    document.getElementById('demo-btn').addEventListener('click', () => {
+      isDemoMode = true;
+      uploadSection.hidden = true;
+      progressSection.hidden = false;
+
+      // Brief loading flash for UX continuity
+      setTimeout(() => {
+        progressSection.hidden = true;
+        document.getElementById('demo-banner').hidden = false;
+        showResults(DEMO_RESULT);
+      }, 600);
+    });
+
     // New analysis / retry
     document.getElementById('new-analysis-btn').addEventListener('click', reset);
     document.getElementById('retry-btn').addEventListener('click', reset);
 
     function reset() {
       analysisId = null;
+      isDemoMode = false;
       fileInput.value = '';
       uploadSection.hidden = false;
       progressSection.hidden = true;
       resultsSection.hidden = true;
       errorSection.hidden = true;
+      document.getElementById('demo-banner').hidden = true;
     }
   </script>
 </BaseLayout>
