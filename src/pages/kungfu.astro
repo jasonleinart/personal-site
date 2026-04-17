@@ -76,8 +76,9 @@ import SEO from '../components/SEO.astro';
         <div class="research-card">
           <span class="research-mode">Cognitive Collaboration</span>
           <h3>From Tool to Teammate</h3>
-          <p class="research-cite">Dell'Acqua et al. &middot; Randomized Controlled Trial &middot; 557 participants</p>
+          <p class="research-cite">Dell'Acqua et al. &middot; Randomized Controlled Trial &middot; 70 clinicians</p>
           <p class="research-finding">Professionals who treated AI as a "teammate" achieved <strong>85% accuracy</strong> on complex tasks, versus 75% without AI. Same technology everyone else had. Different workflow.</p>
+          <a href="https://www.medrxiv.org/content/10.1101/2025.06.07.25329176v1" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
@@ -85,34 +86,39 @@ import SEO from '../components/SEO.astro';
           <h3>How AI Impacts Learning</h3>
           <p class="research-cite">Shen &amp; Tamkin, Anthropic &middot; RCT &middot; 52 developers</p>
           <p class="research-finding">Six interaction patterns emerged. Three preserved learning (comprehension scores of <strong>65-86%</strong>). Three destroyed it (<strong>24-39%</strong>). The split maps almost perfectly to the Three Modes.</p>
+          <a href="https://arxiv.org/abs/2601.20245" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Oracle Mode Fails</span>
-          <h3>Confirmatory Bias in Chatbots</h3>
+          <h3>Sycophantic AI and Belief Distortion</h3>
           <p class="research-cite">Batista &amp; Griffiths &middot; 2026 &middot; 557 participants</p>
           <p class="research-finding">Default chatbot behavior produces confirmatory evidence — it tells you what aligns with what you already believe. Discovery rates were <strong>5x lower</strong> than random sampling. Oracle mode manufactures false confidence.</p>
+          <a href="https://arxiv.org/abs/2602.14270" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Offload Mode Fails</span>
-          <h3>AI vs. Expert Human Work</h3>
-          <p class="research-cite">University of Zurich &middot; 217 AI-generated papers &middot; 7,000+ head-to-head matches</p>
-          <p class="research-finding">AI-generated economics papers competed against peer-reviewed human work. AI win rate: <strong>4.7%</strong>. Offload mode loses 95% of the time against expert judgment.</p>
+          <h3>Project APE: AI vs. Expert Human Work</h3>
+          <p class="research-cite">Social Catalyst Lab &middot; 217 AI-generated papers &middot; 7,187 head-to-head matches</p>
+          <p class="research-finding">AI-generated economics papers competed against peer-reviewed human work from top journals. AI win rate: <strong>4.7%</strong>. Offload mode loses 95% of the time against expert judgment.</p>
+          <a href="https://ape.socialcatalystlab.org/" class="paper-link" target="_blank" rel="noopener">View the project &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Offload Mode Fails</span>
-          <h3>Accuracy Drops in Real Use</h3>
-          <p class="research-cite">Nature Medicine &middot; 2026</p>
+          <h3>Reliability of LLMs as Medical Assistants</h3>
+          <p class="research-cite">Bean et al. &middot; Nature Medicine &middot; 2026</p>
           <p class="research-finding">LLMs alone identify medical conditions at 94.9% accuracy. Give that same tool to actual users and accuracy drops <strong>below 34.5%</strong>. A control group using Google outperformed every AI-assisted group. Standalone accuracy means nothing — accuracy in use is what matters.</p>
+          <a href="https://doi.org/10.1038/s41591-025-04074-y" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">The Gap</span>
-          <h3>Reliability Lags Capability</h3>
+          <h3>Towards a Science of AI Agent Reliability</h3>
           <p class="research-cite">Rabanser et al. &middot; 14 frontier models &middot; Multiple benchmarks</p>
           <p class="research-finding">AI capability scores keep climbing. Reliability scores don't climb at the same rate. Run the same task five times, get different results. <strong>The gap between what AI can do and what it does consistently is where your judgment lives.</strong></p>
+          <a href="https://arxiv.org/abs/2602.16666v1" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
       </div>
     </section>
@@ -466,6 +472,20 @@ I'll provide project context below. Reference it in every response.</pre>
   .research-finding strong {
     color: var(--color-text);
     font-weight: 600;
+  }
+
+  .paper-link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .paper-link:hover {
+    color: var(--color-accent-hover);
   }
 
   /* Diagnostic */
