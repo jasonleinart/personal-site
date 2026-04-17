@@ -5,8 +5,7 @@
  * Attendee landing page for "I Know Kung Fu" presentation at PMI Great Lakes
  * Spring Symposium 2026. QR code on closing slide points here.
  *
- * Contains: framework summary, starter kit materials, five scenario prompts,
- * and behavioral instructions attendees can copy and use immediately.
+ * Framework summary, research citations, and link to GitHub starter kit repo.
  *
  * Route: /kungfu
  *
@@ -21,7 +20,7 @@ import SEO from '../components/SEO.astro';
   <SEO
     slot="head"
     title="I Know Kung Fu — Starter Kit | Jason Leinart"
-    description="Starter kit from the PMI Great Lakes 2026 talk. Three modes of AI use, five PM scenario prompts, and behavioral instructions you can use Monday morning."
+    description="Starter kit from the PMI Great Lakes 2026 talk. Three modes of AI use, five PM scenario prompts, research papers, and behavioral instructions you can use Monday morning."
     type="website"
   />
 
@@ -67,17 +66,17 @@ import SEO from '../components/SEO.astro';
 
     <!-- The Research -->
     <section class="section">
-      <h2>The Research Behind the Framework</h2>
+      <h2>The Research</h2>
       <p class="section-intro">
-        The Three Modes aren't opinion. Six peer-reviewed studies point to the same conclusion: how you use AI matters more than which AI you use.
+        The Three Modes aren't opinion. These studies point to the same conclusion: how you use AI matters more than which AI you use. PDFs are in the starter kit repo.
       </p>
 
       <div class="research-list">
         <div class="research-card">
           <span class="research-mode">Cognitive Collaboration</span>
           <h3>From Tool to Teammate</h3>
-          <p class="research-cite">Dell'Acqua et al. &middot; Randomized Controlled Trial &middot; 70 clinicians</p>
-          <p class="research-finding">Professionals who treated AI as a "teammate" achieved <strong>85% accuracy</strong> on complex tasks, versus 75% without AI. Same technology everyone else had. Different workflow.</p>
+          <p class="research-cite">Dell'Acqua et al. &middot; RCT &middot; 70 clinicians</p>
+          <p class="research-finding">Teammate framing: <strong>85% accuracy</strong> vs 75% without AI. Same technology, different workflow.</p>
           <a href="https://www.medrxiv.org/content/10.1101/2025.06.07.25329176v1" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
@@ -85,39 +84,39 @@ import SEO from '../components/SEO.astro';
           <span class="research-mode">Skill Formation</span>
           <h3>How AI Impacts Learning</h3>
           <p class="research-cite">Shen &amp; Tamkin, Anthropic &middot; RCT &middot; 52 developers</p>
-          <p class="research-finding">Six interaction patterns emerged. Three preserved learning (comprehension scores of <strong>65-86%</strong>). Three destroyed it (<strong>24-39%</strong>). The split maps almost perfectly to the Three Modes.</p>
+          <p class="research-finding">Three interaction patterns preserved learning (<strong>65-86%</strong> comprehension). Three destroyed it (<strong>24-39%</strong>). The split maps to the Three Modes.</p>
           <a href="https://arxiv.org/abs/2601.20245" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Oracle Mode Fails</span>
           <h3>Sycophantic AI and Belief Distortion</h3>
-          <p class="research-cite">Batista &amp; Griffiths &middot; 2026 &middot; 557 participants</p>
-          <p class="research-finding">Default chatbot behavior produces confirmatory evidence — it tells you what aligns with what you already believe. Discovery rates were <strong>5x lower</strong> than random sampling. Oracle mode manufactures false confidence.</p>
+          <p class="research-cite">Batista &amp; Griffiths &middot; 557 participants</p>
+          <p class="research-finding">Default chatbot behavior produces confirmatory evidence. Discovery rates <strong>5x lower</strong> than unbiased sampling.</p>
           <a href="https://arxiv.org/abs/2602.14270" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Offload Mode Fails</span>
           <h3>Project APE: AI vs. Expert Human Work</h3>
-          <p class="research-cite">Social Catalyst Lab &middot; 217 AI-generated papers &middot; 7,187 head-to-head matches</p>
-          <p class="research-finding">AI-generated economics papers competed against peer-reviewed human work from top journals. AI win rate: <strong>4.7%</strong>. Offload mode loses 95% of the time against expert judgment.</p>
+          <p class="research-cite">Social Catalyst Lab &middot; 7,187 head-to-head matches</p>
+          <p class="research-finding">AI-generated economics papers vs peer-reviewed human work. AI win rate: <strong>4.7%</strong>.</p>
           <a href="https://ape.socialcatalystlab.org/" class="paper-link" target="_blank" rel="noopener">View the project &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">Offload Mode Fails</span>
-          <h3>Reliability of LLMs as Medical Assistants</h3>
-          <p class="research-cite">Bean et al. &middot; Nature Medicine &middot; 2026</p>
-          <p class="research-finding">LLMs alone identify medical conditions at 94.9% accuracy. Give that same tool to actual users and accuracy drops <strong>below 34.5%</strong>. A control group using Google outperformed every AI-assisted group. Standalone accuracy means nothing — accuracy in use is what matters.</p>
+          <h3>LLMs as Medical Assistants</h3>
+          <p class="research-cite">Bean et al. &middot; Nature Medicine</p>
+          <p class="research-finding">LLMs alone: 94.9% accuracy. With real users: <strong>below 34.5%</strong>. A control group using Google outperformed every AI-assisted group.</p>
           <a href="https://doi.org/10.1038/s41591-025-04074-y" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
 
         <div class="research-card">
           <span class="research-mode">The Gap</span>
-          <h3>Towards a Science of AI Agent Reliability</h3>
-          <p class="research-cite">Rabanser et al. &middot; 14 frontier models &middot; Multiple benchmarks</p>
-          <p class="research-finding">AI capability scores keep climbing. Reliability scores don't climb at the same rate. Run the same task five times, get different results. <strong>The gap between what AI can do and what it does consistently is where your judgment lives.</strong></p>
+          <h3>AI Agent Reliability</h3>
+          <p class="research-cite">Rabanser et al. &middot; 14 frontier models</p>
+          <p class="research-finding">Capability keeps climbing. Reliability doesn't keep pace. <strong>That gap is where your judgment lives.</strong></p>
           <a href="https://arxiv.org/abs/2602.16666v1" class="paper-link" target="_blank" rel="noopener">Read the paper &rarr;</a>
         </div>
       </div>
@@ -131,131 +130,30 @@ import SEO from '../components/SEO.astro';
       </blockquote>
     </section>
 
-    <!-- Starter Kit -->
+    <!-- Starter Kit CTA -->
     <section class="section">
       <h2>The Starter Kit</h2>
       <p class="section-intro">
-        Three things: behavioral instructions that set the right mode, a place for your project context, and five scenario prompts. Paste them into whatever AI tool you have access to. ChatGPT, Gemini, Claude, Copilot — the tool doesn't matter. The thinking pattern matters.
+        Everything from the talk in one place: behavioral instructions, project context template, five scenario prompts (risk, status, stakeholder, change, retro), Custom GPT setup guide, Claude Code skills, and all the research papers as PDFs.
       </p>
 
-      <!-- Behavioral Instructions -->
-      <div class="kit-block">
-        <h3>1. Behavioral Instructions</h3>
-        <p class="kit-desc">Paste this at the start of every AI conversation. It sets cognitive collaboration mode.</p>
-        <div class="code-block">
-          <button class="copy-btn" data-target="behavioral">Copy</button>
-          <pre id="behavioral">You are a PM thinking partner, not an assistant. When I bring you a project scenario:
-
-- Challenge my assumptions. Don't agree by default.
-- Ask questions that force me to think more carefully.
-- If I ask you to "just write a risk register" or "just draft a status update," push back. Ask what I already know first, then build from there.
-- When you identify a potential issue, explain WHY it matters for this specific project — don't give generic advice.
-- If my reasoning has gaps, say so directly. I'd rather hear it from you than from my steering committee.
-
-I'll provide project context below. Reference it in every response.</pre>
-        </div>
-      </div>
-
-      <!-- Project Context Template -->
-      <div class="kit-block">
-        <h3>2. Project Context</h3>
-        <p class="kit-desc">Paste after the behavioral instructions. Fill in your actual project details — the more specific, the better the collaboration.</p>
-        <div class="code-block">
-          <button class="copy-btn" data-target="context">Copy</button>
-          <pre id="context">## Project Context
-
-**Project:** [Name and one-sentence description]
-**Timeline:** [Start date, key milestones, delivery date]
-**Budget:** [Total budget, current spend, burn rate]
-**Team:** [Size, key roles, any gaps]
-
-**Key Constraints:**
-- [Constraint 1]
-- [Constraint 2]
-
-**Stakeholders:**
-- [Name / Role] — cares about [what], current sentiment: [supportive/skeptical/neutral]
-- [Name / Role] — cares about [what], current sentiment: [supportive/skeptical/neutral]
-
-**Current Risks:**
-- [Risk 1] — severity: [H/M/L], mitigation: [what you're doing]
-- [Risk 2] — severity: [H/M/L], mitigation: [what you're doing]
-
-**Recent Status:**
-- [What happened this week that matters]
-- [What's blocked or at risk]
-- [What decisions are pending]</pre>
-        </div>
-      </div>
-
-      <!-- Five Scenario Prompts -->
-      <div class="kit-block">
-        <h3>3. Five Scenario Prompts</h3>
-        <p class="kit-desc">Copy the one that matches what you're working on. Each prompt is designed to trigger collaboration, not generation.</p>
-
-        <div class="scenario">
-          <h4>Risk Assessment</h4>
-          <div class="code-block">
-            <button class="copy-btn" data-target="risk">Copy</button>
-            <pre id="risk">Review the project context and help me identify risks I may be missing. Don't generate a generic list. Challenge my current risk register and surface risks specific to this project's constraints, timeline, and stakeholder dynamics. For each risk, explain why you think it matters here. Then ask me which ones I disagree with and why.</pre>
+      <div class="kit-cta">
+        <div class="kit-tiers">
+          <div class="kit-tier">
+            <h3>Tier 1: Copy-Paste</h3>
+            <p>Three text files. Paste into any AI tool. Zero setup.</p>
+          </div>
+          <div class="kit-tier">
+            <h3>Tier 2: Custom GPT / Gem</h3>
+            <p>Persistent instructions. Upload your project docs once.</p>
+          </div>
+          <div class="kit-tier">
+            <h3>Tier 3: Claude Code</h3>
+            <p>Structured skills. Local files. Nothing leaves your machine.</p>
           </div>
         </div>
-
-        <div class="scenario">
-          <h4>Status Preparation</h4>
-          <div class="code-block">
-            <button class="copy-btn" data-target="status">Copy</button>
-            <pre id="status">Based on the project context, help me prepare a status update. Don't summarize tasks. Help me interpret what the current state means: what's on track, what's at risk, what needs leadership attention, and what decision I should be requesting. Then tell me what questions my audience will ask that I'm not ready for.</pre>
-          </div>
-        </div>
-
-        <div class="scenario">
-          <h4>Stakeholder Communication</h4>
-          <div class="code-block">
-            <button class="copy-btn" data-target="stakeholder">Copy</button>
-            <pre id="stakeholder">I'm preparing to communicate with [stakeholder name and role]. Play their role. What would they push back on? What questions would they ask? What concerns would they have that I haven't addressed? Help me stress-test my communication before I send it.</pre>
-          </div>
-        </div>
-
-        <div class="scenario">
-          <h4>Change Impact Analysis</h4>
-          <div class="code-block">
-            <button class="copy-btn" data-target="change">Copy</button>
-            <pre id="change">A change request has come in: [describe the change]. Help me map the impact through project dependencies — schedule, budget, scope, resources, quality, and stakeholder expectations. Build three options (absorb, accommodate with trade-offs, defer) with specific trade-offs for each. Then tell me what hidden costs I'm likely to miss.</pre>
-          </div>
-        </div>
-
-        <div class="scenario">
-          <h4>Retrospective</h4>
-          <div class="code-block">
-            <button class="copy-btn" data-target="retro">Copy</button>
-            <pre id="retro">Review the project context and the notes I provide. Identify patterns — not surface observations like "communication could be better" but structural patterns with root causes. What's recurring? What's connected? What specific process change would address the root cause? Limit to three actionable items with owners.</pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- How to Use This -->
-    <section class="section">
-      <h2>Start Monday</h2>
-
-      <div class="tiers-grid">
-        <div class="tier-card">
-          <span class="tier-label">Week 1</span>
-          <h3>Copy-Paste</h3>
-          <p>Paste the behavioral instructions and your project context into any AI tool. Run one scenario. See how it feels different from "just asking ChatGPT."</p>
-        </div>
-
-        <div class="tier-card">
-          <span class="tier-label">Week 2-3</span>
-          <h3>Build the Habit</h3>
-          <p>Pick the scenario you use most often — probably status prep or risk review. Use cognitive collaboration mode every time for two weeks. Notice the ratio of AI confirming your thinking vs. actually challenging it.</p>
-        </div>
-
-        <div class="tier-card">
-          <span class="tier-label">Month 2+</span>
-          <h3>Upgrade the Tooling</h3>
-          <p>If re-pasting gets tedious, move to a Custom GPT or Gemini Gem with persistent instructions. Upload your project docs so the context is always loaded. The pattern is the same — the tool just remembers it.</p>
+        <div class="kit-action">
+          <a href="https://github.com/jasonleinart/pm-ai-teammate" class="btn-primary" target="_blank" rel="noopener">Get the Starter Kit on GitHub</a>
         </div>
       </div>
     </section>
@@ -277,28 +175,6 @@ I'll provide project context below. Reference it in every response.</pre>
 
   </main>
 </BaseLayout>
-
-<script>
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-target');
-        if (!targetId) return;
-        const pre = document.getElementById(targetId);
-        if (!pre) return;
-        navigator.clipboard.writeText(pre.textContent || '').then(() => {
-          const original = btn.textContent;
-          btn.textContent = 'Copied';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = original;
-            btn.classList.remove('copied');
-          }, 2000);
-        });
-      });
-    });
-  });
-</script>
 
 <style>
   .kungfu-page {
@@ -389,10 +265,7 @@ I'll provide project context below. Reference it in every response.</pre>
     border-radius: 8px 8px 0 0;
   }
 
-  .mode-oracle::before {
-    background: var(--color-text-muted);
-  }
-
+  .mode-oracle::before,
   .mode-offload::before {
     background: var(--color-text-muted);
   }
@@ -414,10 +287,6 @@ I'll provide project context below. Reference it in every response.</pre>
     margin-bottom: 0.75rem;
   }
 
-  .mode-collab .mode-pattern {
-    color: var(--color-accent);
-  }
-
   .mode-problem {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
@@ -429,11 +298,11 @@ I'll provide project context below. Reference it in every response.</pre>
   .research-list {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .research-card {
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     background: var(--gradient-card);
     border: 1px solid var(--color-border);
     border-radius: 8px;
@@ -447,25 +316,25 @@ I'll provide project context below. Reference it in every response.</pre>
     letter-spacing: 0.08em;
     color: var(--color-accent);
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.375rem;
   }
 
   .research-card h3 {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 0.375rem;
+    margin-bottom: 0.25rem;
   }
 
   .research-cite {
     font-size: 0.8125rem;
     color: var(--color-text-muted);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .research-finding {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
+    line-height: 1.5;
     margin: 0;
   }
 
@@ -476,7 +345,7 @@ I'll provide project context below. Reference it in every response.</pre>
 
   .paper-link {
     display: inline-block;
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--color-accent);
@@ -519,117 +388,46 @@ I'll provide project context below. Reference it in every response.</pre>
     font-family: 'Instrument Serif', serif;
   }
 
-  /* Kit Blocks */
-  .kit-block {
-    margin-bottom: 2.5rem;
-  }
-
-  .kit-block h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .kit-desc {
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    margin-bottom: 1rem;
-  }
-
-  /* Code Blocks */
-  .code-block {
-    position: relative;
-    background: var(--color-bg-secondary);
+  /* Kit CTA */
+  .kit-cta {
+    background: var(--gradient-card);
     border: 1px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
   }
 
-  .code-block pre {
-    padding: 1.25rem;
-    padding-top: 1rem;
-    margin: 0;
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: 'DM Sans', sans-serif;
+  .kit-tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
   }
 
-  .copy-btn {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    padding: 0.375rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'DM Sans', sans-serif;
+  .kit-tier {
+    padding: 1.5rem;
+    border-right: 1px solid var(--color-border);
   }
 
-  .copy-btn:hover {
-    color: var(--color-text);
-    border-color: var(--color-accent-muted);
+  .kit-tier:last-child {
+    border-right: none;
   }
 
-  .copy-btn.copied {
-    color: var(--color-accent-secondary);
-    border-color: var(--color-accent-secondary);
-  }
-
-  /* Scenarios */
-  .scenario {
-    margin-bottom: 1.5rem;
-  }
-
-  .scenario h4 {
+  .kit-tier h3 {
     font-size: 0.9375rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--color-text);
   }
 
-  /* Tiers Grid */
-  .tiers-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-    margin-top: 1.5rem;
-  }
-
-  .tier-card {
-    padding: 1.5rem;
-    background: var(--gradient-card);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-  }
-
-  .tier-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-accent);
-    font-weight: 600;
-  }
-
-  .tier-card h3 {
-    font-size: 1.0625rem;
-    font-weight: 600;
-    margin: 0.5rem 0 0.75rem;
-  }
-
-  .tier-card p {
-    font-size: 0.9375rem;
+  .kit-tier p {
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
     margin: 0;
+  }
+
+  .kit-action {
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--color-border);
   }
 
   /* Closing Frame */
@@ -692,8 +490,17 @@ I'll provide project context below. Reference it in every response.</pre>
     }
 
     .modes-grid,
-    .tiers-grid {
+    .kit-tiers {
       grid-template-columns: 1fr;
+    }
+
+    .kit-tier {
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .kit-tier:last-child {
+      border-bottom: none;
     }
 
     .diagnostic {
