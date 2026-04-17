@@ -65,6 +65,58 @@ import SEO from '../components/SEO.astro';
       </div>
     </section>
 
+    <!-- The Research -->
+    <section class="section">
+      <h2>The Research Behind the Framework</h2>
+      <p class="section-intro">
+        The Three Modes aren't opinion. Six peer-reviewed studies point to the same conclusion: how you use AI matters more than which AI you use.
+      </p>
+
+      <div class="research-list">
+        <div class="research-card">
+          <span class="research-mode">Cognitive Collaboration</span>
+          <h3>From Tool to Teammate</h3>
+          <p class="research-cite">Dell'Acqua et al. &middot; Randomized Controlled Trial &middot; 557 participants</p>
+          <p class="research-finding">Professionals who treated AI as a "teammate" achieved <strong>85% accuracy</strong> on complex tasks, versus 75% without AI. Same technology everyone else had. Different workflow.</p>
+        </div>
+
+        <div class="research-card">
+          <span class="research-mode">Skill Formation</span>
+          <h3>How AI Impacts Learning</h3>
+          <p class="research-cite">Shen &amp; Tamkin, Anthropic &middot; RCT &middot; 52 developers</p>
+          <p class="research-finding">Six interaction patterns emerged. Three preserved learning (comprehension scores of <strong>65-86%</strong>). Three destroyed it (<strong>24-39%</strong>). The split maps almost perfectly to the Three Modes.</p>
+        </div>
+
+        <div class="research-card">
+          <span class="research-mode">Oracle Mode Fails</span>
+          <h3>Confirmatory Bias in Chatbots</h3>
+          <p class="research-cite">Batista &amp; Griffiths &middot; 2026 &middot; 557 participants</p>
+          <p class="research-finding">Default chatbot behavior produces confirmatory evidence — it tells you what aligns with what you already believe. Discovery rates were <strong>5x lower</strong> than random sampling. Oracle mode manufactures false confidence.</p>
+        </div>
+
+        <div class="research-card">
+          <span class="research-mode">Offload Mode Fails</span>
+          <h3>AI vs. Expert Human Work</h3>
+          <p class="research-cite">University of Zurich &middot; 217 AI-generated papers &middot; 7,000+ head-to-head matches</p>
+          <p class="research-finding">AI-generated economics papers competed against peer-reviewed human work. AI win rate: <strong>4.7%</strong>. Offload mode loses 95% of the time against expert judgment.</p>
+        </div>
+
+        <div class="research-card">
+          <span class="research-mode">Offload Mode Fails</span>
+          <h3>Accuracy Drops in Real Use</h3>
+          <p class="research-cite">Nature Medicine &middot; 2026</p>
+          <p class="research-finding">LLMs alone identify medical conditions at 94.9% accuracy. Give that same tool to actual users and accuracy drops <strong>below 34.5%</strong>. A control group using Google outperformed every AI-assisted group. Standalone accuracy means nothing — accuracy in use is what matters.</p>
+        </div>
+
+        <div class="research-card">
+          <span class="research-mode">The Gap</span>
+          <h3>Reliability Lags Capability</h3>
+          <p class="research-cite">Rabanser et al. &middot; 14 frontier models &middot; Multiple benchmarks</p>
+          <p class="research-finding">AI capability scores keep climbing. Reliability scores don't climb at the same rate. Run the same task five times, get different results. <strong>The gap between what AI can do and what it does consistently is where your judgment lives.</strong></p>
+        </div>
+      </div>
+    </section>
+
     <!-- The Self-Diagnostic -->
     <section class="section diagnostic">
       <blockquote>
@@ -365,6 +417,55 @@ I'll provide project context below. Reference it in every response.</pre>
     color: var(--color-text-secondary);
     line-height: 1.5;
     margin: 0;
+  }
+
+  /* Research */
+  .research-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .research-card {
+    padding: 1.5rem;
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    border-left: 3px solid var(--color-border);
+  }
+
+  .research-mode {
+    display: inline-block;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .research-card h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+
+  .research-cite {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .research-finding {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .research-finding strong {
+    color: var(--color-text);
+    font-weight: 600;
   }
 
   /* Diagnostic */
