@@ -1,0 +1,592 @@
+---
+/**
+ * Kung Fu — PMI Talk Resource Page
+ *
+ * Attendee landing page for "I Know Kung Fu" presentation at PMI Great Lakes
+ * Spring Symposium 2026. QR code on closing slide points here.
+ *
+ * Contains: framework summary, starter kit materials, five scenario prompts,
+ * and behavioral instructions attendees can copy and use immediately.
+ *
+ * Route: /kungfu
+ *
+ * @page
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title="I Know Kung Fu — Starter Kit | Jason Leinart"
+    description="Starter kit from the PMI Great Lakes 2026 talk. Three modes of AI use, five PM scenario prompts, and behavioral instructions you can use Monday morning."
+    type="website"
+  />
+
+  <main class="kungfu-page">
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="event-tag">PMI Great Lakes Spring Symposium 2026</p>
+      <h1>I Know Kung Fu</h1>
+      <p class="hero-sub">
+        A Practitioner's Guide to AI That Actually Works
+      </p>
+      <p class="hero-credit">Jason Leinart &middot; Three Horizons LLC</p>
+    </section>
+
+    <!-- The Three Modes -->
+    <section class="section">
+      <h2>The Three Modes</h2>
+      <p class="section-intro">
+        Every AI interaction falls into one of three modes. Two create dependency. One builds capability.
+      </p>
+
+      <div class="modes-grid">
+        <div class="mode-card mode-oracle">
+          <h3>Oracle</h3>
+          <p class="mode-pattern">Ask &rarr; Get answer &rarr; Paste</p>
+          <p class="mode-problem">No learning. No judgment development. You're using a search engine with better grammar.</p>
+        </div>
+
+        <div class="mode-card mode-offload">
+          <h3>Offload</h3>
+          <p class="mode-pattern">Hand it off entirely</p>
+          <p class="mode-problem">Output looks professional but you can't defend it in a meeting. You've outsourced the one thing you're paid to do.</p>
+        </div>
+
+        <div class="mode-card mode-collab">
+          <h3>Cognitive Collaboration</h3>
+          <p class="mode-pattern">Think together</p>
+          <p class="mode-problem">You bring context and judgment. AI brings breadth and challenge. Your output is better AND you understand it deeply.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Self-Diagnostic -->
+    <section class="section diagnostic">
+      <blockquote>
+        <p>Is AI clearing space for you to think harder?</p>
+        <p>Or filling the space where your thinking should be?</p>
+      </blockquote>
+    </section>
+
+    <!-- Starter Kit -->
+    <section class="section">
+      <h2>The Starter Kit</h2>
+      <p class="section-intro">
+        Three things: behavioral instructions that set the right mode, a place for your project context, and five scenario prompts. Paste them into whatever AI tool you have access to. ChatGPT, Gemini, Claude, Copilot — the tool doesn't matter. The thinking pattern matters.
+      </p>
+
+      <!-- Behavioral Instructions -->
+      <div class="kit-block">
+        <h3>1. Behavioral Instructions</h3>
+        <p class="kit-desc">Paste this at the start of every AI conversation. It sets cognitive collaboration mode.</p>
+        <div class="code-block">
+          <button class="copy-btn" data-target="behavioral">Copy</button>
+          <pre id="behavioral">You are a PM thinking partner, not an assistant. When I bring you a project scenario:
+
+- Challenge my assumptions. Don't agree by default.
+- Ask questions that force me to think more carefully.
+- If I ask you to "just write a risk register" or "just draft a status update," push back. Ask what I already know first, then build from there.
+- When you identify a potential issue, explain WHY it matters for this specific project — don't give generic advice.
+- If my reasoning has gaps, say so directly. I'd rather hear it from you than from my steering committee.
+
+I'll provide project context below. Reference it in every response.</pre>
+        </div>
+      </div>
+
+      <!-- Project Context Template -->
+      <div class="kit-block">
+        <h3>2. Project Context</h3>
+        <p class="kit-desc">Paste after the behavioral instructions. Fill in your actual project details — the more specific, the better the collaboration.</p>
+        <div class="code-block">
+          <button class="copy-btn" data-target="context">Copy</button>
+          <pre id="context">## Project Context
+
+**Project:** [Name and one-sentence description]
+**Timeline:** [Start date, key milestones, delivery date]
+**Budget:** [Total budget, current spend, burn rate]
+**Team:** [Size, key roles, any gaps]
+
+**Key Constraints:**
+- [Constraint 1]
+- [Constraint 2]
+
+**Stakeholders:**
+- [Name / Role] — cares about [what], current sentiment: [supportive/skeptical/neutral]
+- [Name / Role] — cares about [what], current sentiment: [supportive/skeptical/neutral]
+
+**Current Risks:**
+- [Risk 1] — severity: [H/M/L], mitigation: [what you're doing]
+- [Risk 2] — severity: [H/M/L], mitigation: [what you're doing]
+
+**Recent Status:**
+- [What happened this week that matters]
+- [What's blocked or at risk]
+- [What decisions are pending]</pre>
+        </div>
+      </div>
+
+      <!-- Five Scenario Prompts -->
+      <div class="kit-block">
+        <h3>3. Five Scenario Prompts</h3>
+        <p class="kit-desc">Copy the one that matches what you're working on. Each prompt is designed to trigger collaboration, not generation.</p>
+
+        <div class="scenario">
+          <h4>Risk Assessment</h4>
+          <div class="code-block">
+            <button class="copy-btn" data-target="risk">Copy</button>
+            <pre id="risk">Review the project context and help me identify risks I may be missing. Don't generate a generic list. Challenge my current risk register and surface risks specific to this project's constraints, timeline, and stakeholder dynamics. For each risk, explain why you think it matters here. Then ask me which ones I disagree with and why.</pre>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <h4>Status Preparation</h4>
+          <div class="code-block">
+            <button class="copy-btn" data-target="status">Copy</button>
+            <pre id="status">Based on the project context, help me prepare a status update. Don't summarize tasks. Help me interpret what the current state means: what's on track, what's at risk, what needs leadership attention, and what decision I should be requesting. Then tell me what questions my audience will ask that I'm not ready for.</pre>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <h4>Stakeholder Communication</h4>
+          <div class="code-block">
+            <button class="copy-btn" data-target="stakeholder">Copy</button>
+            <pre id="stakeholder">I'm preparing to communicate with [stakeholder name and role]. Play their role. What would they push back on? What questions would they ask? What concerns would they have that I haven't addressed? Help me stress-test my communication before I send it.</pre>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <h4>Change Impact Analysis</h4>
+          <div class="code-block">
+            <button class="copy-btn" data-target="change">Copy</button>
+            <pre id="change">A change request has come in: [describe the change]. Help me map the impact through project dependencies — schedule, budget, scope, resources, quality, and stakeholder expectations. Build three options (absorb, accommodate with trade-offs, defer) with specific trade-offs for each. Then tell me what hidden costs I'm likely to miss.</pre>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <h4>Retrospective</h4>
+          <div class="code-block">
+            <button class="copy-btn" data-target="retro">Copy</button>
+            <pre id="retro">Review the project context and the notes I provide. Identify patterns — not surface observations like "communication could be better" but structural patterns with root causes. What's recurring? What's connected? What specific process change would address the root cause? Limit to three actionable items with owners.</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to Use This -->
+    <section class="section">
+      <h2>Start Monday</h2>
+
+      <div class="tiers-grid">
+        <div class="tier-card">
+          <span class="tier-label">Week 1</span>
+          <h3>Copy-Paste</h3>
+          <p>Paste the behavioral instructions and your project context into any AI tool. Run one scenario. See how it feels different from "just asking ChatGPT."</p>
+        </div>
+
+        <div class="tier-card">
+          <span class="tier-label">Week 2-3</span>
+          <h3>Build the Habit</h3>
+          <p>Pick the scenario you use most often — probably status prep or risk review. Use cognitive collaboration mode every time for two weeks. Notice the ratio of AI confirming your thinking vs. actually challenging it.</p>
+        </div>
+
+        <div class="tier-card">
+          <span class="tier-label">Month 2+</span>
+          <h3>Upgrade the Tooling</h3>
+          <p>If re-pasting gets tedious, move to a Custom GPT or Gemini Gem with persistent instructions. Upload your project docs so the context is always loaded. The pattern is the same — the tool just remembers it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Frame -->
+    <section class="section closing-frame">
+      <h2>"I know kung fu" is the download.</h2>
+      <p>"Show me" is the practice.</p>
+      <p class="closing-line">The tools will change. The practice won't.</p>
+    </section>
+
+    <!-- Contact -->
+    <section class="section contact-section">
+      <div class="contact-inner">
+        <p>Questions about the framework, the starter kit, or how to bring this to your team?</p>
+        <a href="/contact" class="btn-primary">Get in Touch</a>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        if (!targetId) return;
+        const pre = document.getElementById(targetId);
+        if (!pre) return;
+        navigator.clipboard.writeText(pre.textContent || '').then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .kungfu-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding-bottom: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .event-tag {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    font-family: 'Instrument Serif', serif;
+  }
+
+  .hero-sub {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .hero-credit {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 650px;
+  }
+
+  /* Three Modes Grid */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .mode-card {
+    padding: 1.5rem;
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .mode-oracle::before {
+    background: var(--color-text-muted);
+  }
+
+  .mode-offload::before {
+    background: var(--color-text-muted);
+  }
+
+  .mode-collab::before {
+    background: var(--gradient-accent);
+  }
+
+  .mode-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .mode-pattern {
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .mode-collab .mode-pattern {
+    color: var(--color-accent);
+  }
+
+  .mode-problem {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Diagnostic */
+  .diagnostic {
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(196, 101, 74, 0.08) 0%, rgba(196, 101, 74, 0.03) 100%);
+    border: 1px solid rgba(196, 101, 74, 0.2);
+    border-radius: 12px;
+  }
+
+  .diagnostic blockquote {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .diagnostic blockquote p:first-child {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    font-family: 'Instrument Serif', serif;
+  }
+
+  .diagnostic blockquote p:last-child {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0;
+    font-family: 'Instrument Serif', serif;
+  }
+
+  /* Kit Blocks */
+  .kit-block {
+    margin-bottom: 2.5rem;
+  }
+
+  .kit-block h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .kit-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  /* Code Blocks */
+  .code-block {
+    position: relative;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .code-block pre {
+    padding: 1.25rem;
+    padding-top: 1rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .copy-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-accent-muted);
+  }
+
+  .copy-btn.copied {
+    color: var(--color-accent-secondary);
+    border-color: var(--color-accent-secondary);
+  }
+
+  /* Scenarios */
+  .scenario {
+    margin-bottom: 1.5rem;
+  }
+
+  .scenario h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  /* Tiers Grid */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .tier-card {
+    padding: 1.5rem;
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+
+  .tier-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .tier-card h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin: 0.5rem 0 0.75rem;
+  }
+
+  .tier-card p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Closing Frame */
+  .closing-frame {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .closing-frame h2 {
+    font-size: 1.75rem;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .closing-frame > p {
+    font-size: 1.75rem;
+    font-family: 'Instrument Serif', serif;
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-line {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Contact */
+  .contact-section {
+    margin-bottom: 0;
+  }
+
+  .contact-inner {
+    text-align: center;
+    padding: 2rem;
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+  }
+
+  .contact-inner p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .kungfu-page {
+      padding: 2rem 1rem 3rem;
+    }
+
+    .hero h1 {
+      font-size: 2.25rem;
+    }
+
+    .hero-sub {
+      font-size: 1.125rem;
+    }
+
+    .modes-grid,
+    .tiers-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .diagnostic {
+      padding: 1.75rem;
+    }
+
+    .diagnostic blockquote p:first-child,
+    .diagnostic blockquote p:last-child {
+      font-size: 1.125rem;
+    }
+
+    .closing-frame h2,
+    .closing-frame > p {
+      font-size: 1.375rem;
+    }
+  }
+</style>
