@@ -1,5 +1,20 @@
 import { Resend } from "resend";
 
+// Make failures LOUD: a dropped contact-form email must never be silent.
+async function alertFailure(env, where, detail) {
+  try {
+    const resend = new Resend(env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: env.ALERT_FROM || "Site Worker <contact@jasonleinart.com>",
+      to: env.ALERT_EMAIL || "jason@forke.co",
+      subject: `⚠️ email-worker failure — jasonleinart.com (${where})`,
+      text: `A send failed in the contact-form worker (${where}).\n\n${detail}\n\nTime: ${new Date().toISOString()}`,
+    });
+  } catch (e) {
+    console.error("alertFailure: could not send alert", e);
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     // Handle CORS preflight
@@ -58,6 +73,7 @@ export default {
 
       if (error) {
         console.error("Resend error:", error);
+        await alertFailure(env, "Resend send", error?.message || JSON.stringify(error));
         return new Response(
           JSON.stringify({ success: false, error: error.message }),
           { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
@@ -71,6 +87,7 @@ export default {
 
     } catch (error) {
       console.error("Worker error:", error);
+      await alertFailure(env, "worker exception", error?.message || String(error));
       return new Response(
         JSON.stringify({ success: false, error: error.message }),
         { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
