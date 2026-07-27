@@ -1,7 +1,7 @@
 # CLAUDE.md - Project Instructions
 
 ## Project Overview
-Personal portfolio site for Jason Leinart built with Astro. A systems architect disguised as a marketer—transitioning into AI-native operations, bringing cross-domain fluency and problem-led leadership. Change management is the throughline.
+Personal portfolio site for Jason Leinart built with Astro. Positioning (since 2026-07): a practitioner portfolio for AI enablement / forward-deployed / adoption roles — production receipts first, consultant language out (consulting sell lives on Peakscape, not here). Change management remains the throughline; the proof format is case studies with metrics, told as discovery, build, evals, adoption, measured result.
 
 ## Tech Stack
 - **Framework:** Astro v5
@@ -33,7 +33,7 @@ All content must pass the anti-AI writing rules in `Workspace/writing/universal/
 - `src/content.config.ts` - Content collection schemas (source of truth for frontmatter)
 - `src/config.ts` - Site configuration (reads from `.env`)
 - `.env` - Environment variables (personal info, social links)
-- `docs/` - Strategy documentation (positioning, content architecture, target audience)
+- `docs/` - Operational specs only (`styling-spec.md`, `content-format-spec.md`). The Feb-2026 strategy docs were deleted 2026-07-27 (git history keeps them); positioning lives in the section below, and canonical career facts live in the vault at `career/positioning/source-of-truth.md`
 
 ## Content Collections
 
@@ -121,7 +121,7 @@ skills:  # optional
 ```
 
 ### Analysis (`src/content/analysis/`)
-Strategic domain analysis articles. See `docs/positioning.md` for content guidelines.
+Strategic domain analysis articles.
 
 **Required frontmatter:**
 ```yaml
@@ -267,23 +267,13 @@ draft: false  # boolean, optional
 
 ## Site Positioning & Content Architecture
 
-See `docs/positioning.md` for full strategy. Related docs:
-- `docs/content-architecture.md` - Content type relationships
-- `docs/content-strategy.md` - Content creation guidelines
-- `docs/target-audience.md` - Audience personas and signals
-- `docs/language-reframing.md` - SMB to Enterprise language mapping
+**Positioning (set 2026-07-27, grounded in a 10-listing market sample; see vault `career/listings/` summer 2026 entries):** a practitioner who builds AI systems and runs the adoption loop. Primary audience: hiring managers for AI enablement, adoption/change, forward-deployed, and AI delivery roles. NOT a consulting sales surface — the vendor pitch lives on Peakscape; this site must read candidate-clean (no "Let's Talk" advisory CTAs).
 
-Key points:
+**Vocabulary rule:** describe work in the market's words, which are also the true words for what Jason does daily: agents, grounding/RAG, evals, human-in-the-loop, workflow orchestration, prompt libraries, enablement, champions, governance (NIST/OWASP LLM). Name real tools (Claude, Claude Code, n8n/Zapier-class orchestration). Never the consultant abstractions (intersections, synthesis, transformation journeys).
 
-**Core positioning:** A systems architect disguised as a marketer—transitioning into AI-native operations. Not an AI researcher, not a developer, not a pure strategist. The value is in working the intersections: Systems + Marketing + Data + Technology + Operations + Strategy. Change management is the throughline.
+**Proof format:** Catalyst-tile case studies — 2-3 metric tiles, then the loop: discovery → build → eval → adoption → measured result, with an honest stack line. Canonical facts come from vault `career/positioning/source-of-truth.md`; never fork numbers.
 
-**Target role clusters:**
-
-| Cluster | Example Roles | Site Signal |
-|---------|--------------|-------------|
-| **AI Enablement** | KPMG AI Initiatives, Ford AI Integrations | Playbook + Contract Review + Notes |
-| **CRM/MarTech Strategy** | Deloitte CRM Strategist | CRM/Marketing Automation projects |
-| **Technical Program Management** | Ford Manager (hybrid) | All projects + Analysis |
+**The playbook is a work sample, not an offer:** framed as "how I run AI adoption, written down," which is direct evidence for practice-building roles.
 
 **Content architecture (Analysis / Playbook / Projects / Notes):**
 
@@ -302,9 +292,9 @@ Key points:
 - Don't write Notes that should be full Analysis articles
 
 **Target audiences:**
-- Hiring managers for AI transformation roles (Big 4, Fortune 1000, mid-market)
-- Potential consulting clients
-- Peers (secondary)
+- Hiring managers and practice leads for AI enablement / adoption / delivery roles (primary)
+- Recruiters running a 10-second scan (metrics tiles + stack keywords must survive that scan)
+- Peers (secondary). Consulting prospects are NOT an audience here; they belong to Peakscape.
 
 ## Commands
 
