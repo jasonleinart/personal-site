@@ -1,0 +1,65 @@
+---
+title: "Agentic Marketing Operations: AI Agents Under Evaluation Gates"
+role: "Architect & Operator"
+year: 2026
+outcomeSummary: "LLM agents run marketing operations for live client businesses; every output clears an automated evaluation gate before a human relies on it. Two clients in production, zero fabricated metrics delivered."
+overview: "A production agentic system that runs real marketing operations for paying clients: reporting drafted from live analytics data, business-profile publishing, and booking-data sync, all gated by automated evaluation and human review queues. Built solo, run daily, measured honestly."
+problem: "Small operators need the output of a marketing team without the headcount, and generic LLM tooling fails them in a specific way: it confidently fabricates. A monthly report that invents a traffic number is worse than no report. The system had to produce work a business owner can act on without checking the AI's math, which means the AI's math has to be checked by machine before anyone sees it."
+constraints:
+  - "Solo operator: every component must run unattended or fail loudly, because there is no team to babysit it"
+  - "Real client data and real client trust: a single fabricated metric reaching a client destroys the entire premise"
+  - "Client tooling budget near zero: Google Sheets and Docs as the client-facing surface, not a SaaS dashboard"
+  - "Existing business systems stay: the agents integrate with what the clients already use, never force migrations"
+approach: "Ground every agent in live data through MCP connections to GA4, Search Console, and the client's operational systems, with a per-client context corpus defining voice, goals, and known gotchas. Draft with Claude. Gate every output through deterministic graders that block fabricated metrics, unsupported causal claims, and off-context content before delivery. Route consequential actions through human review queues; let reversible, verified work flow. Log every run with full audit trails and token usage, so quality and cost are numbers instead of impressions."
+keyDecisions:
+  - decision: "Treat agent output like untrusted code: a blocking evaluation gate, not a spot check"
+    reasoning: "LLM failure mode in reporting is confident fabrication. A deterministic grader that verifies every claimed metric against source data converts trust from a feeling into a test result."
+    alternatives:
+      - "Human review of every output (does not scale past a few clients, and humans miss plausible numbers)"
+      - "Prompt engineering alone (reduces but never eliminates fabrication; unverifiable)"
+  - decision: "Human-in-the-loop by consequence, not by default"
+    reasoning: "Publishing to a client's public profile is gated behind a review ticket; regenerating an internal draft is not. An explicit allow/deny boundary makes autonomy auditable and lets it expand as evidence accumulates."
+    alternatives:
+      - "Full autonomy (unacceptable blast radius on client-facing surfaces)"
+      - "Approve everything (recreates the bottleneck the system exists to remove)"
+  - decision: "Google Sheets and Docs as the client surface instead of a custom dashboard"
+    reasoning: "Adoption beats elegance: clients already live in these tools. The retired first version proved a warehouse-and-dashboard stack (BigQuery, Firestore, dashboards) added cost without adding trust."
+    alternatives:
+      - "Custom reporting dashboard (built one; clients did not open it)"
+      - "Warehouse-centric stack (torn out in favor of near-zero-cost tooling)"
+techStack:
+  - "Claude & Claude Code"
+  - "Python (agent core, graders)"
+  - "TypeScript (platform integrations)"
+  - "MCP (GA4, Search Console, Google Ads, client ops)"
+  - "Cloudflare Workers & D1"
+  - "Google Sheets / Docs delivery"
+  - "launchd scheduling"
+impact:
+  metrics:
+    - label: "Clients in production"
+      value: "2"
+    - label: "Fabricated metrics delivered past the gate"
+      value: "0"
+    - label: "Automated test suite"
+      value: "13 tests"
+    - label: "Unattended agent services live"
+      value: "3"
+  qualitative: "Client-facing reports, business-profile posts, and booking-data sync run without a human driving, and the humans involved review instead of produce. The evaluation gate has caught fabricated analytics claims before delivery, which is the entire point: the system's honesty does not depend on anyone's attention span."
+learnings:
+  - "Evaluation is the product: the gate that blocks a bad claim is worth more than the generation that drafted a good one"
+  - "Adoption lives in existing tools; the second-best surface the client actually opens beats the best surface they do not"
+  - "Autonomy is earned in increments: an explicit permission boundary lets human review recede as the regression set grows"
+  - "Cost per completed task, not total token spend, is the number that makes agent economics legible to a business"
+featured: true
+status: ongoing
+order: 1
+tldr:
+  summary: "AI agents run marketing operations for live businesses, with every output machine-verified before a human relies on it."
+  points:
+    - "<strong>Eval-gated:</strong> Deterministic graders block fabricated metrics and unsupported claims before delivery — zero delivered past the gate."
+    - "<strong>Human-in-the-loop by consequence:</strong> Reversible work flows; consequential actions wait in review queues."
+    - "<strong>Real stakes:</strong> Two paying clients in production, on the systems they already use."
+---
+
+This is a living build: a standing SEO agent with scheduled runs and review-ticket approvals, an evaluation harness with golden regression sets, and per-task cost instrumentation are landing milestone by milestone, and this case study grows as they do.

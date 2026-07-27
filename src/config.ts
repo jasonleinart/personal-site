@@ -130,7 +130,6 @@ export const siteConfig = {
     { label: 'Notes', href: '/notes' },
     { label: 'Playbook', href: '/playbook' },
     { label: 'Speaking', href: '/speaking' },
-    { label: 'Advisory', href: '/advisory' },
     { label: 'Contact', href: '/contact' },
   ],
 } as const;
