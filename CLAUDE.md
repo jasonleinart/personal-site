@@ -7,7 +7,7 @@ Personal portfolio site for Jason Leinart built with Astro. Positioning (since 2
 - **Framework:** Astro v5
 - **Styling:** Tailwind CSS
 - **Content:** MDX files with Zod schema validation
-- **Hosting:** Cloudflare Pages, auto-deploys on push to `master`. On a **personal** Cloudflare account, NOT the peakscape one that `wrangler` defaults to. See Deployment.
+- **Hosting:** Cloudflare Pages
 - **CMS:** None - content in markdown files
 
 ## Styling
