@@ -324,6 +324,14 @@ Site deploys automatically via Cloudflare Pages when changes are pushed to GitHu
 Cloudflare runs `npm run build` and serves the `dist/` directory. Deploying the site needs
 **no local Cloudflare credentials**; the push is the deploy.
 
+**Cloudflare Pages is the only deploy target. Do not enable GitHub Pages.** It was enabled on
+this repo and set to `legacy` build type, so GitHub tried to build an Astro site with Jekyll on
+every push to `master`. It failed 39 of its last 40 runs going back to 2026-01-28 and never
+served the site, only a Jekyll-rendered README at `jasonleinart.github.io/personal-site/`.
+Disabled 2026-08-14 (`gh api -X DELETE repos/jasonleinart/personal-site/pages`, which needs
+`gh auth switch --user jasonleinart` first). If a `pages-build-deployment` run appears again,
+something re-enabled it; turn it off rather than trying to make the Jekyll build pass.
+
 `main` and `master` were fast-forwarded to the same commit on 2026-08-14. Before that, `main`
 sat 67 commits behind at a January state while `master` was production. If they diverge again,
 `master` is the one Pages builds.
