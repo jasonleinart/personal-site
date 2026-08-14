@@ -7,7 +7,7 @@ Personal portfolio site for Jason Leinart built with Astro. Positioning (since 2
 - **Framework:** Astro v5
 - **Styling:** Tailwind CSS
 - **Content:** MDX files with Zod schema validation
-- **Hosting:** Cloudflare Pages (auto-deploys from GitHub)
+- **Hosting:** Cloudflare Pages, auto-deploys on push to `master`. On a **personal** Cloudflare account, NOT the peakscape one that `wrangler` defaults to. See Deployment.
 - **CMS:** None - content in markdown files
 
 ## Styling
@@ -321,7 +321,38 @@ Site deploys automatically via Cloudflare Pages when changes are pushed to GitHu
 2. Push to `origin master`
 3. Cloudflare Pages automatically builds and deploys
 
-Cloudflare runs `npm run build` and serves the `dist/` directory.
+Cloudflare runs `npm run build` and serves the `dist/` directory. Deploying the site needs
+**no local Cloudflare credentials**; the push is the deploy.
+
+`main` and `master` were fast-forwarded to the same commit on 2026-08-14. Before that, `main`
+sat 67 commits behind at a January state while `master` was production. If they diverge again,
+`master` is the one Pages builds.
+
+### Two Cloudflare accounts, and the trap that follows
+
+This repo spans two accounts. Getting this wrong is the most likely way to waste an hour here.
+
+| What | Account |
+|---|---|
+| `jasonleinart.com` zone + its Pages project | **personal** account (id not recorded; read it off the dashboard) |
+| `email-worker` (`jasonleinart-email-worker`) | **`090ff2bbc69fa3773a65881f1decb269`**, the peakscape account, pinned in `email-worker/wrangler.toml` |
+
+`wrangler` on this machine is logged in as `jason@peakscapedigital.com`, which is the peakscape
+account. So:
+
+- `wrangler pages project list` returns only `peakscape-site` and **not** this site.
+- The `peakscape-zone-ops` token holds Zone:Read on all its zones and still cannot see
+  `jasonleinart.com`.
+
+**Neither absence means the resource is missing. It means you are pointed at the wrong account.**
+Verified 2026-08-14. Do not conclude the Pages project was deleted, and never deploy the site
+with peakscape credentials.
+
+To get real per-directory credentials, Cloudflare has directory-bound auth profiles
+(`wrangler auth create <name>` then `wrangler auth activate <name> <dir>`), which resolve ahead
+of the default login. That needs a wrangler newer than the 4.95.0 on this machine and the
+`^3.0.0` pinned in `email-worker`, and it only covers both accounts if they sit under one
+Cloudflare login. Not set up as of 2026-08-14, and not needed while the site deploys by push.
 
 ## File Locations
 
