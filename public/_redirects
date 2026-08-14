@@ -33,6 +33,13 @@
 /start-here/ /playbook 301
 /search/* / 301
 
+# Consulting surfaces removed 2026-07-27 (site is a hiring asset, not a services pitch; sell lives on Peakscape)
+/advisory / 301
+/advisory/ / 301
+/three-horizons /playbook 301
+/three-horizons/ /playbook 301
+/three-horizons/* /playbook 301
+
 # Old asset paths
 /assets/Jason-Leinart-Resume.pdf https://linkedin.com/in/jason-leinart 301
 /assets/img/* / 301

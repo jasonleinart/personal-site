@@ -1,0 +1,177 @@
+---
+title: "Auditing My Own Production Sites"
+role: "Builder and auditor, solo"
+year: 2026
+duration: "Audit in one pass, fixes shipped over 6 weeks"
+outcomeSummary: "Self-commissioned security review across three production sites found a HIGH-severity defect in my own admin console. Fixed with cryptographic JWT verification, fail-closed, verified by attacking it. Every cross-cutting fix shipped once in the shared library and adopted everywhere."
+overview: "I migrated a client off WordPress after it was compromised through plugin vulnerabilities. Removing the plugin attack surface was the easy part. The harder question was whether the thing I replaced it with was actually safe. Nobody asked me to answer that, so I audited my own three production sites against their source, rated what I found, and fixed it."
+problem: "AI-assisted development is fast, and speed is exactly how a spoofable admin console reaches production without anyone noticing. Three live sites were handling customer PII, card payments through Stripe, and offline conversion uploads to Google Ads. They had been built quickly by one person with no code review. Nobody had ever checked whether they were secure, and no client was going to ask."
+constraints:
+  - "Solo work. No peer reviewer, no security team, no second opinion."
+  - "Live production sites with real customer data and real payments. No maintenance window."
+  - "Source-only review. No penetration testing against deployed hosts, which caps what the audit can claim."
+  - "Any fix had to work across three separate codebases without forking the logic three ways."
+approach: "Read the actual source on all three sites and require every finding to cite a file and line. Group findings by root cause rather than listing them flat, so shared defects get one shared fix. Rate severity, then rank the action list by severity against effort. Record what was verified safe as explicitly as what was broken, so it does not get re-litigated later. State the method's limits up front."
+keyDecisions:
+  - decision: "Verify the Cloudflare Access JWT in application code instead of trusting the edge-injected header"
+    reasoning: "Both admin consoles authenticated solely on the cf-access-authenticated-user-email header that Cloudflare Access injects at the edge. The mutation APIs checked it. The read-side pages that render orders, revenue, and full customer PII checked nothing at all. That means security was entirely a property of deployment configuration. If the Worker were ever reachable off the Access-gated host, through a preview deployment, a route change, or a direct origin hit, anyone setting that header could read and export every customer record. I replaced it with cryptographic verification of the Access JWT against the team JWKS plus each app's AUD, failing closed, and guarded every page rather than only the APIs."
+    alternatives:
+      - "Leave it. Access is in front of it in production, so exploitation requires a deployment mistake first."
+      - "Add an allowlist check on the header value, which is still trusting a forgeable header."
+      - "Move the admin console off the public Worker entirely."
+  - decision: "Fix cross-cutting findings once in the shared library, never per site"
+    reasoning: "Four of the ten prioritized actions were the same defect appearing on three sites. Patching each repo separately would have meant three chances to get it wrong and guaranteed drift the moment one site was updated and the others were not. The Access verification, the security headers, the HTML escaping for email templates, and the bot protection all became shared library modules that each site imports."
+    alternatives:
+      - "Patch each repository independently and track parity by hand."
+      - "Copy a snippet into each site and accept the fork."
+  - decision: "Ship a security-headers baseline and publicly record that the full CSP is not done"
+    reasoning: "HSTS, nosniff, X-Frame-Options, Referrer-Policy, and a frame-ancestors and object-src baseline shipped everywhere. A complete script-src and style-src policy is genuinely hard on sites running Google Tag Manager, and doing it correctly requires a report-only rollout with a violation collector before enforcement. Claiming CSP was finished would have been the easy sentence to write and the wrong one. The audit says what shipped and what remains."
+    alternatives:
+      - "Enforce a strict CSP immediately and risk breaking tag manager and payment flows in production."
+      - "Report CSP as complete on the strength of the baseline headers."
+  - decision: "Verify the webhook fix by forging a request against it in production"
+    reasoning: "One site exposed an unauthenticated webhook that fed a CRM sync and Google Ads offline conversions, which meant anyone who found the URL could forge conversion data and corrupt ad optimization. Decommissioning was considered and rejected, because the route was load-bearing for two live integrations. I added HMAC-SHA1 verification over the raw body and the registered callback URL, with a constant-time compare, failing closed when the secret is unset. Then I proved it: a forged unsigned POST claiming an order amount of 999999 returns 401, a genuine signed request is accepted, and the live webhook stayed active with zero consecutive failures."
+    alternatives:
+      - "Decommission the webhook and lose the CRM sync and conversion uploads."
+      - "Filter by source IP, which Trello does not guarantee."
+      - "Ship the verification and assume it works."
+techStack:
+  - "Cloudflare Workers"
+  - "Cloudflare Access (JWKS, JWT, AUD validation)"
+  - "jose"
+  - "WebCrypto (HMAC-SHA1, constant-time compare)"
+  - "Cloudflare D1"
+  - "Astro SSR"
+  - "Sanity"
+  - "Stripe"
+  - "Cloudflare Turnstile"
+  - "TypeScript"
+impact:
+  metrics:
+    - label: "Production sites audited"
+      value: "3"
+    - label: "Findings traced to file and line"
+      value: "100%"
+    - label: "Cross-cutting HIGH and MEDIUM findings fixed"
+      value: "Same day"
+    - label: "Fixes shipped once, adopted everywhere"
+      value: "4 of 10 actions"
+    - label: "Forged-header attack after the fix"
+      value: "302 on pages, 403 on APIs"
+    - label: "Secrets committed to git"
+      value: "0"
+  qualitative: "The admin consoles no longer depend on deployment configuration for their security. Every fix that applied to more than one site lives in one place, so the next client site inherits it on day one rather than needing its own audit. The findings that remain open are written down with their severity and the reason they are still open, which is a different state from not knowing about them."
+learnings:
+  - "The defect I was most embarrassed by was mine, in code I had shipped and believed was fine. Auditing your own work is uncomfortable in a way that reading someone else's is not, and that discomfort is the reason most solo work never gets audited."
+  - "Security that depends on deployment configuration is not security. The admin consoles were safe in production and would have been wide open on any preview URL. Nothing about the code told me that until I read it looking for it."
+  - "Grouping findings by root cause instead of listing them flat is what turned ten findings into four shared fixes. A flat list would have produced twelve separate patches and three codebases that drift apart."
+  - "Writing down what is verified safe is as valuable as writing down what is broken. It stops the same questions from being re-opened six months later by someone, including me, who no longer remembers checking."
+  - "Recording what is not finished, and why, is the part of an audit that makes the rest of it believable. An all-green report proves the instrument is not measuring anything."
+  - "AI-assisted delivery is fast enough to outrun your own review. The answer is not to slow down, it is to build the instruments that check the output and to run them on yourself."
+featured: true
+status: ongoing
+order: 2
+tldr:
+  summary: "I audited the three production sites I had built myself, found a HIGH-severity authentication defect in my own admin console, and fixed it with cryptographic verification rather than a patch."
+  points:
+    - "<strong>Self-commissioned:</strong> no client asked for it and no client paid for it."
+    - "<strong>Evidence-first method:</strong> every finding cites a file and line from the actual source, and the audit states its own limits."
+    - "<strong>My defect:</strong> admin pages rendering customer PII authenticated on a forgeable edge header, with the read-side pages unguarded entirely."
+    - "<strong>Verified by attack:</strong> forged the header against a non-gated host and confirmed the fix fails closed."
+    - "<strong>Fix once, adopt everywhere:</strong> 4 of 10 actions became shared library modules."
+    - "<strong>Still open, on purpose:</strong> full script-src CSP needs a report-only rollout first, and that is written down rather than glossed."
+---
+
+## Why this exists
+
+I inherited a client website that had been compromised. It ran on WordPress, and it was breached
+through vulnerabilities in its plugins. Rebuilding it on a stack with no plugin surface solved that
+specific problem on the first day.
+
+It did not answer the question underneath it, which is the one that actually matters: **is the thing
+I built any safer, or have I just moved the attack surface somewhere I cannot see?**
+
+Nobody was going to ask me that. The clients are restaurants and bars. They hired me for marketing.
+There is no security review in the engagement, no second engineer, and no procurement process that
+would catch a mistake. If the sites were insecure, the way I would find out is the way the last one
+found out.
+
+So I audited them.
+
+## The method, and its limits
+
+Three production sites, all running Astro SSR on Cloudflare Workers with Sanity as the CMS and a
+shared internal library. Two of them take payments through Stripe and run a gated admin console over
+Cloudflare D1.
+
+The rules I set before starting:
+
+1. **Read the source.** Not the documentation, not my memory of how it works.
+2. **Every finding cites a file and line.** A claim without a citation does not go in the report.
+3. **Group by root cause, not by site.** If the same mistake appears three times it is one finding.
+4. **Record what is verified safe**, so it does not get re-audited later out of vague anxiety.
+5. **State what the method cannot see.** This was a source review. No penetration testing against
+   deployed hosts. That limit is printed at the top of the report, because an audit that overstates
+   its own coverage is worse than no audit.
+
+## The finding I did not want to write
+
+The admin consoles authenticate on an HTTP header that Cloudflare Access injects at the edge.
+
+The mutation APIs checked it. **The read-side pages did not check anything at all.** Those are the
+pages that render orders, revenue, and complete customer PII.
+
+In production this was fine, because Cloudflare Access sits in front of the gated hostname. That is
+the problem. The security was not a property of the application. It was a property of the deployment
+configuration. Any preview deployment, any route change, any direct hit on the origin, and anyone who
+knew to set one header could read and export every customer record on the site.
+
+I wrote it up as HIGH, against my own code, and rated it honestly rather than talking myself down.
+
+The fix was not a patch on the header check. The application now verifies the Access JWT
+cryptographically against the team JWKS and each app's audience claim, fails closed, and guards every
+page rather than only the mutation endpoints.
+
+Then I attacked it. From a hostname that Access does not gate, I forged the header the old code had
+trusted. Pages return a 302 to the login flow. APIs return 403. The public site is unaffected.
+
+## Fix once, adopt everywhere
+
+Ten prioritized actions came out of the audit. Four of them were the same defect wearing different
+clothes on three different sites: the Access verification, the security headers, HTML escaping for
+customer input in notification emails, and bot protection on public forms.
+
+Patching three repositories separately would have given me three chances to get each one wrong, and
+guaranteed that the moment one site was updated the other two would fall behind. All four became
+modules in the shared library instead. Each site imports them. The next site I build inherits all of
+it before it has a single page.
+
+That is the leverage note I wrote at the bottom of the action list, and it is the reason the audit
+was worth more than the sum of its findings.
+
+## What is still open, and why
+
+A complete Content Security Policy with a real `script-src` and `style-src` is not shipped. The
+baseline is: HSTS, nosniff, X-Frame-Options, Referrer-Policy, `frame-ancestors`, and `object-src`.
+The rest is genuinely difficult on sites running Google Tag Manager, and doing it properly means a
+report-only rollout with a violation collector before anything gets enforced. Enforcing a strict
+policy today would break tag manager and possibly checkout.
+
+A dependency decision is also still pending. One site's advisories cleared completely. On the other
+two, the remaining high-severity advisories all trace to an embedded CMS studio toolchain rather than
+the deployed Worker runtime, which means the standard fix command does not clear them and the real
+options are a breaking major version bump, moving the studio to dev dependencies, or accepting a
+dev-only exposure. I wrote down all three options and have not decided yet.
+
+Both of those are in the report, with their severity, as open items. That is a different state from
+not knowing about them, and the difference is the entire point of doing this.
+
+## The part that generalizes
+
+The uncomfortable thing I learned is that **AI-assisted development is fast enough to outrun your own
+review.** The spoofable admin console was not a knowledge gap. I know what a forgeable header is. It
+happened because the code worked, the console loaded, the client was happy, and nothing in that loop
+was ever going to surface the problem.
+
+The answer is not to build more slowly. The answer is to build the instruments that check the output,
+and then to actually run them on yourself, which is the step that requires wanting to find out.

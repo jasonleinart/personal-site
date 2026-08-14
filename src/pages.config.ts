@@ -55,7 +55,7 @@ export const pagesConfig = {
    */
   home: {
     title: 'Home',
-    description: 'Engineering leader specializing in system architecture, technical decision-making, and delivering measurable business impact.',
+    description: 'I build AI systems and run the adoption loop for real businesses: agents in production, evaluation-gated output, and staff who actually use what ships. AI enablement, adoption, and forward-deployed delivery.',
   },
   
   /**
@@ -72,10 +72,10 @@ export const pagesConfig = {
    * Journey timeline page (/journey)
    */
   journey: {
-    title: 'Professional Journey | From Marketing Ops to AI Systems Architecture',
-    description: '10+ years from marketing operations to AI systems architecture. The career path, pivotal decisions, and skills built bridging business strategy with technical implementation.',
+    title: 'Professional Journey | From Operations to AI Systems in Production',
+    description: 'Ten years making organizations actually use the technology they buy, from multi-location operations to AI systems running in production. The career path, the pivotal decisions, and the skills built bridging business and build.',
     heading: 'Journey',
-    intro: 'A timeline of my professional growth and learning progression. This isn\'t a resume—it\'s a story of how I\'ve evolved as an engineer, the pivotal moments that shaped my thinking, and the skills I\'ve developed along the way.',
+    intro: 'How I got here: ten years making organizations actually use the technology they buy, from multi-location operations to AI systems running in production. The pivotal decisions, and the skills built bridging business strategy and hands-on delivery.',
   },
 
   /**
@@ -93,7 +93,7 @@ export const pagesConfig = {
    */
   speaking: {
     title: 'Speaking | AI Transformation Talks & Presentations',
-    description: 'Conference talks and presentations on AI transformation, change management, and bridging strategy with implementation. Available for speaking engagements.',
+    description: 'Conference talks and presentations on AI transformation, change management, and bridging strategy with implementation.',
     heading: 'Speaking',
     intro: 'Presentations on AI transformation, operational systems, and bridging the gap between technical capability and organizational adoption.',
   },
@@ -102,9 +102,9 @@ export const pagesConfig = {
    * Contact page (/contact)
    */
   contact: {
-    title: 'Contact Jason Leinart | AI Consulting & Collaboration',
-    description: 'Connect for AI implementation consulting, technical collaboration, or strategic advisory. Working with select clients on AI systems from strategy through production.',
-    heading: 'Let\'s Talk',
+    title: 'Contact Jason Leinart | AI Enablement & Delivery',
+    description: 'Get in touch about AI enablement, adoption, forward-deployed delivery, and AI transformation roles. Glad to walk through any system on this site.',
+    heading: 'Get in Touch',
   },
 } as const;
 

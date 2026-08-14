@@ -1,0 +1,276 @@
+---
+title: "Five Client Sites, One Platform, No Team"
+role: "Sole architect, builder, and operator"
+year: 2026
+duration: "11 months, ongoing"
+teamSize: 1
+outcomeSummary: "Migrated five hospitality clients off WordPress and page builders onto a standardized Astro and Cloudflare Workers platform with a shared library, custom Stripe commerce that has no off-the-shelf equivalent, and a 39-parameter conformance audit that keeps four codebases from drifting apart. 860 commits, built by one person who had not written HTML two years earlier."
+overview: "This started because a client site was compromised through WordPress plugin vulnerabilities. Rebuilding it removed the plugin attack surface. Doing it four more times created a different problem, which is that four separate codebases solving the same problems will diverge, and one person cannot hold four codebases in their head. So the work became less about building sites and more about building the shared library and the audit instruments that keep them consistent."
+problem: "Five hospitality businesses needed real web platforms: online ordering, reservations, lead capture, email lifecycle, analytics that actually attributes revenue. The available options were bad. WordPress had just cost one of them a security incident. Page builders cannot support custom commerce or an owned customer database. Agency rebuilds cost five figures per site and leave the client dependent. And whatever got built had to be maintainable by exactly one person across five clients simultaneously."
+constraints:
+  - "One person. No team, no code review, no second opinion on architecture."
+  - "No engineering background. The first commit predates knowing HTML or CSS."
+  - "Live businesses. Real payments, real customer data, no maintenance windows."
+  - "Client budgets are restaurant budgets, not enterprise budgets. Recurring per-site costs had to stay near zero."
+  - "Every client must own their own infrastructure outright, under a written ownership-transfer standard."
+  - "Five codebases maintained by one person will drift unless something actively prevents it."
+approach: "Standardize hard on one stack, then extract everything shared into a single library consumed as a pinned dependency rather than forked per client. When the library made drift possible in a new way, build a conformance audit that grades not just whether each site complies but how strongly each check was verified. Treat the resulting instruments as the actual deliverable, because they are what makes a five-client platform survivable by one person."
+keyDecisions:
+  - decision: "Astro SSR on Cloudflare Workers with a headless CMS, rather than hardening WordPress"
+    reasoning: "The incident that started this was a plugin vulnerability. Hardening WordPress means continuing to run a plugin ecosystem and hoping the next advisory arrives before the next exploit. Moving to a compiled site on an edge runtime eliminates the category rather than mitigating it. There are no plugins to exploit. The trade is that everything a plugin would have given you now has to be built, which is the cost that produced the rest of this project."
+    alternatives:
+      - "Harden the existing WordPress install with a WAF, managed updates, and a security plugin."
+      - "Move to Squarespace or Wix and accept no custom commerce and no owned customer data."
+      - "Next.js on Vercel, which solves the same problem at higher recurring cost per site."
+  - decision: "Build one shared library instead of five site codebases"
+    reasoning: "The second site made it obvious that I was about to copy attribution capture, consent bootstrapping, SEO helpers, and form handling into a second repository, and that the two copies would diverge the first time I fixed a bug in one. Everything shared moved into a private library consumed as a pinned git dependency. It is now 5,695 lines of TypeScript across 21 modules with 23 public entry points. A new client site inherits all of it before it has a single page."
+    alternatives:
+      - "Copy shared code between repositories and reconcile by hand."
+      - "A monorepo containing all client sites, which entangles client ownership and complicates handover."
+      - "Accept per-client forks as the cost of doing business."
+  - decision: "Build the commerce layer instead of renting a cart"
+    reasoning: "Astro has no WooCommerce. Its officially documented commerce options are hosted checkout overlays or a rented third-party cart, and no dedicated Stripe integration is documented at all. The only relevant community package was last published in 2023 at version 0.1.35, marked work in progress. Renting a cart would have meant a per-transaction cut, no ownership of the order data, and no connection to the CMS product catalog the client already edits. So the catalog lives in the CMS as source of truth and syncs to Stripe products, coupons, and promotion codes, with the order data in the client's own database."
+    alternatives:
+      - "Snipcart, which would genuinely have worked for a small catalog, at the cost of fees and order-data ownership."
+      - "Shopify headless, which is heavier than a 13-product bar shop justifies."
+      - "Stripe Payment Links, which cannot express a cart with mixed item types."
+  - decision: "Own the order data in the client's database rather than reading it back from Stripe"
+    reasoning: "Reading orders out of the payment processor means the fulfillment workflow is limited to whatever the processor models. The client needed statuses the processor does not have, including ready for pickup, picked up, and label created, each stamped with its own timestamp. A canonical order store with an eight-status vocabulary lives in the shared library so it cannot re-fork per client, which is exactly the drift that had already happened once with CMS-side order schemas."
+    alternatives:
+      - "Query Stripe on every admin page load and accept its data model."
+      - "Keep orders in the CMS, which is what the earlier sites did and what had already drifted."
+  - decision: "Build a conformance audit that grades how each check was verified, not just whether it passed"
+    reasoning: "A shared library does not guarantee adoption. A site can pin an old version, import the right module and never call it, or comply in source while failing in production. So the audit tracks 39 parameters across four sites, and every row carries a rigor level recording how that check was established: from config, from reading content, from a verified import, from an actual call site, or from live behavior. A pass verified from configuration is weaker evidence than a pass verified against the running site, and treating those as the same number is how audits become theater."
+    alternatives:
+      - "Trust that the shared library is adopted because it is installed."
+      - "Spot-check sites occasionally with no recorded standard."
+      - "A simple pass or fail checklist with no evidence tiering."
+techStack:
+  - "Astro (SSR)"
+  - "Cloudflare Workers"
+  - "Cloudflare D1"
+  - "Cloudflare Access"
+  - "Cloudflare Turnstile"
+  - "Sanity CMS"
+  - "Stripe"
+  - "TypeScript"
+  - "Google Analytics 4"
+  - "Google Ads API"
+  - "Google Search Console API"
+  - "Google Sheets API"
+  - "Brevo"
+  - "Resend"
+  - "GitHub Actions"
+impact:
+  metrics:
+    - label: "Production sites"
+      value: "4 live, 5th in build"
+    - label: "Commits across the platform"
+      value: "860"
+    - label: "Shared library"
+      value: "5,695 lines, 21 modules"
+    - label: "Field LCP, flagship site"
+      value: "0.9s (Core Web Vitals pass)"
+    - label: "Plugin attack surface"
+      value: "Eliminated"
+    - label: "Conformance parameters tracked"
+      value: "39 across 4 sites"
+    - label: "Reporting stack cost"
+      value: "Warehouse stack replaced at near $0/mo"
+  qualitative: "Every client owns their own infrastructure outright and can be handed the keys without a migration. Shared logic lives in one place, so a fix reaches every site rather than the one where the bug was noticed. The conformance audit means divergence is a number I can read rather than a surprise I discover. And the platform is genuinely maintainable by one person, which was the actual requirement the whole time."
+learnings:
+  - "The second site is where the real project starts. The first one is a website. The second one forces the decision between copying code and building a platform, and that decision determines whether five clients is sustainable or fatal."
+  - "A shared library creates a new failure mode rather than eliminating drift. Sites can pin old versions, import without calling, or comply in source and fail in production. The library needs an audit or it is just a more confident kind of guessing."
+  - "Grading how a check was verified matters more than the check. A pass established from a config file and a pass established against live behavior are not the same evidence, and collapsing them into one green cell is how an audit stops measuring anything."
+  - "The honest build-versus-buy answer here is mixed. A rented cart would have worked for the smallest shop. The reasons not to use it were fees, order-data ownership, and CMS integration, and those are real, but they are reasons rather than proof. Anyone who says the off-the-shelf option was never viable is selling something."
+  - "This stack is overkill for a neighborhood bar, and that is the correct criticism. It was chosen deliberately, partly as a learning vehicle and partly because the alternative had just produced a security incident for this exact client."
+  - "Speed created the worst defect on the platform. Building fast is what let a spoofable admin console reach production. The fix was not building more slowly, it was building the instruments that check the output and running them on myself."
+featured: true
+status: ongoing
+order: 1
+relatedProjects:
+  - "security-audit-own-sites"
+tldr:
+  summary: "Five hospitality clients moved off WordPress and page builders onto one standardized platform, built and maintained by one person, with a shared library and a conformance audit doing the work a team would normally do."
+  points:
+    - "<strong>Origin:</strong> a client site compromised through WordPress plugin vulnerabilities."
+    - "<strong>Scale:</strong> 860 commits, 4 live sites, a 5,695-line shared library across 21 modules."
+    - "<strong>Commerce:</strong> Astro has no WooCommerce and no documented Stripe integration, so the catalog, checkout, and order store were built."
+    - "<strong>Standardization:</strong> shared library consumed as a pinned dependency, not forked per client."
+    - "<strong>Drift control:</strong> 39-parameter conformance audit that grades how strongly each check was verified."
+    - "<strong>Honesty:</strong> the stack is overkill for a bar, a rented cart would have worked for the smallest shop, and the worst defect found was my own."
+---
+
+## Where this started
+
+A client site was compromised. It ran WordPress, and it was breached through vulnerabilities in its
+plugins.
+
+At that point I had never written HTML or CSS. My background is economics and statistics, then ten
+years of marketing operations, which meant I had spent a decade specifying systems for other people
+to build and watching organizations fail to adopt them. The first commit on the earliest of these
+sites is dated September 2025.
+
+Eleven months later there are four sites in production, a fifth in build, and 860 commits across the
+platform. What follows is what actually happened in between, including the parts that went wrong.
+
+## The stack decision, and the obvious objection
+
+Everything runs on Astro with server-side rendering, deployed to Cloudflare Workers, with a headless
+CMS for content and a Cloudflare D1 database per client for customer data.
+
+**The obvious criticism is that this is overkill for a neighborhood bar, and it is correct.** A
+restaurant does not need edge rendering. I chose it anyway for two reasons, and only one of them is
+technical.
+
+The technical reason is that the incident that started this was a plugin vulnerability. Hardening
+WordPress means continuing to run plugins and hoping each advisory lands before the matching exploit
+does. A compiled site on an edge runtime removes the category. There are no plugins to exploit.
+
+The other reason is that I wanted to learn a real stack, and the client work was the only place I had
+to do it. I would rather say that plainly than pretend every decision was driven by requirements.
+
+The cost of that choice is that everything a plugin would have handed you now has to be built. That
+cost is the rest of this project.
+
+## The second site is where the real project starts
+
+The first site is a website. The second one is a decision.
+
+Building the second site meant either copying attribution capture, consent bootstrapping, form
+handling, SEO helpers, and email templates into a new repository, or extracting them somewhere both
+sites could share. Copying works fine right up until the first bug fix, at which point there are two
+versions and only one of them is correct.
+
+So everything shared moved into a private library, consumed by each client site as a pinned
+dependency. It is now 5,695 lines of TypeScript across 21 modules with 23 public entry points,
+covering attribution, consent, analytics, forms, email, SEO, commerce, the data store, the admin
+console shell, security headers, and bot protection.
+
+A new client site inherits all of it before it has a single page.
+
+## Commerce, because nothing off the shelf fit
+
+The instinct on any build is to look for the existing solution first. For WordPress, online ordering
+is a plugin install. For this stack, it does not exist.
+
+Astro's own documentation lists three commerce options: two hosted checkout overlays and one rented
+third-party cart. **No dedicated Stripe integration is documented at all.** Searching the package
+registry, the only relevant community package was last published in October 2023 at version 0.1.35
+and describes itself as a work in progress.
+
+So the commerce layer is 1,315 lines across ten modules:
+
+- **The CMS is the catalog source of truth**, syncing to Stripe products, coupons, and promotion
+  codes. Product IDs are stored separately per environment, so test and live never collide. That
+  detail exists because they collided once.
+- **Checkout prices are computed server side.** Client-supplied prices are never trusted.
+- **The order store belongs to the client**, in their own database, with an eight-status fulfillment
+  vocabulary the payment processor does not model, each status stamping its own timestamp.
+- **The library carries no payment SDK.** It defines the minimal interface it needs and the caller
+  passes its own client, which keeps the edge bundle small and the library independent of SDK
+  versions.
+
+The honest version of the build-versus-buy call: **a rented cart would have worked for the smallest
+shop.** The reasons against it were the per-transaction fee, not owning the order data, and no
+connection to the CMS catalog the client already edits. Those are real reasons. They are not proof
+that building was the only option, and I am not going to claim they were.
+
+## Integration depth is the part that transfers
+
+The platform talks to Stripe, Sanity, Cloudflare Workers and D1 and Access and Turnstile, Google
+Analytics, Google Ads, Search Console, Google Business Profile, Google Sheets, Brevo, Resend, and a
+reservations platform.
+
+Listing integrations is not very interesting. Two pieces of it are:
+
+**Service-account authentication implemented directly.** Signing a JWT and exchanging it for an OAuth
+access token, rather than pasting an API key into an environment variable.
+
+**JWT verification against a JWKS endpoint** with per-application audience validation, which is what
+replaced the admin console's original authentication after I found out how weak it was.
+
+Those two are the difference between connecting to APIs and understanding how the authentication
+underneath them actually works.
+
+## The drift problem, and the instrument for it
+
+A shared library does not guarantee anything. A site can pin an old version. It can import the right
+module and never call it. It can look correct in source and behave differently in production.
+
+So there is a conformance audit: **39 parameters across four sites**, spanning foundation, identity
+and SEO, analytics, forms, data storage, the admin console, email, commerce, secrets and CI, and CSS.
+
+Every row carries two grades. Severity, which is standard. And **rigor**, which is not: a record of
+*how* that check was established.
+
+| Rigor | What it means |
+|---|---|
+| `config` | Read from a configuration file |
+| `content` | Read from source |
+| `kit-import` | The shared module is genuinely imported |
+| `call-site` | The imported function is actually called |
+| `live` | Verified against the running site |
+
+A pass established from a config file is weaker evidence than a pass established against live
+behavior. Recording them as the same green cell is how an audit becomes theater. This is the piece of
+the project I am most pleased with, and it comes more from the statistics training than from
+anything I learned building websites.
+
+The matrix currently contains failures, warnings, and unknowns. They stay in. An all-green audit
+proves the instrument is not measuring anything.
+
+## Then the question I did not want to ask
+
+Removing the plugin attack surface solved the problem that started this. It did not answer whether
+what I built was any safer, or whether I had just moved the attack surface somewhere I could not see.
+
+So I audited my own three production sites against their source. The worst finding was mine: the
+admin console rendering customer orders, revenue, and complete customer records authenticated on a
+forgeable header, with the read-side pages checking nothing at all. In production it was fine,
+because the gate sat in front of it. That is precisely the problem. The security was a property of
+the deployment configuration, not of the application.
+
+That audit is written up separately, including how the fix was verified by attacking it, and what is
+still open.
+
+## Measurement, since that is what the sites are for
+
+These are marketing platforms, so attribution is not decoration.
+
+First-touch and last-touch are captured in a first-party cookie with a canonical source taxonomy,
+carried through checkout into the payment session metadata, and read back on the confirmation page.
+One shared lead-stage to analytics-event mapping applies across every client, so a qualified lead
+means the same thing on all of them. Consent mode is bootstrapped before the tag manager loads.
+
+One detail worth keeping because it was a real bug: a cart containing multiple item types was
+reporting revenue correctly while item-level reports came back empty, because a single metadata key
+was missed. The fix was a single configuration listing every item type, read by both the checkout
+and confirmation paths, so adding a type is one entry rather than three places to forget.
+
+On one client, a warehouse-based reporting stack was replaced with a spreadsheet as system of record
+and an automated pipeline, taking recurring tooling cost to approximately zero without losing
+reporting.
+
+## What I would tell a skeptic
+
+**"Four restaurant sites is not scale."** Correct. This is not a scale story. It is a breadth,
+rigor, and ownership story, and I would rather be precise about that than inflate it.
+
+**"AI wrote it."** AI was central to how fast this happened and I am not going to be coy about that.
+It also produced the worst defect on the platform, because velocity is exactly how a spoofable admin
+console reaches production. The architecture decisions, the audit, and the rigor grading are the
+work. Typing is not the work.
+
+**"Solo means nobody checked you."** True, and it is why the conformance audit and the security
+review exist at all. They are the substitute for a team, and they are an imperfect one.
+
+## Where it stands
+
+Four sites in production, a fifth in build. The shared library is at its 31st minor release since
+June. The conformance matrix has open failures in it that I have not closed. The security audit has
+two items still pending, including a full content security policy that needs a report-only rollout
+before it can be enforced.
+
+All of that is written down, with severity, in a place I will actually look. That is a different
+state from finished, and it is the state I would rather be in.
