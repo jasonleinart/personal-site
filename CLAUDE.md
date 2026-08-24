@@ -40,7 +40,9 @@ All content must pass the anti-AI writing rules in `Workspace/writing/universal/
 All content lives in `src/content/` as `.mdx` files.
 
 ### Projects (`src/content/projects/`)
-Case studies with structured narrative format.
+Case studies with structured narrative format. A project that is still running should carry a
+current measurement and the date it was taken, not only a past-tense outcome. A hand-written
+outcome is a document and starts rotting the day it ships; a dated grade can be re-derived.
 
 **Required frontmatter:**
 ```yaml
@@ -121,7 +123,9 @@ skills:  # optional
 ```
 
 ### Analysis (`src/content/analysis/`)
-Strategic domain analysis articles.
+A position on a question worth deciding, with the sources named and the reasoning visible.
+Must pass the two-question Analysis gate in "Site Positioning & Content Architecture" below
+before it is written, not after. Not a domain survey.
 
 **Required frontmatter:**
 ```yaml
@@ -279,17 +283,124 @@ draft: false  # boolean, optional
 
 | Type | Purpose | What Belongs | Hiring Signal |
 |------|---------|--------------|---------------|
-| **Analysis** | "I understand the domain" | Strategic landscape, 30k ft architecture, org implications | AI Strategy & Advisory |
+| **Analysis** | "I hold a position on a question I would be paid to decide" | A named decision, the sources behind it, and where the evidence runs out | AI Strategy & Advisory |
 | **Playbook** | "I have a repeatable process" | Methodology phases, tools, templates | Change Management, Adoption |
-| **Projects** | "I can build it" | Working implementations, technical READMEs, demos | PoC Development |
+| **Projects** | "I run it, and here is the current grade" | Working implementations with a live measurement and a date | PoC Development |
 | **Notes** | "I'm in the details" | Specific insights, implementation learnings, observations | Thought Leadership |
 
-**Content relationship:** Analysis provides strategic "why" → Playbook shows methodological "how" → Projects prove execution → Notes pull out specific insights. They link to each other bidirectionally.
+**Content relationship:** Analysis commits to a position, Playbook shows the process that position produces, Projects prove it ran, Notes pull out specific insights. They link to each other bidirectionally.
+
+### The Analysis gate (set 2026-08-16)
+
+Two questions. A draft that fails either one is not Analysis.
+
+1. **Is there a question here that somebody has to decide?**
+2. **Does the piece commit to an answer, and can a reader trace how you got there?**
+
+First-party evidence (your own numbers, systems, or scars) is what separates a strong Analysis
+from a merely good one. It is **not** the entry condition. A reasoned position on a live question,
+argued from public research with the sources named, is legitimate Analysis, because making
+defensible calls on incomplete evidence is the job these roles hire for.
+
+**Why this gate exists.** The prior definition was "I understand the domain," which licensed four
+articles that summarized other people's research and decided nothing: a healthcare deployment-gap
+survey, a JPMorgan case study, a generic enterprise-transformation piece, and a law-firm roadmap.
+A survey describes a state. It does not answer a question, so under this gate it does not ship.
+
+**Three guards, or this becomes opinion blogging:**
+
+- **Show where the position came from.** Never assert from nowhere. What satisfies this depends on
+  the kind of evidence:
+  - *Argued from public research:* the convergence table is the format, not a courtesy. Independent
+    sources, what each contributes, the quote that carries it, then the position and where it diverges.
+  - *Argued from your own systems:* the artifact and the number are the citation. Name the repo, the
+    file, the count, the date. A first-party piece needs no external sources and is stronger without
+    bolted-on ones.
+
+  The obligation is a traceable reasoning chain, not a bibliography.
+- **State the position so it could be shown wrong.** "Name the binding risk first, then the vendor
+  follows" is falsifiable. "AI is changing everything" is not.
+- **Never borrow certainty from a source.** Where the evidence is one anonymous post from one metro,
+  say so. Match the honest-boundaries discipline in vault `career/positioning/source-of-truth.md`.
+
+### Site scope (set 2026-08-16)
+
+**This site optimizes for precision. The feed optimizes for recall.** They are not one pipeline at
+two lengths, they are two surfaces with opposite targets.
+
+A hiring manager here is doing evaluation, so every additional item dilutes the signal and adds
+another chance to land on something weaker than the best thing. **More content makes this site
+worse.** A reader on LinkedIn or X is doing discovery, where volume is how you get found and how
+you practice. More content makes the feed better. Publish fast there, publish curated here.
+
+| | This site | LinkedIn / X |
+|---|---|---|
+| Publish gate | Stabilize | Scaffold or Iterate |
+| Volume | Few, curated | Many, fast |
+| Failure mode | Dilution | Silence |
+| Being wrong is | Expensive | Cheap and correctable |
+
+**The scope rule:** every item answers a different question a hiring manager actually has, and
+**nothing answers the same question twice.** When two items answer one question, the weaker one is
+cut, not kept for completeness. Coverage of the question set is the target, never volume.
+
+Each item leads with a number in its first line, because the site's own constraint is a recruiter
+running a ten-second scan.
+
+**How the question set is derived.** From the real `career/listings/` corpus, the same way skill
+demand is derived by `career/scripts/skill-demand.py` rather than hand-counted. Never type a
+question set from intuition. Re-derive it when the corpus grows enough to move it.
+
+**PROVISIONAL question set and inventory verdict — pending the listings pass.** Sketched
+2026-08-16 from the lane doc and the summer-2026 listings already read. A fresh batch of listings
+lands next, and the set below is re-derived against it before anything is cut or written.
+
+| Hiring question | Current best answer | Site item |
+|---|---|---|
+| Can you build production AI systems? | Eval-gated reporting pipeline | Project (exists) |
+| Do you know whether they work? | 18 cases, 0.72 baseline, failure taxonomy | Project (exists, needs numbers) |
+| Can you run a fleet without becoming the bottleneck? | 84 checks, selftest, run history | Project (exists as security audit, needs rework) |
+| Do you know when *not* to build? | 579 deleted, 297 numbers proved, read/write asymmetry | Analysis (to write) |
+| Can you make people adopt something? | Adoption loop, 44 stores, 70% | Playbook + Project |
+| Do you have judgment about risk? | Security audit, HITL, risk classification | Project (exists) |
+
+Roughly three or four Projects and two or three Analyses, plus the playbook. That is the whole
+site. Items answering none of the derived questions are cut regardless of quality, and portfolio
+pieces built on demo data are the first candidates, because a skimming reader cannot tell them
+from client work and will average them in.
+
+**Promotion, so scope is derived rather than guessed.** Publish an idea to the feed first. What
+lands gets promoted into a site item. The feed does the selection, so this site does not have to
+guess which candidate deserves a permanent URL.
+
+Two constraints on that. The feed selects **among** things that already pass the Analysis gate; it
+decides what is resonant, never what is true. And the signal is **engagement and profile views, not
+clickthroughs**, for the reason below.
+
+**This site is not a funnel, and feed posts do not route here (corrected 2026-08-17).** An earlier
+version of this section said every post should link back. That was wrong on two counts. LinkedIn's
+ranking rewards content that keeps people on the platform, so routing every post off-site fights the
+algorithm. And more fundamentally, it imports a lead-generation model into a hiring context that does
+not work that way.
+
+**The site has one job: survive evaluation by a hiring manager who already decided to look you up.**
+Not attract, not convert, not nurture. People arrive here from a profile, a resume, a recruiter, or a
+search of the name, at the point where they are checking whether the claims hold. Optimize for that
+reader and no other.
+
+The real path is: post delivers complete value on LinkedIn, reader wonders who wrote it, reader
+visits the **profile**, and the minority who want to evaluate deeply come here from there. That makes
+the LinkedIn profile the load-bearing link in the system, not the posts.
+
+Linking out is not banned, it is rare. Link when the link *is* the artifact (a repo, a spec) and the
+post is complete without it.
 
 **What NOT to do:**
 - Don't put implementation details in Analysis (goes in Project README)
 - Don't put pure strategy in Projects (goes in Analysis)
 - Don't write Notes that should be full Analysis articles
+- Don't publish a survey, a roundup, or a vendor-news recap. If the piece reports what happened
+  without deciding anything, it is a link, not an article.
 
 **Target audiences:**
 - Hiring managers and practice leads for AI enablement / adoption / delivery roles (primary)
