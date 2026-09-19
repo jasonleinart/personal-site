@@ -1,0 +1,56 @@
+---
+title: "Workflow-First AI Enablement Course"
+role: "Author & facilitator"
+year: 2026
+duration: "2 weeks"
+outcomeSummary: "Standalone docs site with a 90-minute three-phase course (19 lessons), concept reference, printable worksheets, and a live workflow case study — built to reframe agents as workflow units, not chatbots."
+overview: "An enablement course and reference site for teams stuck in the chatbot mental model. Starlight docs host three phased lesson tracks, five bookmarkable reference pages, facilitator materials, and a case study with a real workflow diagram."
+problem: "Most AI enablement teaches seat activation and prompt tips. Teams leave knowing how to open ChatGPT, not how to define a bounded workflow with an exit condition, independent evidence, and a cost boundary."
+constraints:
+  - "Standalone site first; personal-site gets a link only until repositioning"
+  - "Knowledge-gap instrument only — no full gap-diagnosis product in v1"
+  - "Content adapted from internal research notes; no vault paths in learner-facing pages"
+approach: "Astro Starlight for the awesome-ai-native-style docs pattern: Concepts reference layer plus Course narrative layer. Worksheets are print-to-PDF Starlight pages. Case study embeds a rendered workflow map from a production bottom-up reporting chain."
+keyDecisions:
+  - decision: "Starlight standalone repo, not personal-site embed at v1"
+    reasoning: "Keeps portfolio stripped down while the course earns its own URL and can port later."
+    alternatives:
+      - "Extend personal-site playbook section (mixes positioning)"
+      - "Skilljar-style LMS (overbuilt for v1)"
+  - decision: "Worksheets as docs pages, not separate PDF pipeline"
+    reasoning: "Browser print-to-PDF is enough for facilitators; avoids a build step."
+    alternatives:
+      - "Static HTML in public/downloads"
+techStack:
+  - "Astro Starlight"
+  - "MDX content"
+  - "Cloudflare Pages"
+  - "Pagefind search"
+impact:
+  metrics:
+    - label: "Concept pages"
+      value: "5"
+    - label: "Phase lessons"
+      value: "19 (~90 min)"
+    - label: "Printable worksheets"
+      value: "6"
+  qualitative: "Gives enablement leads a shareable operating model — workflow as unit, three kinds of agent, Gate 0, seat contract, evidence not trust — with activities that classify a real team idea and draft one workflow contract."
+learnings:
+  - "The knowledge gap for most teams is unit of progress, not tool fluency"
+  - "Concepts + course layers match how reference docs get bookmarked vs how sessions get run"
+  - "Bottom-up case study lands harder than role-shaped failure stories told in prose alone"
+featured: false
+status: ongoing
+order: 3
+contentOnly: true
+tldr:
+  summary: "A hosted enablement course that teaches workflow units instead of chatbots."
+  points:
+    - "<strong>Three phases (~90 min):</strong> Reframe, Design, Operate — 19 lesson pages with facilitator run-of-show."
+    - "<strong>Reference layer:</strong> Five concept pages teams can bookmark."
+    - "<strong>Live site:</strong> <a href=\"https://workflow-first.pages.dev/\">workflow-first.pages.dev</a> (after CF Pages deploy)."
+---
+
+**Course site:** [workflow-first.pages.dev](https://workflow-first.pages.dev/)
+
+Repo: `workflow-first` in Workspace. Plan: `.cursor/plans/workflow-first-enablement-course_b4e8f2a1.plan.md`.
